@@ -17,7 +17,7 @@ const defaultConfig = {
   RCON_PASSWORD: ""
 };
 
-const sharedCommands = ["/tiktokwall setup", "/tiktokwall size 128", "/tiktokwall dithering off", "/tiktokwall animationspeed 8"];
+const sharedCommands = ["/tiktokwall setup", "/tiktokwall size 128", "/tiktokwall dithering off", "/tiktokwall animation on", "/tiktokwall animationspeed 8", "/tiktokwall test"];
 
 const platformContent = {
   windows: {
@@ -27,40 +27,82 @@ const platformContent = {
     startBridge: "start-interface-windows.bat",
     startPaper: "start-paper.bat",
     pluginPath: "C:\\MinecraftLive\\plugins\\TikTokWall.jar",
-    paperCommands: ["Renomear Paper para paper.jar", "Copiar scripts\\windows\\start-paper.bat para C:\\MinecraftLive", "Abrir start-paper.bat"],
+    paperCommands: [
+      "Criar C:\\MinecraftLive",
+      "Baixar o Paper da mesma versao do Minecraft Java",
+      "Renomear o arquivo baixado para paper.jar",
+      "Copiar paper.jar e start-paper.bat para C:\\MinecraftLive"
+    ],
     steps: [
       {
         label: "Passo 1",
         title: "Baixe o pack completo e extraia em uma pasta simples.",
-        body: "Use uma pasta como C:\\TikTokMinecraftLive. Evite OneDrive, Desktop sincronizado ou pastas com acentos.",
-        commands: ["Baixar pack completo", "Extrair ZIP", "Abrir start-interface-windows.bat depois do Paper"]
+        body: "Use C:\\TikTokMinecraftLive. Evite OneDrive, Desktop sincronizado ou pastas com acentos.",
+        commands: ["Baixar pack completo", "Extrair em C:\\TikTokMinecraftLive", "Entrar na pasta C:\\TikTokMinecraftLive"]
       },
       {
         label: "Passo 2",
-        title: "Instale Java JDK, Node.js LTS e baixe o Paper.",
-        body: "O Minecraft, o Paper e o plugin precisam estar na mesma versão de jogo. O bot roda neste computador e conversa com o plugin.",
-        commands: ["https://adoptium.net/temurin/releases", "https://nodejs.org/en/download", "https://papermc.io/downloads/paper"]
+        title: "Instale Java JDK 25 e Node.js LTS.",
+        body: "O plugin foi compilado para Java 25. Depois de instalar, abra o PowerShell e confirme as versoes.",
+        commands: [
+          "https://adoptium.net/temurin/releases/?version=25",
+          "https://nodejs.org/en/download",
+          "java -version",
+          "node -v",
+          "npm -v"
+        ]
       },
       {
         label: "Passo 3",
-        title: "Coloque o plugin dentro do servidor Paper.",
-        body: "Copie TikTokWall.jar para a pasta plugins do servidor. Depois reinicie o Paper para carregar o plugin.",
-        commands: ["C:\\MinecraftLive\\plugins\\TikTokWall.jar", "java -Xms2G -Xmx4G -jar paper.jar --nogui"]
+        title: "Baixe o Paper da mesma versao do Minecraft.",
+        body: "No launcher do Minecraft, veja a versao Java que voce vai abrir. Baixe o Paper dessa mesma versao.",
+        commands: [
+          "https://papermc.io/downloads/paper",
+          "Criar C:\\MinecraftLive",
+          "Renomear o arquivo baixado para paper.jar",
+          "Copiar paper.jar para C:\\MinecraftLive\\paper.jar",
+          "Copiar C:\\TikTokMinecraftLive\\scripts\\windows\\start-paper.bat para C:\\MinecraftLive\\start-paper.bat"
+        ]
       },
       {
         label: "Passo 4",
+        title: "Inicie o Paper pela primeira vez e aceite a EULA.",
+        body: "A primeira abertura cria eula.txt, server.properties e a pasta plugins. Depois aceite a EULA e abra de novo.",
+        commands: [
+          "Abrir C:\\MinecraftLive\\start-paper.bat",
+          "Editar C:\\MinecraftLive\\eula.txt",
+          "Trocar eula=false por eula=true",
+          "Abrir C:\\MinecraftLive\\start-paper.bat novamente",
+          "Quando terminar de carregar, digitar stop no console"
+        ]
+      },
+      {
+        label: "Passo 5",
+        title: "Instale o plugin e ligue o RCON.",
+        body: "Agora a pasta plugins ja existe. Copie o JAR, configure RCON e reinicie o Paper.",
+        commands: [
+          "Copiar C:\\TikTokMinecraftLive\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar",
+          "Abrir C:\\MinecraftLive\\server.properties",
+          "enable-rcon=true",
+          "rcon.port=25575",
+          "rcon.password=troque-essa-senha",
+          "Abrir C:\\MinecraftLive\\start-paper.bat"
+        ]
+      },
+      {
+        label: "Passo 6",
         title: "Entre no servidor e prepare a parede automaticamente.",
         body: "Entre em localhost pelo Minecraft Java. Se precisar de permissão, use op SeuNick no console do Paper.",
         commands: sharedCommands
       },
       {
-        label: "Passo 5",
+        label: "Passo 7",
         title: "Abra a ponte local e salve a configuração da live.",
         body: "A ponte local é o start-interface-windows.bat. Ela salva a configuração neste computador, roda testes e inicia o bot.",
-        commands: ["start-interface-windows.bat", "http://127.0.0.1:3333", "Salvar configuracao"]
+        commands: ["Abrir C:\\TikTokMinecraftLive\\start-interface-windows.bat", "http://127.0.0.1:3333", "Salvar configuracao"]
       },
       {
-        label: "Passo 6",
+        label: "Passo 8",
         title: "Teste uma imagem e inicie o bot quando a live estiver aberta.",
         body: "A conta TikTok precisa estar ao vivo e pública. Deixe Gift info avançado desligado se não tiver plano EulerStream.",
         commands: ["Enviar imagem teste", "Iniciar bot", "Aguardar curtida ou rosa na live"]
@@ -74,40 +116,86 @@ const platformContent = {
     startBridge: "./start-interface-linux.sh",
     startPaper: "./start-paper.sh",
     pluginPath: "~/MinecraftLive/plugins/TikTokWall.jar",
-    paperCommands: ["mkdir -p ~/MinecraftLive", "cp scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh", "chmod +x ~/MinecraftLive/start-paper.sh", "cd ~/MinecraftLive && ./start-paper.sh"],
+    paperCommands: [
+      "mkdir -p ~/MinecraftLive",
+      "cp ~/Downloads/tiktok-minecraft-live/scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh",
+      "chmod +x ~/MinecraftLive/start-paper.sh",
+      "cd ~/MinecraftLive && ./start-paper.sh"
+    ],
     steps: [
       {
         label: "Passo 1",
         title: "Baixe o pack completo e extraia em uma pasta simples.",
-        body: "Use uma pasta como ~/TikTokMinecraftLive. Evite pastas sincronizadas ou caminhos com caracteres estranhos.",
-        commands: ["Baixar pack completo", "unzip tiktok-minecraft-live.zip", "cd tiktok-minecraft-live"]
+        body: "Este passo assume que o ZIP foi baixado em ~/Downloads. Se voce extraiu em outra pasta, ajuste os caminhos.",
+        commands: ["cd ~/Downloads", "unzip tiktok-minecraft-live.zip", "cd ~/Downloads/tiktok-minecraft-live"]
       },
       {
         label: "Passo 2",
-        title: "Instale Java JDK, Node.js LTS e baixe o Paper.",
-        body: "Confirme node, npm e java no terminal. O Paper deve usar a mesma versão do Minecraft.",
-        commands: ["node -v", "npm -v", "java -version", "https://papermc.io/downloads/paper"]
+        title: "Instale Java JDK 25 e Node.js LTS.",
+        body: "O plugin foi compilado para Java 25. Se seu Ubuntu nao tiver openjdk-25-jdk, instale Temurin 25 pelo link.",
+        commands: [
+          "sudo apt update",
+          "sudo apt install -y curl unzip",
+          "sudo apt install -y openjdk-25-jdk",
+          "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -",
+          "sudo apt install -y nodejs",
+          "java -version",
+          "node -v && npm -v",
+          "https://adoptium.net/temurin/releases/?version=25"
+        ]
       },
       {
         label: "Passo 3",
-        title: "Coloque o plugin dentro do servidor Paper.",
-        body: "Crie ~/MinecraftLive, rode o Paper uma vez, aceite a EULA, copie o JAR para plugins e reinicie.",
-        commands: ["mkdir -p ~/MinecraftLive", "cp TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar", "cd ~/MinecraftLive && ./start-paper.sh"]
+        title: "Baixe o Paper da mesma versao do Minecraft.",
+        body: "No launcher do Minecraft, veja a versao Java que voce vai abrir. Baixe o Paper dessa mesma versao e coloque como paper.jar.",
+        commands: [
+          "https://papermc.io/downloads/paper",
+          "mkdir -p ~/MinecraftLive",
+          "cp ~/Downloads/paper-*.jar ~/MinecraftLive/paper.jar",
+          "cp ~/Downloads/tiktok-minecraft-live/scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh",
+          "chmod +x ~/MinecraftLive/start-paper.sh"
+        ]
       },
       {
         label: "Passo 4",
+        title: "Inicie o Paper pela primeira vez e aceite a EULA.",
+        body: "A primeira abertura cria eula.txt, server.properties e plugins/. Depois aceite a EULA e abra de novo.",
+        commands: [
+          "cd ~/MinecraftLive",
+          "./start-paper.sh",
+          "sed -i 's/eula=false/eula=true/' eula.txt",
+          "./start-paper.sh",
+          "Quando terminar de carregar, digite stop no console"
+        ]
+      },
+      {
+        label: "Passo 5",
+        title: "Instale o plugin e ligue o RCON.",
+        body: "Agora plugins/ ja existe. Copie o JAR, configure RCON e reinicie o Paper.",
+        commands: [
+          "mkdir -p ~/MinecraftLive/plugins",
+          "cp ~/Downloads/tiktok-minecraft-live/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar",
+          "nano ~/MinecraftLive/server.properties",
+          "enable-rcon=true",
+          "rcon.port=25575",
+          "rcon.password=troque-essa-senha",
+          "cd ~/MinecraftLive && ./start-paper.sh"
+        ]
+      },
+      {
+        label: "Passo 6",
         title: "Entre no servidor e prepare a parede automaticamente.",
         body: "Entre em localhost pelo Minecraft Java. Se precisar de permissão, use op SeuNick no console do Paper.",
         commands: sharedCommands
       },
       {
-        label: "Passo 5",
+        label: "Passo 7",
         title: "Abra a ponte local e salve a configuração da live.",
         body: "A ponte local é o start-interface-linux.sh. Ela salva a configuração neste computador, roda testes e inicia o bot.",
-        commands: ["chmod +x start-interface-linux.sh", "./start-interface-linux.sh", "http://127.0.0.1:3333"]
+        commands: ["cd ~/Downloads/tiktok-minecraft-live", "chmod +x start-interface-linux.sh", "./start-interface-linux.sh", "http://127.0.0.1:3333"]
       },
       {
-        label: "Passo 6",
+        label: "Passo 8",
         title: "Teste uma imagem e inicie o bot quando a live estiver aberta.",
         body: "A conta TikTok precisa estar ao vivo e pública. Deixe Gift info avançado desligado se não tiver plano EulerStream.",
         commands: ["Enviar imagem teste", "Iniciar bot", "Aguardar curtida ou rosa na live"]
@@ -294,30 +382,30 @@ function quickStartText() {
   const platform = platformContent[selectedPlatform];
   const platformSpecific = selectedPlatform === "linux"
     ? [
-        "1. Instale Java JDK 25 e Node.js LTS.",
-        "2. Baixe o Paper, coloque em ~/MinecraftLive e renomeie para paper.jar.",
-        "3. Copie scripts/linux/start-paper.sh para ~/MinecraftLive e rode chmod +x.",
-        "4. Rode ./start-paper.sh uma vez e aceite o eula.txt.",
-        "5. Ative RCON no server.properties.",
-        "6. Copie TikTokWall.jar para ~/MinecraftLive/plugins/TikTokWall.jar.",
-        "7. Reinicie o Paper e entre em localhost.",
-        "8. Rode /tiktokwall setup.",
-        "9. Abra ./start-interface-linux.sh.",
-        "10. Salve o username TikTok no portal.",
-        "11. Clique Enviar imagem teste e depois Iniciar bot."
+        "1. Baixe o pack em ~/Downloads, rode unzip tiktok-minecraft-live.zip e entre em ~/Downloads/tiktok-minecraft-live.",
+        "2. Instale Java JDK 25 e Node.js LTS; confirme com java -version, node -v e npm -v.",
+        "3. No launcher do Minecraft, veja a versao Java que sera usada. Baixe Paper dessa mesma versao em https://papermc.io/downloads/paper.",
+        "4. Crie ~/MinecraftLive, copie o Paper como ~/MinecraftLive/paper.jar e copie scripts/linux/start-paper.sh para ~/MinecraftLive/start-paper.sh.",
+        "5. Rode cd ~/MinecraftLive && ./start-paper.sh uma vez, aceite eula.txt trocando eula=false por eula=true, rode ./start-paper.sh de novo e depois digite stop.",
+        "6. Copie ~/Downloads/tiktok-minecraft-live/TikTokWall.jar para ~/MinecraftLive/plugins/TikTokWall.jar.",
+        "7. Ative RCON em ~/MinecraftLive/server.properties: enable-rcon=true, rcon.port=25575 e rcon.password=uma-senha.",
+        "8. Reinicie o Paper com cd ~/MinecraftLive && ./start-paper.sh.",
+        "9. Entre no Minecraft em localhost, rode /tiktokwall setup e depois /tiktokwall test.",
+        "10. Abra cd ~/Downloads/tiktok-minecraft-live && ./start-interface-linux.sh.",
+        "11. No portal, salve o username TikTok, clique Enviar imagem teste e depois Iniciar bot."
       ]
     : [
-        "1. Instale Java JDK 25 e Node.js LTS.",
-        "2. Baixe o Paper, coloque em C:\\MinecraftLive e renomeie para paper.jar.",
-        "3. Copie scripts\\windows\\start-paper.bat para C:\\MinecraftLive.",
-        "4. Abra start-paper.bat uma vez e aceite o eula.txt.",
-        "5. Ative RCON no server.properties.",
-        "6. Copie TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar.",
-        "7. Reinicie o Paper e entre em localhost.",
-        "8. Rode /tiktokwall setup.",
-        "9. Abra start-interface-windows.bat.",
-        "10. Salve o username TikTok no portal.",
-        "11. Clique Enviar imagem teste e depois Iniciar bot."
+        "1. Baixe o pack e extraia em C:\\TikTokMinecraftLive.",
+        "2. Instale Java JDK 25 e Node.js LTS; confirme com java -version, node -v e npm -v.",
+        "3. No launcher do Minecraft, veja a versao Java que sera usada. Baixe Paper dessa mesma versao em https://papermc.io/downloads/paper.",
+        "4. Crie C:\\MinecraftLive, copie o Paper como C:\\MinecraftLive\\paper.jar e copie scripts\\windows\\start-paper.bat para C:\\MinecraftLive\\start-paper.bat.",
+        "5. Abra start-paper.bat uma vez, aceite eula.txt trocando eula=false por eula=true, abra start-paper.bat de novo e depois digite stop.",
+        "6. Copie C:\\TikTokMinecraftLive\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar.",
+        "7. Ative RCON em C:\\MinecraftLive\\server.properties: enable-rcon=true, rcon.port=25575 e rcon.password=uma-senha.",
+        "8. Reinicie o Paper abrindo C:\\MinecraftLive\\start-paper.bat.",
+        "9. Entre no Minecraft em localhost, rode /tiktokwall setup e depois /tiktokwall test.",
+        "10. Abra C:\\TikTokMinecraftLive\\start-interface-windows.bat.",
+        "11. No portal, salve o username TikTok, clique Enviar imagem teste e depois Iniciar bot."
       ];
 
   return [

@@ -412,6 +412,7 @@ h3 {
 }
 
 .copy-row code {
+  white-space: pre-wrap;
   overflow-wrap: anywhere;
   color: var(--soft);
 }

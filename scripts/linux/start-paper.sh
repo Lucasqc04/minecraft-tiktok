@@ -2,6 +2,7 @@
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
+mkdir -p plugins
 
 if [ ! -f "paper.jar" ]; then
   echo "Coloque o arquivo do Paper nesta pasta com o nome paper.jar"

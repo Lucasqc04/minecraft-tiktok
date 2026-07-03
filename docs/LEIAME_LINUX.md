@@ -29,57 +29,109 @@ Voce precisa de:
 - Node.js LTS: https://nodejs.org/en/download
 - Paper: https://papermc.io/downloads/paper
 
-No Ubuntu, se preferir instalar Node pelo NodeSource ou pelo pacote oficial da sua distro, tambem funciona. Confira:
+No Ubuntu, comece assim:
 
 ```bash
-node -v
-npm -v
-java -version
+sudo apt update
+sudo apt install -y curl unzip
 ```
 
-## Preparar O Paper
+Tente instalar Java pelo apt:
 
-1. Crie uma pasta:
+```bash
+sudo apt install -y openjdk-25-jdk
+```
+
+Se o Ubuntu responder que nao encontrou `openjdk-25-jdk`, instale o Temurin JDK 25 pelo site:
+
+```text
+https://adoptium.net/temurin/releases/?version=25
+```
+
+Instale Node.js LTS:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
+```
+
+Confira:
+
+```bash
+java -version
+node -v
+npm -v
+```
+
+O `java -version` precisa mostrar Java 25. O `node -v` e `npm -v` precisam responder uma versao, sem erro.
+
+## Verificar A Versao Do Minecraft E Do Paper
+
+1. Abra o Minecraft Launcher.
+2. Veja qual versao do Minecraft Java voce vai usar na live.
+3. Baixe o Paper da mesma versao:
+
+```text
+https://papermc.io/downloads/paper
+```
+
+Exemplo: se o Minecraft vai abrir na versao `26.2`, baixe Paper `26.2`. Se a versao que voce quer ainda nao aparece no site do Paper, use uma versao do Minecraft que tenha Paper disponivel.
+
+Depois de baixar, deixe o arquivo `.jar` do Paper na pasta `~/Downloads`.
+
+## Preparar O Servidor Paper
+
+Estes comandos assumem que voce extraiu o pack em `~/Downloads/tiktok-minecraft-live`.
+
+1. Entre na pasta do pack:
+
+```bash
+cd ~/Downloads/tiktok-minecraft-live
+```
+
+2. Crie a pasta do servidor:
 
 ```bash
 mkdir -p ~/MinecraftLive
 ```
 
-2. Baixe o Paper, coloque dentro dessa pasta e renomeie para:
-
-```text
-paper.jar
-```
-
-3. Copie o script:
+3. Copie o Paper baixado para o servidor com o nome correto:
 
 ```bash
-cp scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh
+cp ~/Downloads/paper-*.jar ~/MinecraftLive/paper.jar
+```
+
+Se aparecer erro dizendo que nao encontrou `paper-*.jar`, o arquivo do Paper nao esta em `~/Downloads` ou esta com outro nome.
+
+4. Copie o script que inicia o servidor:
+
+```bash
+cp ~/Downloads/tiktok-minecraft-live/scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh
 chmod +x ~/MinecraftLive/start-paper.sh
 ```
 
-4. Rode:
+5. Rode o Paper pela primeira vez:
 
 ```bash
 cd ~/MinecraftLive
 ./start-paper.sh
 ```
 
-Na primeira vez o Paper vai parar e criar `eula.txt`.
+Na primeira vez o Paper deve parar sozinho e criar `eula.txt`.
 
-5. Aceite a EULA:
+6. Aceite a EULA:
 
 ```bash
 sed -i 's/eula=false/eula=true/' eula.txt
 ```
 
-6. Rode o Paper de novo:
+7. Rode o Paper de novo:
 
 ```bash
 ./start-paper.sh
 ```
 
-Quando o servidor terminar de iniciar, voce pode parar com:
+Espere aparecer no console algo parecido com `Done`. Depois pare o servidor digitando no console do Paper:
 
 ```text
 stop
@@ -87,7 +139,13 @@ stop
 
 ## Ativar RCON
 
-Abra `server.properties` dentro de `~/MinecraftLive` e configure:
+Abra `server.properties`:
+
+```bash
+nano ~/MinecraftLive/server.properties
+```
+
+Procure e ajuste estas linhas:
 
 ```properties
 enable-rcon=true
@@ -101,15 +159,21 @@ Sua senha RCON e o arquivo `.env` ficam no computador da live. Nao publique esse
 
 ## Instalar O Plugin
 
-Copie o plugin:
+Agora a pasta `plugins` ja existe. Copie o plugin:
 
 ```bash
-cp TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar
+mkdir -p ~/MinecraftLive/plugins
+cp ~/Downloads/tiktok-minecraft-live/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar
 ```
 
-Se a pasta `plugins` ainda nao existir, rode o Paper uma vez.
+Depois inicie o Paper de novo:
 
-Depois reinicie o Paper.
+```bash
+cd ~/MinecraftLive
+./start-paper.sh
+```
+
+No console do Paper, confirme que aparece algo parecido com `TikTokWall enabled` ou `HTTP server listening on 127.0.0.1:4567`.
 
 ## Entrar No Minecraft
 
@@ -143,9 +207,10 @@ Dentro do Minecraft:
 
 ## Abrir A Ponte Local
 
-Na pasta do projeto:
+Na pasta do pack:
 
 ```bash
+cd ~/Downloads/tiktok-minecraft-live
 chmod +x start-interface-linux.sh
 ./start-interface-linux.sh
 ```
@@ -190,6 +255,26 @@ Me guia passo a passo para resolver o problema.
 ```
 
 ## Problemas Comuns
+
+### Erro: `plugins/TikTokWall.jar`: Arquivo ou diretorio inexistente
+
+Voce tentou copiar o plugin antes de criar a pasta `plugins`. Rode:
+
+```bash
+mkdir -p ~/MinecraftLive/plugins
+cp ~/Downloads/tiktok-minecraft-live/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar
+```
+
+### Erro: `./start-paper.sh`: arquivo ou diretorio inexistente
+
+Voce entrou em `~/MinecraftLive`, mas ainda nao copiou o script para la. Rode:
+
+```bash
+cp ~/Downloads/tiktok-minecraft-live/scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh
+chmod +x ~/MinecraftLive/start-paper.sh
+cd ~/MinecraftLive
+./start-paper.sh
+```
 
 ### Imagem aparece em um canto
 

@@ -1,6 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+if not exist "plugins" mkdir "plugins"
 
 if not exist "paper.jar" (
   echo Coloque o arquivo do Paper nesta pasta com o nome paper.jar

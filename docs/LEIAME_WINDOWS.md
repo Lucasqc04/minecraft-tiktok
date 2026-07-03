@@ -43,7 +43,27 @@ Instale:
 - Node.js LTS: https://nodejs.org/en/download
 - Paper: https://papermc.io/downloads/paper
 
-Use a mesma versao do Paper que o Minecraft vai abrir. Se o Minecraft do criador esta em `26.2`, baixe Paper para `26.2`.
+Depois de instalar Java e Node, abra o PowerShell e confira:
+
+```text
+java -version
+node -v
+npm -v
+```
+
+O `java -version` precisa mostrar Java 25. O `node -v` e `npm -v` precisam responder uma versao, sem erro.
+
+## Verificar A Versao Do Minecraft E Do Paper
+
+1. Abra o Minecraft Launcher.
+2. Veja qual versao do Minecraft Java voce vai usar na live.
+3. Baixe o Paper da mesma versao:
+
+```text
+https://papermc.io/downloads/paper
+```
+
+Exemplo: se o Minecraft vai abrir na versao `26.2`, baixe Paper `26.2`. Se a versao que voce quer ainda nao aparece no site do Paper, use uma versao do Minecraft que tenha Paper disponivel.
 
 ## Preparar O Servidor Paper
 
@@ -53,23 +73,45 @@ Use a mesma versao do Paper que o Minecraft vai abrir. Se o Minecraft do criador
 C:\MinecraftLive
 ```
 
-2. Baixe o Paper e renomeie o arquivo para:
+2. Pegue o arquivo `.jar` do Paper que voce baixou, renomeie para:
 
 ```text
 paper.jar
 ```
 
-3. Copie o arquivo abaixo para dentro de `C:\MinecraftLive`:
+3. Coloque esse arquivo aqui:
 
 ```text
-scripts\windows\start-paper.bat
+C:\MinecraftLive\paper.jar
 ```
 
-4. Dê duplo clique em `start-paper.bat`.
+4. Copie o arquivo abaixo do pack para dentro de `C:\MinecraftLive`:
+
+```text
+C:\TikTokMinecraftLive\scripts\windows\start-paper.bat
+```
+
+O destino deve ficar assim:
+
+```text
+C:\MinecraftLive\start-paper.bat
+```
+
+5. De duplo clique em:
+
+```text
+C:\MinecraftLive\start-paper.bat
+```
 
 Na primeira vez, o Paper vai parar e criar `eula.txt`.
 
-5. Abra `eula.txt` e troque:
+6. Abra:
+
+```text
+C:\MinecraftLive\eula.txt
+```
+
+Troque:
 
 ```text
 eula=false
@@ -81,9 +123,9 @@ para:
 eula=true
 ```
 
-6. Rode `start-paper.bat` de novo.
+7. Rode `start-paper.bat` de novo.
 
-7. Quando o servidor terminar de iniciar, feche com:
+Quando o servidor terminar de iniciar, espere aparecer algo parecido com `Done`. Depois pare com:
 
 ```text
 stop
@@ -105,10 +147,10 @@ RCON e opcional para a live funcionar, mas ajuda a interface a mandar comandos d
 
 ## Instalar O Plugin TikTokWall
 
-Copie:
+Agora a pasta `plugins` ja existe. Copie:
 
 ```text
-TikTokWall.jar
+C:\TikTokMinecraftLive\TikTokWall.jar
 ```
 
 para:
@@ -117,9 +159,9 @@ para:
 C:\MinecraftLive\plugins\TikTokWall.jar
 ```
 
-Se a pasta `plugins` ainda nao existir, rode o Paper uma vez e ela sera criada.
-
 Depois reinicie o Paper.
+
+No console do Paper, confirme que aparece algo parecido com `TikTokWall enabled` ou `HTTP server listening on 127.0.0.1:4567`.
 
 ## Entrar No Mundo
 

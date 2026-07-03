@@ -29,16 +29,20 @@ Leia um destes arquivos:
 
 Resumo do fluxo:
 
-1. Instalar Java e Node.js.
-2. Baixar Paper no site oficial.
-3. Criar o servidor local e colocar `TikTokWall.jar` na pasta `plugins`.
-4. Reiniciar o Paper.
-5. Entrar no servidor pelo Minecraft Java em `localhost`.
-6. Rodar `/tiktokwall setup`.
-7. Abrir a ponte local: `start-interface-windows.bat` no Windows ou `./start-interface-linux.sh` no Linux.
-8. Configurar o usuario TikTok, likes, rosa, tempo e tamanho.
-9. Clicar em `Enviar imagem teste`.
-10. Clicar em `Iniciar bot`.
+1. Instalar Java JDK 25 e Node.js LTS.
+2. Ver no Minecraft Launcher qual versao Java sera usada.
+3. Baixar Paper da mesma versao do Minecraft.
+4. Criar o servidor local, copiar o Paper como `paper.jar` e copiar o script `start-paper`.
+5. Rodar o Paper uma vez, aceitar `eula.txt`, rodar de novo e parar com `stop`.
+6. Ativar RCON em `server.properties`.
+7. Copiar `TikTokWall.jar` para a pasta `plugins`.
+8. Reiniciar o Paper.
+9. Entrar no servidor pelo Minecraft Java em `localhost`.
+10. Rodar `/tiktokwall setup` e `/tiktokwall test`.
+11. Abrir a ponte local: `start-interface-windows.bat` no Windows ou `./start-interface-linux.sh` no Linux.
+12. Configurar o usuario TikTok, likes, rosa, tempo e tamanho.
+13. Clicar em `Enviar imagem teste`.
+14. Clicar em `Iniciar bot`.
 
 ## Interface Local
 
