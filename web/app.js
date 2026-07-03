@@ -448,6 +448,7 @@ function itemText(item) {
 function commandsText() {
   return [
     "/tiktokwall setup",
+    "/tiktokwall setpos",
     "/tiktokwall info",
     "/tiktokwall test",
     "/tiktokwall clear",
@@ -473,6 +474,10 @@ function commandsText() {
     "/tiktokwall fireworks any",
     "/tiktokwall fireworkcount 5",
     "/tiktokwall fireworkcount 10",
+    "/tiktokwall fireworkpower 0",
+    "/tiktokwall fireworkpower 1",
+    "/tiktokwall fireworkpower 2",
+    "/tiktokwall fireworkpower 3",
     "/tiktokwall facing NORTH",
     "/tiktokwall facing SOUTH",
     "/tiktokwall facing EAST",
@@ -672,6 +677,7 @@ function zipMapText() {
     "- docs/LEIAME_WINDOWS.md: guia Windows completo.",
     "- docs/LEIAME_LINUX.md: guia Linux completo.",
     "- web/: portal estatico com downloads, setup, painel admin, atualizacoes e contexto para IA.",
+    "- web/commands.html: wiki dos comandos do TikTokWall.jar e endpoints HTTP do plugin.",
     "- web/updates.json: historico de versoes usado pela pagina Atualizacoes."
   ].join("\n");
 }
@@ -785,6 +791,10 @@ function bindEvents() {
   on("copyCommands", "click", () => copyText(commandsText(), "Comandos copiados."));
   on("copyServerProps", "click", () => copyText(serverPropsText(), "server.properties copiado."));
   on("copyZipMap", "click", () => copyText(zipMapText(), "Mapa do ZIP copiado."));
+
+  $$("[data-copy-text]").forEach((button) => {
+    button.addEventListener("click", () => copyText(button.dataset.copyText || "", "Copiado."));
+  });
 }
 
 window.addEventListener("unhandledrejection", (event) => {

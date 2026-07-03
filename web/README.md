@@ -41,6 +41,7 @@ O portal tem seletor Windows/Linux no checklist para trocar caminhos e comandos 
 - `/index.html`: entrada do portal.
 - `/setup.html`: passo a passo completo e mapa do ZIP.
 - `/admin.html`: painel admin local, configuracao, logs e comandos RCON.
+- `/commands.html`: wiki dos comandos do TikTokWall.jar e endpoints HTTP locais.
 - `/updates.html`: status de versao do plugin, historico e download do JAR.
 - `/ai.html`: contexto grande para copiar e mandar para uma IA.
 

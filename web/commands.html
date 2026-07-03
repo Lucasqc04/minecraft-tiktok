@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Wiki de comandos do TikTokWall.jar para Minecraft Paper." />
+  <title>Comandos - TikTok Minecraft Live</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="commands">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="TikTok Minecraft Live">
+      <span class="brand-mark" aria-hidden="true">TML</span>
+      <span>
+        <strong>TikTok Minecraft Live</strong>
+        <small>Portal do criador</small>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="./index.html">Início</a>
+      <a href="./setup.html">Setup</a>
+      <a href="./admin.html">Painel</a>
+      <a class="active" href="./commands.html">Comandos</a>
+      <a href="./updates.html">Atualizações</a>
+      <a href="./ai.html">IA</a>
+    </nav>
+    <div class="bridge-status" id="bridgeStatus">
+      <span class="status-dot"></span>
+      <span>Ponte local desconectada</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero compact-hero">
+      <p class="system-label">Wiki do TikTokWall.jar</p>
+      <h1>Todos os comandos do plugin Minecraft.</h1>
+      <p class="lead">
+        Use esta página para entender o que cada comando faz, quando usar e qual exemplo copiar.
+        No chat do Minecraft use a barra inicial. Via RCON, use o mesmo comando sem a barra.
+      </p>
+      <div class="actions">
+        <button class="button primary" id="copyCommands" type="button">Copiar lista completa</button>
+        <a class="button" href="./admin.html">Abrir painel</a>
+      </div>
+    </section>
+
+    <section class="workspace wiki-layout">
+      <aside class="panel wiki-rail">
+        <p class="system-label">Como ler</p>
+        <h2>Regras rápidas.</h2>
+        <div class="wiki-note-list">
+          <p><strong>No jogo:</strong> digite com barra, por exemplo <code>/tiktokwall test</code>.</p>
+          <p><strong>No painel/RCON:</strong> o portal envia sem barra, por exemplo <code>tiktokwall test</code>.</p>
+          <p><strong>Permissão:</strong> o jogador precisa ser OP ou ter <code>tiktokwall.admin</code>.</p>
+          <p><strong>Depois de mudar tamanho:</strong> rode <code>/tiktokwall setup</code> para recriar a parede no tamanho novo.</p>
+        </div>
+      </aside>
+
+      <div class="wiki-content">
+        <section class="panel command-doc-section">
+          <div class="panel-head">
+            <div>
+              <p class="system-label">Operação</p>
+              <h2>Preparar, testar e limpar.</h2>
+            </div>
+          </div>
+          <div class="command-doc-grid">
+            <article class="command-doc-card">
+              <code>/tiktokwall setup</code>
+              <p>Prepara automaticamente a área da live: limpa espaço, cria piso, cria parede, moldura, posição da parede, mundo sempre de dia e modo criativo.</p>
+              <span>Use quando instalou o plugin, mudou tamanho ou quer refazer a arena.</span>
+              <button class="button small" data-copy-text="/tiktokwall setup" type="button">Copiar</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall setpos</code>
+              <p>Define manualmente o canto superior esquerdo da parede usando o bloco que o jogador está olhando.</p>
+              <span>Use se você construiu sua própria parede e não quer usar o setup automático.</span>
+              <button class="button small" data-copy-text="/tiktokwall setpos" type="button">Copiar</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall test</code>
+              <p>Renderiza uma imagem colorida de teste usando blocos.</p>
+              <span>Use para confirmar que o plugin está carregado e a parede está no lugar certo.</span>
+              <button class="button small" data-copy-text="/tiktokwall test" type="button">Copiar</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall clear</code>
+              <p>Limpa a área ativa da parede e remove o nome acima do painel.</p>
+              <span>Use quando quiser apagar uma imagem travada ou resetar antes de outro teste.</span>
+              <button class="button small" data-copy-text="/tiktokwall clear" type="button">Copiar</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall info</code>
+              <p>Mostra mundo, origem, direção, tamanho, duração, dithering, animação, nome, fogos, HTTP e status ocupado/livre.</p>
+              <span>Use para diagnosticar configuração errada.</span>
+              <button class="button small" data-copy-text="/tiktokwall info" type="button">Copiar</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel command-doc-section">
+          <div class="panel-head">
+            <div>
+              <p class="system-label">Parede</p>
+              <h2>Tamanho e direção.</h2>
+            </div>
+          </div>
+          <div class="command-doc-grid">
+            <article class="command-doc-card">
+              <code>/tiktokwall size &lt;32|48|64|128|256&gt;</code>
+              <p>Define o tamanho padrão da parede em blocos.</p>
+              <span>O bot precisa usar o mesmo valor em <code>AVATAR_SIZE</code>. Para 256, a parede fica 256x256 blocos.</span>
+              <button class="button small" data-copy-text="/tiktokwall size 128" type="button">Copiar 128</button>
+              <button class="button small" data-copy-text="/tiktokwall size 256" type="button">Copiar 256</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall facing &lt;NORTH|SOUTH|EAST|WEST&gt;</code>
+              <p>Define para qual direção a imagem vai crescer horizontalmente.</p>
+              <span>Use se a imagem estiver invertida, crescendo para o lado errado ou olhando para trás.</span>
+              <button class="button small" data-copy-text="/tiktokwall facing SOUTH" type="button">Copiar SOUTH</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel command-doc-section">
+          <div class="panel-head">
+            <div>
+              <p class="system-label">Visual</p>
+              <h2>Dithering e animação.</h2>
+            </div>
+          </div>
+          <div class="command-doc-grid">
+            <article class="command-doc-card">
+              <code>/tiktokwall dithering &lt;on|off&gt;</code>
+              <p>Liga ou desliga a mistura de blocos para simular mais tons.</p>
+              <span>Para fotos de live, <code>off</code> costuma ficar mais limpo. <code>on</code> pode gerar ruído.</span>
+              <button class="button small" data-copy-text="/tiktokwall dithering off" type="button">Copiar off</button>
+              <button class="button small" data-copy-text="/tiktokwall dithering on" type="button">Copiar on</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall ditheringstrength &lt;0-64&gt;</code>
+              <p>Controla a força do dithering.</p>
+              <span>Valores baixos são mais discretos. Valores altos criam mais pontilhado.</span>
+              <button class="button small" data-copy-text="/tiktokwall ditheringstrength 12" type="button">Copiar 12</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall animation &lt;on|off&gt;</code>
+              <p>Liga ou desliga animação padrão do plugin.</p>
+              <span>O bot também pode mandar <code>animate:false</code> por evento. Curtidas usam sem animação por padrão.</span>
+              <button class="button small" data-copy-text="/tiktokwall animation on" type="button">Copiar on</button>
+              <button class="button small" data-copy-text="/tiktokwall animation off" type="button">Copiar off</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall animationspeed &lt;1-32&gt;</code>
+              <p>Define quantas linhas de blocos são renderizadas por tick durante a animação.</p>
+              <span>Número maior é mais rápido. Para 128 ou 256, use 8, 16 ou 32 se quiser transição rápida.</span>
+              <button class="button small" data-copy-text="/tiktokwall animationspeed 8" type="button">Copiar 8</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel command-doc-section">
+          <div class="panel-head">
+            <div>
+              <p class="system-label">Nome e fogos</p>
+              <h2>Texto acima da parede e efeitos.</h2>
+            </div>
+          </div>
+          <div class="command-doc-grid">
+            <article class="command-doc-card">
+              <code>/tiktokwall nameplate &lt;on|off&gt;</code>
+              <p>Liga ou desliga o nome do usuário acima do painel, desenhado com blocos.</p>
+              <span>Use <code>on</code> para lives. Use <code>off</code> se a parede estiver muito alta ou apertada.</span>
+              <button class="button small" data-copy-text="/tiktokwall nameplate on" type="button">Copiar on</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall nameplatematerial &lt;MATERIAL&gt;</code>
+              <p>Escolhe o bloco usado no nome acima da parede.</p>
+              <span>Exemplos bons: <code>BLACK_CONCRETE</code>, <code>WHITE_CONCRETE</code>, <code>YELLOW_CONCRETE</code>.</span>
+              <button class="button small" data-copy-text="/tiktokwall nameplatematerial BLACK_CONCRETE" type="button">Copiar preto</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall fireworks &lt;off|like|gift|any&gt;</code>
+              <p>Define quando o plugin solta fogos perto da parede.</p>
+              <span><code>gift</code> é o recomendado: fogos só para rosa/gift. <code>any</code> solta em tudo.</span>
+              <button class="button small" data-copy-text="/tiktokwall fireworks gift" type="button">Copiar gift</button>
+              <button class="button small" data-copy-text="/tiktokwall fireworks off" type="button">Copiar off</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall fireworkcount &lt;1-20&gt;</code>
+              <p>Define quantos fogos são lançados por evento.</p>
+              <span>Use 3 a 8 para não poluir a tela. Use 10+ só para momentos especiais.</span>
+              <button class="button small" data-copy-text="/tiktokwall fireworkcount 5" type="button">Copiar 5</button>
+            </article>
+            <article class="command-doc-card">
+              <code>/tiktokwall fireworkpower &lt;0-3&gt;</code>
+              <p>Define a força/altura dos fogos.</p>
+              <span><code>1</code> é o padrão. <code>0</code> é mais baixo e discreto.</span>
+              <button class="button small" data-copy-text="/tiktokwall fireworkpower 1" type="button">Copiar 1</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel command-doc-section">
+          <div class="panel-head">
+            <div>
+              <p class="system-label">API local</p>
+              <h2>Endpoints HTTP do plugin.</h2>
+            </div>
+          </div>
+          <div class="command-doc-grid">
+            <article class="command-doc-card">
+              <code>GET /health</code>
+              <p>Retorna se o plugin está online, versão instalada e se a parede está ocupada.</p>
+              <span>O portal usa isso para mostrar versão instalada e status do plugin.</span>
+              <button class="button small" data-copy-text="curl http://127.0.0.1:4567/health" type="button">Copiar curl</button>
+            </article>
+            <article class="command-doc-card">
+              <code>POST /render</code>
+              <p>Recebe avatar em PNG base64, converte pixels para blocos e renderiza na parede.</p>
+              <span>Campos principais: <code>username</code>, <code>nickname</code>, <code>eventType</code>, <code>imageBase64</code>, <code>size</code>, <code>clearAfter</code>, <code>animate</code>.</span>
+              <button class="button small" data-copy-text='{"username":"teste","nickname":"Teste","eventType":"like","eventLabel":"curtiu a live","imageBase64":"...","size":128,"durationSeconds":15,"clearAfter":false,"animate":false}' type="button">Copiar JSON</button>
+            </article>
+            <article class="command-doc-card">
+              <code>POST /test</code>
+              <p>Roda o teste colorido via HTTP, equivalente ao comando <code>/tiktokwall test</code>.</p>
+              <span>Útil para testar sem entrar no Minecraft, desde que o Paper esteja aberto.</span>
+              <button class="button small" data-copy-text="curl -X POST http://127.0.0.1:4567/test" type="button">Copiar curl</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel command-doc-section">
+          <div class="panel-head">
+            <div>
+              <p class="system-label">Receitas</p>
+              <h2>Combinações prontas.</h2>
+            </div>
+          </div>
+          <div class="command-list compact-list">
+            <div class="copy-row"><code>/tiktokwall size 256
+/tiktokwall setup
+/tiktokwall test</code><button class="button small" data-copy-text="/tiktokwall size 256&#10;/tiktokwall setup&#10;/tiktokwall test" type="button">Copiar</button></div>
+            <div class="copy-row"><code>/tiktokwall dithering off
+/tiktokwall animation on
+/tiktokwall animationspeed 16
+/tiktokwall nameplate on
+/tiktokwall fireworks gift</code><button class="button small" data-copy-text="/tiktokwall dithering off&#10;/tiktokwall animation on&#10;/tiktokwall animationspeed 16&#10;/tiktokwall nameplate on&#10;/tiktokwall fireworks gift" type="button">Copiar</button></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>

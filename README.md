@@ -94,6 +94,7 @@ O site em `web/` e um portal estatico com:
 - `index.html`: entrada e atalhos principais;
 - `setup.html`: passo a passo detalhado e mapa do ZIP;
 - `admin.html`: painel da live, configuracao, logs e comandos RCON;
+- `commands.html`: wiki dos comandos do TikTokWall.jar e endpoints HTTP do plugin;
 - `updates.html`: status de versao, historico e passos para atualizar o JAR;
 - `ai.html`: contexto completo para mandar para uma IA;
 - download do pack e do `TikTokWall.jar`;
