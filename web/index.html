@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Portal para instalar e controlar TikTok Minecraft Live com Paper local." />
+  <meta name="description" content="Portal para instalar e operar TikTok Minecraft Live com Paper local." />
   <title>TikTok Minecraft Live</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
@@ -31,11 +31,11 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <p class="system-label">Vercel portal + Minecraft local bridge</p>
-        <h1>Controle a parede TikTok no Minecraft sem abrir código.</h1>
+        <p class="system-label">Portal online + ponte local</p>
+        <h1>Transforme curtidas e rosas em avatares de blocos no Minecraft.</h1>
         <p class="lead">
-          Baixe o pack, prepare o Paper, conecte a ponte local e configure curtidas, rosas,
-          duração, tamanho e testes por uma interface única.
+          Baixe o pack, prepare o Paper e controle o bot pelo navegador. O Minecraft,
+          o plugin e as credenciais continuam no computador de quem está transmitindo.
         </p>
         <div class="actions">
           <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
@@ -45,7 +45,7 @@
       </div>
       <div class="wall-preview" aria-label="Preview de parede em blocos">
         <div class="preview-toolbar">
-          <span>localhost:25565</span>
+          <span>servidor local</span>
           <span id="previewState">bridge offline</span>
         </div>
         <div class="pixel-wall">
@@ -65,7 +65,7 @@
     <section id="download" class="download-band">
       <div>
         <p class="system-label">Primeira instalação</p>
-        <h2>Um ZIP para o amigo, um JAR para o Paper.</h2>
+        <h2>Um ZIP para instalar, um JAR para colocar no Paper.</h2>
       </div>
       <div class="download-actions">
         <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Pack completo</a>
@@ -107,7 +107,7 @@
         <div class="panel-head">
           <div>
             <p class="system-label">Ponte local</p>
-            <h2>Controle o PC do streamer pelo navegador.</h2>
+            <h2>Controle o bot e a parede pelo navegador.</h2>
           </div>
           <button class="button small" id="refreshBridge" type="button">Atualizar</button>
         </div>
@@ -131,7 +131,7 @@
           <button class="button" id="testImage" type="button">Enviar imagem teste</button>
         </div>
         <p class="note">
-          Para conectar esta página ao PC, abra <code id="bridgeScriptName">o script da ponte local</code>.
+          Para conectar esta página ao seu Minecraft, abra <code id="bridgeScriptName">o script da ponte local</code>.
         </p>
       </div>
 
@@ -220,10 +220,10 @@
     <section id="ai" class="workspace ai-grid">
       <div>
         <p class="system-label">Suporte assistido</p>
-        <h2>Contexto pronto para mandar para a IA dele.</h2>
+        <h2>Contexto pronto para mandar para uma IA.</h2>
         <p class="lead slim">
           O botão copia um resumo completo do projeto, instalação, comandos, arquitetura e problemas comuns.
-          Assim ele consegue pedir ajuda para qualquer IA sem explicar tudo do zero.
+          Assim a pessoa consegue pedir ajuda para qualquer IA sem explicar tudo do zero.
         </p>
         <div class="actions">
           <button class="button primary" id="copyAiContext" type="button">Copiar contexto para IA</button>

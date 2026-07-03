@@ -14,11 +14,11 @@ Quando alguem curtir ou mandar uma rosa na live do TikTok:
 4. depois de alguns segundos a parede limpa;
 5. a proxima pessoa da fila aparece.
 
-## Site E Ponte Local
+## Portal Online E Ponte Local
 
-Este projeto pode ter um site hospedado na Vercel. O site ajuda com download, passo a passo, configuracao e suporte.
+Voce pode receber um link publico do portal TikTok Minecraft Live. Ele ajuda com download, passo a passo, configuracao e suporte.
 
-Mas o Minecraft e o bot rodam no seu PC. Por isso voce tambem precisa abrir:
+O Minecraft, o Paper, o plugin e o bot rodam no seu computador. O portal so consegue controlar tudo quando a ponte local esta aberta. Por isso voce tambem precisa abrir:
 
 ```text
 start-interface-windows.bat
@@ -30,7 +30,9 @@ Esse arquivo liga a ponte local em:
 http://127.0.0.1:3333
 ```
 
-Quando a ponte esta aberta, o site hospedado consegue salvar configuracoes, iniciar/parar o bot, mandar teste e enviar comandos seguros para o plugin.
+Quando a ponte esta aberta, o portal consegue salvar configuracoes no seu proprio computador, iniciar/parar o bot, mandar teste e enviar comandos seguros para o plugin.
+
+Sua senha RCON e o arquivo `.env` ficam no computador da live. Nao publique esses arquivos.
 
 ## Programas Necessarios
 
@@ -185,7 +187,7 @@ Depois ele abre:
 http://127.0.0.1:3333
 ```
 
-Se voce recebeu um link do site na Vercel, abra o link tambem. O site deve mostrar que a ponte local esta conectada.
+Se voce recebeu um link do portal online, abra o link tambem. O portal deve mostrar que a ponte local esta conectada.
 
 ## Configurar A Live Na Interface
 
@@ -235,7 +237,7 @@ Se apareceu imagem na parede, a parte Minecraft esta funcionando.
 
 ## Pedir Ajuda Para IA
 
-No site, use o botao:
+No portal, use o botao:
 
 ```text
 Copiar contexto para IA

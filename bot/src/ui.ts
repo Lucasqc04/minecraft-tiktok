@@ -76,7 +76,7 @@ async function main(): Promise<void> {
     } catch (error) {
       sendJson(response, 500, {
         ok: false,
-        message: error instanceof Error ? error.message : "Erro interno"
+        message: error instanceof Error ? error.message : "Erro ao processar a solicitacao"
       });
     }
   });

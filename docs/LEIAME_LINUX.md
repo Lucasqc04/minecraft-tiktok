@@ -4,9 +4,11 @@ Este guia e para usar a integracao no Linux.
 
 ## Como Funciona
 
-O site pode estar hospedado na Vercel, mas o Minecraft, o Paper, o bot e a ponte local rodam no seu PC.
+Voce pode receber um link publico do portal TikTok Minecraft Live. Ele concentra download, passo a passo, configuracao e suporte.
 
-Para o site conseguir controlar o bot local, abra:
+O Minecraft, o Paper, o plugin e o bot rodam no seu computador. O portal so consegue controlar tudo quando a ponte local esta aberta.
+
+Para o portal conseguir controlar o bot local, abra:
 
 ```bash
 ./start-interface-linux.sh
@@ -93,7 +95,9 @@ rcon.port=25575
 rcon.password=troque-essa-senha
 ```
 
-RCON e opcional para a live funcionar, mas permite que o site mande comandos de teste para o Minecraft.
+RCON e opcional para a live funcionar, mas permite que o portal mande comandos de teste para o Minecraft.
+
+Sua senha RCON e o arquivo `.env` ficam no computador da live. Nao publique esses arquivos.
 
 ## Instalar O Plugin
 
@@ -148,7 +152,7 @@ chmod +x start-interface-linux.sh
 
 Na primeira vez ele instala dependencias do bot.
 
-Depois abra o site hospedado na Vercel ou a interface local:
+Depois abra o portal online ou a interface local:
 
 ```text
 http://127.0.0.1:3333
@@ -156,7 +160,7 @@ http://127.0.0.1:3333
 
 ## Configurar A Live
 
-No site/interface:
+No portal/interface:
 
 - `TikTok username sem @`: conta que esta ao vivo.
 - `Tamanho do avatar`: `128`.
@@ -173,7 +177,7 @@ Se a imagem apareceu na parede, clique em `Iniciar bot` quando a live estiver ab
 
 ## Pedir Ajuda Para IA
 
-No site, clique em:
+No portal, clique em:
 
 ```text
 Copiar contexto para IA
@@ -195,7 +199,7 @@ O tamanho do bot e do plugin nao batem:
 /tiktokwall size 128
 ```
 
-E no site:
+E no portal:
 
 ```text
 Tamanho do avatar = 128
@@ -207,7 +211,7 @@ Tamanho do avatar = 128
 /tiktokwall dithering off
 ```
 
-### Site nao conecta na ponte local
+### Portal nao conecta na ponte local
 
 Confira:
 

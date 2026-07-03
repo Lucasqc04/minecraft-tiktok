@@ -14,10 +14,10 @@ O projeto tem:
 
 - `bot/`: bot Node.js + TypeScript, com interface web local.
 - `minecraft-plugin/`: plugin Paper Java `TikTokWall`.
-- `web/`: portal estatico para subir na Vercel.
+- `web/`: portal online estatico para download, setup guiado e controle.
 - `start-interface-windows.bat`: atalho para abrir a interface no Windows.
 - `start-interface-linux.sh`: atalho para abrir a interface no Linux.
-- `docs/LEIAME_WINDOWS.md`: passo a passo Windows para streamer que nao programa.
+- `docs/LEIAME_WINDOWS.md`: passo a passo Windows para criador que nao programa.
 - `docs/LEIAME_LINUX.md`: passo a passo Linux.
 
 ## Para Quem Vai Usar No Windows Ou Linux
@@ -78,7 +78,7 @@ Ela permite:
 - ver logs;
 - enviar alguns comandos `/tiktokwall` por RCON, se a senha RCON estiver configurada.
 
-## Portal Na Vercel
+## Portal Online
 
 O site em `web/` e um portal estatico com:
 
@@ -87,16 +87,18 @@ O site em `web/` e um portal estatico com:
 - configuracao visual da live;
 - controle do bot pela ponte local;
 - comandos Minecraft;
-- botao para copiar contexto completo para uma IA ajudar o streamer.
+- botao para copiar contexto completo para uma IA ajudar o criador.
 
-Para publicar:
+Para publicar em uma hospedagem estatica:
 
 1. Suba este repositorio no GitHub.
-2. Importe na Vercel.
+2. Importe o repositorio na plataforma de hospedagem.
 3. Defina `Root Directory` como `web`.
 4. Use framework `Other` e sem build command.
 
-O portal hospedado fala com a ponte local em `http://127.0.0.1:3333`, entao o streamer ainda precisa abrir `start-interface-windows.bat` no Windows ou `./start-interface-linux.sh` no Linux.
+O portal online nao roda o Minecraft na nuvem. Ele se comunica, pelo navegador, com a ponte local em `http://127.0.0.1:3333`. Por isso o criador precisa abrir `start-interface-windows.bat` no Windows ou `./start-interface-linux.sh` no Linux antes de controlar o bot pelo portal.
+
+As configuracoes ficam no arquivo `bot/.env` do computador da live. O arquivo real de ambiente nao deve ser publicado.
 
 ## Desenvolvimento
 

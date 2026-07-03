@@ -1,10 +1,10 @@
-# TikTok Minecraft Live Web Portal
+# TikTok Minecraft Live Portal
 
-Site estatico pronto para Vercel.
+Site estatico do portal publico do TikTok Minecraft Live.
 
-## Deploy
+## Publicar
 
-No painel da Vercel:
+Em uma hospedagem estatica:
 
 1. Importe o repositorio do GitHub.
 2. Em `Root Directory`, escolha `web`.
@@ -13,13 +13,13 @@ No painel da Vercel:
 5. Output directory: vazio.
 6. Deploy.
 
-O site usa a ponte local em:
+O portal usa a ponte local em:
 
 ```text
 http://127.0.0.1:3333
 ```
 
-Para o controle funcionar, o streamer precisa abrir a ponte local no PC dele.
+Para o controle funcionar, a pessoa que vai transmitir precisa abrir a ponte local no computador da live.
 
 Windows:
 

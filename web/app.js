@@ -38,7 +38,7 @@ const platformContent = {
       {
         label: "Passo 2",
         title: "Instale Java JDK, Node.js LTS e baixe o Paper.",
-        body: "O Minecraft, o Paper e o plugin precisam estar na mesma versão de jogo. Node roda o bot e a ponte local.",
+        body: "O Minecraft, o Paper e o plugin precisam estar na mesma versão de jogo. O bot roda neste computador e conversa com o plugin.",
         commands: ["https://adoptium.net/temurin/releases", "https://nodejs.org/en/download", "https://papermc.io/downloads/paper"]
       },
       {
@@ -56,7 +56,7 @@ const platformContent = {
       {
         label: "Passo 5",
         title: "Abra a ponte local e salve a configuração da live.",
-        body: "A ponte local é o start-interface-windows.bat. Ela permite que este site salve .env, rode teste e inicie o bot.",
+        body: "A ponte local é o start-interface-windows.bat. Ela salva a configuração neste computador, roda testes e inicia o bot.",
         commands: ["start-interface-windows.bat", "http://127.0.0.1:3333", "Salvar configuracao"]
       },
       {
@@ -85,7 +85,7 @@ const platformContent = {
       {
         label: "Passo 2",
         title: "Instale Java JDK, Node.js LTS e baixe o Paper.",
-        body: "Confirme node, npm e java no terminal. O Paper deve ser da mesma versão do Minecraft.",
+        body: "Confirme node, npm e java no terminal. O Paper deve usar a mesma versão do Minecraft.",
         commands: ["node -v", "npm -v", "java -version", "https://papermc.io/downloads/paper"]
       },
       {
@@ -103,7 +103,7 @@ const platformContent = {
       {
         label: "Passo 5",
         title: "Abra a ponte local e salve a configuração da live.",
-        body: "A ponte local é o start-interface-linux.sh. Ela permite que este site salve .env, rode teste e inicie o bot.",
+        body: "A ponte local é o start-interface-linux.sh. Ela salva a configuração neste computador, roda testes e inicia o bot.",
         commands: ["chmod +x start-interface-linux.sh", "./start-interface-linux.sh", "http://127.0.0.1:3333"]
       },
       {
@@ -203,7 +203,7 @@ async function refreshBridge() {
     botValue.textContent = "-";
     pluginValue.textContent = "-";
     previewState.textContent = "bridge offline";
-    logs.textContent = `Abra ${platformContent[selectedPlatform].bridgeScript} no PC do streamer para conectar este site ao Minecraft local.`;
+    logs.textContent = `Abra ${platformContent[selectedPlatform].bridgeScript} no computador da live para conectar o portal ao Minecraft local.`;
     fillForm(currentConfig);
   }
 }
@@ -216,7 +216,7 @@ async function saveConfig(event) {
     body: JSON.stringify(data)
   });
   fillForm(result.config);
-  showToast("Configuração salva na ponte local.");
+  showToast("Configuração salva no computador local.");
 }
 
 async function botAction(path, message) {
@@ -303,7 +303,7 @@ function quickStartText() {
         "7. Reinicie o Paper e entre em localhost.",
         "8. Rode /tiktokwall setup.",
         "9. Abra ./start-interface-linux.sh.",
-        "10. Salve o username TikTok no site.",
+        "10. Salve o username TikTok no portal.",
         "11. Clique Enviar imagem teste e depois Iniciar bot."
       ]
     : [
@@ -316,7 +316,7 @@ function quickStartText() {
         "7. Reinicie o Paper e entre em localhost.",
         "8. Rode /tiktokwall setup.",
         "9. Abra start-interface-windows.bat.",
-        "10. Salve o username TikTok no site.",
+        "10. Salve o username TikTok no portal.",
         "11. Clique Enviar imagem teste e depois Iniciar bot."
       ];
 
@@ -334,11 +334,11 @@ function aiContextText() {
   return `Quero ajuda com o projeto TikTok Minecraft Live.
 
 Arquitetura:
-- Site Vercel: portal visual de download, setup e controle.
-- Ponte local: ${platformContent[selectedPlatform].bridgeScript} abre http://127.0.0.1:3333 no PC.
+- Portal online: tela de download, setup guiado e controle. Ele nao guarda credenciais; conversa com a ponte local aberta no computador da live.
+- Ponte local: ${platformContent[selectedPlatform].bridgeScript} abre http://127.0.0.1:3333 no computador.
 - Bot Node: conecta na live TikTok, pega curtidas/rosas e baixa avatar.
 - Plugin Paper: TikTokWall.jar roda no Minecraft local e renderiza avatar em blocos.
-- Minecraft: servidor Paper local, jogador entra em localhost.
+- Minecraft: servidor Paper local; o jogador entra em localhost.
 - Sistema escolhido no portal: ${platformContent[selectedPlatform].name}
 
 Config atual:
