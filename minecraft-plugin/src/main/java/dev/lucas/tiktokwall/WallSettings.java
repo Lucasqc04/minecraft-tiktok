@@ -20,6 +20,13 @@ public final class WallSettings {
     private int ditheringStrength;
     private boolean animationEnabled;
     private int animationRowsPerTick;
+    private boolean nameplateEnabled;
+    private Material nameplateMaterial;
+    private int nameplateMaxChars;
+    private int nameplateYOffset;
+    private String fireworksMode;
+    private int fireworksCount;
+    private int fireworksPower;
     private boolean setupAutoOnJoin;
     private boolean setupOnlyOnce;
     private boolean setupCompleted;
@@ -63,6 +70,13 @@ public final class WallSettings {
         settings.ditheringStrength = clamp(config.getInt("ditheringStrength", 18), 0, 64);
         settings.animationEnabled = config.getBoolean("animation.enabled", true);
         settings.animationRowsPerTick = clamp(config.getInt("animation.rowsPerTick", 4), 1, 32);
+        settings.nameplateEnabled = config.getBoolean("nameplate.enabled", true);
+        settings.nameplateMaterial = parseMaterial(config.getString("nameplate.material", "BLACK_CONCRETE"), Material.BLACK_CONCRETE);
+        settings.nameplateMaxChars = clamp(config.getInt("nameplate.maxChars", 16), 4, 32);
+        settings.nameplateYOffset = clamp(config.getInt("nameplate.yOffset", 3), 2, 16);
+        settings.fireworksMode = normalizeFireworksMode(config.getString("fireworks.mode", "gift"));
+        settings.fireworksCount = clamp(config.getInt("fireworks.count", 5), 1, 20);
+        settings.fireworksPower = clamp(config.getInt("fireworks.power", 1), 0, 3);
         settings.setupAutoOnJoin = config.getBoolean("setup.autoOnJoin", true);
         settings.setupOnlyOnce = config.getBoolean("setup.onlyOnce", true);
         settings.setupCompleted = config.getBoolean("setup.completed", false);
@@ -103,6 +117,13 @@ public final class WallSettings {
         config.set("ditheringStrength", ditheringStrength);
         config.set("animation.enabled", animationEnabled);
         config.set("animation.rowsPerTick", animationRowsPerTick);
+        config.set("nameplate.enabled", nameplateEnabled);
+        config.set("nameplate.material", nameplateMaterial.name());
+        config.set("nameplate.maxChars", nameplateMaxChars);
+        config.set("nameplate.yOffset", nameplateYOffset);
+        config.set("fireworks.mode", fireworksMode);
+        config.set("fireworks.count", fireworksCount);
+        config.set("fireworks.power", fireworksPower);
         config.set("setup.autoOnJoin", setupAutoOnJoin);
         config.set("setup.onlyOnce", setupOnlyOnce);
         config.set("setup.completed", setupCompleted);
@@ -128,10 +149,23 @@ public final class WallSettings {
     }
 
     public static int normalizeSize(int size) {
-        if (size == 32 || size == 48 || size == 64 || size == 128) {
+        if (size == 32 || size == 48 || size == 64 || size == 128 || size == 256) {
             return size;
         }
-        return 48;
+        return 128;
+    }
+
+    public static String normalizeFireworksMode(String value) {
+        if (value == null) {
+            return "gift";
+        }
+
+        String normalized = value.trim().toLowerCase();
+        if (normalized.equals("off") || normalized.equals("like") || normalized.equals("gift") || normalized.equals("any")) {
+            return normalized;
+        }
+
+        return "gift";
     }
 
     public static BlockFace parseFacing(String value) {
@@ -223,6 +257,34 @@ public final class WallSettings {
 
     public int getAnimationRowsPerTick() {
         return animationRowsPerTick;
+    }
+
+    public boolean isNameplateEnabled() {
+        return nameplateEnabled;
+    }
+
+    public Material getNameplateMaterial() {
+        return nameplateMaterial;
+    }
+
+    public int getNameplateMaxChars() {
+        return nameplateMaxChars;
+    }
+
+    public int getNameplateYOffset() {
+        return nameplateYOffset;
+    }
+
+    public String getFireworksMode() {
+        return fireworksMode;
+    }
+
+    public int getFireworksCount() {
+        return fireworksCount;
+    }
+
+    public int getFireworksPower() {
+        return fireworksPower;
     }
 
     public boolean isSetupAutoOnJoin() {
@@ -349,6 +411,31 @@ public final class WallSettings {
 
     public void setAnimationRowsPerTick(int animationRowsPerTick) {
         this.animationRowsPerTick = clamp(animationRowsPerTick, 1, 32);
+        save();
+    }
+
+    public void setNameplateEnabled(boolean nameplateEnabled) {
+        this.nameplateEnabled = nameplateEnabled;
+        save();
+    }
+
+    public void setNameplateMaterial(Material nameplateMaterial) {
+        this.nameplateMaterial = nameplateMaterial;
+        save();
+    }
+
+    public void setFireworksMode(String fireworksMode) {
+        this.fireworksMode = normalizeFireworksMode(fireworksMode);
+        save();
+    }
+
+    public void setFireworksCount(int fireworksCount) {
+        this.fireworksCount = clamp(fireworksCount, 1, 20);
+        save();
+    }
+
+    public void setFireworksPower(int fireworksPower) {
+        this.fireworksPower = clamp(fireworksPower, 0, 3);
         save();
     }
 

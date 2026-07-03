@@ -3,6 +3,7 @@ package dev.lucas.tiktokwall;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -23,13 +24,21 @@ public final class TikTokWallCommand implements CommandExecutor, TabCompleter {
         "dithering",
         "ditheringstrength",
         "animation",
-        "animationspeed"
+        "animationspeed",
+        "nameplate",
+        "nameplatematerial",
+        "fireworks",
+        "fireworkcount",
+        "fireworkpower"
     );
-    private static final List<String> SIZES = List.of("32", "48", "64", "128");
+    private static final List<String> SIZES = List.of("32", "48", "64", "128", "256");
     private static final List<String> FACINGS = List.of("NORTH", "SOUTH", "EAST", "WEST");
     private static final List<String> TOGGLES = List.of("on", "off");
     private static final List<String> DITHERING_STRENGTHS = List.of("0", "8", "12", "18", "24", "32");
     private static final List<String> ANIMATION_SPEEDS = List.of("1", "2", "4", "8", "16", "32");
+    private static final List<String> FIREWORK_MODES = List.of("off", "like", "gift", "any");
+    private static final List<String> FIREWORK_COUNTS = List.of("1", "3", "5", "8", "12", "20");
+    private static final List<String> FIREWORK_POWERS = List.of("0", "1", "2", "3");
 
     private final TikTokWallPlugin plugin;
     private final WallSettings settings;
@@ -62,6 +71,11 @@ public final class TikTokWallCommand implements CommandExecutor, TabCompleter {
             case "ditheringstrength" -> handleDitheringStrength(sender, args);
             case "animation" -> handleAnimation(sender, args);
             case "animationspeed" -> handleAnimationSpeed(sender, args);
+            case "nameplate" -> handleNameplate(sender, args);
+            case "nameplatematerial" -> handleNameplateMaterial(sender, args);
+            case "fireworks" -> handleFireworks(sender, args);
+            case "fireworkcount" -> handleFireworkCount(sender, args);
+            case "fireworkpower" -> handleFireworkPower(sender, args);
             default -> sendUsage(sender);
         }
 
@@ -109,7 +123,7 @@ public final class TikTokWallCommand implements CommandExecutor, TabCompleter {
 
     private void handleSize(CommandSender sender, String[] args) {
         if (args.length < 2 || !SIZES.contains(args[1])) {
-            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall size <32|48|64|128>");
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall size <32|48|64|128|256>");
             return;
         }
 
@@ -132,6 +146,13 @@ public final class TikTokWallCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GRAY + "Animation: " + ChatColor.WHITE
             + (settings.isAnimationEnabled() ? "on" : "off")
             + ", rowsPerTick=" + settings.getAnimationRowsPerTick());
+        sender.sendMessage(ChatColor.GRAY + "Nameplate: " + ChatColor.WHITE
+            + (settings.isNameplateEnabled() ? "on" : "off")
+            + ", material=" + settings.getNameplateMaterial().name());
+        sender.sendMessage(ChatColor.GRAY + "Fireworks: " + ChatColor.WHITE
+            + settings.getFireworksMode()
+            + ", count=" + settings.getFireworksCount()
+            + ", power=" + settings.getFireworksPower());
         sender.sendMessage(ChatColor.GRAY + "HTTP: " + ChatColor.WHITE + "127.0.0.1:" + settings.getHttpPort());
         sender.sendMessage(ChatColor.GRAY + "Auto setup: " + ChatColor.WHITE
             + (settings.isSetupAutoOnJoin() ? "on" : "off")
@@ -218,8 +239,91 @@ public final class TikTokWallCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GREEN + "Velocidade da animacao definida para " + rowsPerTick + " linhas por tick.");
     }
 
+    private void handleNameplate(CommandSender sender, String[] args) {
+        if (args.length < 2 || !TOGGLES.contains(args[1].toLowerCase())) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall nameplate <on|off>");
+            return;
+        }
+
+        boolean enabled = "on".equalsIgnoreCase(args[1]);
+        settings.setNameplateEnabled(enabled);
+        sender.sendMessage(ChatColor.GREEN + "Nome acima da parede " + (enabled ? "ligado" : "desligado") + ".");
+    }
+
+    private void handleNameplateMaterial(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall nameplatematerial <MATERIAL>");
+            return;
+        }
+
+        Material material = Material.matchMaterial(args[1].trim().toUpperCase());
+        if (material == null || !material.isBlock()) {
+            sender.sendMessage(ChatColor.RED + "Material invalido.");
+            return;
+        }
+
+        settings.setNameplateMaterial(material);
+        sender.sendMessage(ChatColor.GREEN + "Material do nome definido para " + material.name() + ".");
+    }
+
+    private void handleFireworks(CommandSender sender, String[] args) {
+        if (args.length < 2 || !FIREWORK_MODES.contains(args[1].toLowerCase())) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall fireworks <off|like|gift|any>");
+            return;
+        }
+
+        settings.setFireworksMode(args[1]);
+        sender.sendMessage(ChatColor.GREEN + "Fogos definidos para modo " + settings.getFireworksMode() + ".");
+    }
+
+    private void handleFireworkCount(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall fireworkcount <1-20>");
+            return;
+        }
+
+        int count;
+        try {
+            count = Integer.parseInt(args[1]);
+        } catch (NumberFormatException error) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall fireworkcount <1-20>");
+            return;
+        }
+
+        if (count < 1 || count > 20) {
+            sender.sendMessage(ChatColor.RED + "Use um valor entre 1 e 20.");
+            return;
+        }
+
+        settings.setFireworksCount(count);
+        sender.sendMessage(ChatColor.GREEN + "Quantidade de fogos definida para " + count + ".");
+    }
+
+    private void handleFireworkPower(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall fireworkpower <0-3>");
+            return;
+        }
+
+        int power;
+        try {
+            power = Integer.parseInt(args[1]);
+        } catch (NumberFormatException error) {
+            sender.sendMessage(ChatColor.RED + "Uso: /tiktokwall fireworkpower <0-3>");
+            return;
+        }
+
+        if (power < 0 || power > 3) {
+            sender.sendMessage(ChatColor.RED + "Use um valor entre 0 e 3.");
+            return;
+        }
+
+        settings.setFireworksPower(power);
+        sender.sendMessage(ChatColor.GREEN + "Potencia dos fogos definida para " + power + ".");
+    }
+
     private void sendUsage(CommandSender sender) {
-        sender.sendMessage(ChatColor.YELLOW + "Uso: /tiktokwall <setup|setpos|clear|test|size|info|facing|dithering|ditheringstrength|animation|animationspeed>");
+        sender.sendMessage(ChatColor.YELLOW + "Uso: /tiktokwall <setup|setpos|clear|test|size|info|facing|dithering|animation|nameplate|fireworks>");
     }
 
     private String formatResponse(RenderResponse response) {
@@ -255,6 +359,26 @@ public final class TikTokWallCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 2 && "animationspeed".equalsIgnoreCase(args[0])) {
             return filter(ANIMATION_SPEEDS, args[1]);
+        }
+
+        if (args.length == 2 && "nameplate".equalsIgnoreCase(args[0])) {
+            return filter(TOGGLES, args[1]);
+        }
+
+        if (args.length == 2 && "nameplatematerial".equalsIgnoreCase(args[0])) {
+            return filter(List.of("BLACK_CONCRETE", "WHITE_CONCRETE", "YELLOW_CONCRETE", "RED_CONCRETE"), args[1]);
+        }
+
+        if (args.length == 2 && "fireworks".equalsIgnoreCase(args[0])) {
+            return filter(FIREWORK_MODES, args[1]);
+        }
+
+        if (args.length == 2 && "fireworkcount".equalsIgnoreCase(args[0])) {
+            return filter(FIREWORK_COUNTS, args[1]);
+        }
+
+        if (args.length == 2 && "fireworkpower".equalsIgnoreCase(args[0])) {
+            return filter(FIREWORK_POWERS, args[1]);
         }
 
         return List.of();

@@ -1,14 +1,26 @@
 {
   "latest": {
-    "version": "1.0.5",
+    "version": "1.1.0",
     "date": "2026-07-03",
     "minecraft": "26.2",
     "java": "25",
     "jar": "./downloads/TikTokWall.jar",
     "pack": "./downloads/tiktok-minecraft-live.zip",
-    "summary": "Correcao na ponte local para iniciar o bot com o Username TikTok salvo no painel."
+    "summary": "Mosaico de curtidas 1x1 a 4x4, gifts em tela cheia, nome em blocos, fogos configuraveis e tamanho 256."
   },
   "history": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-03",
+      "title": "Mosaico, nome e fogos",
+      "changes": [
+        "Curtidas agora podem preencher um mosaico 1x1, 2x2, 3x3 ou 4x4 com os ultimos usuarios.",
+        "Gifts podem ocupar o painel inteiro e depois restaurar o mosaico de curtidas.",
+        "O nome do usuario aparece acima da parede usando blocos.",
+        "Fogos configuraveis por evento: desligado, curtida, gift ou qualquer evento.",
+        "Tamanho 256 adicionado para paredes maiores."
+      ]
+    },
     {
       "version": "1.0.5",
       "date": "2026-07-03",

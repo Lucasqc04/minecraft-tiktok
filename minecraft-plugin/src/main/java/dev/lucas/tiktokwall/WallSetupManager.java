@@ -47,10 +47,11 @@ public final class WallSetupManager implements Listener {
         prepareWorld(world);
 
         int size = settings.getDefaultSize();
+        int reservedAbove = settings.isNameplateEnabled() ? settings.getNameplateYOffset() + 10 : 4;
         int playerX = player.getLocation().getBlockX();
         int playerY = player.getLocation().getBlockY();
         int playerZ = player.getLocation().getBlockZ();
-        int groundY = clamp(playerY - 1, world.getMinHeight() + 1, world.getMaxHeight() - size - 6);
+        int groundY = clamp(playerY - 1, world.getMinHeight() + 1, world.getMaxHeight() - size - reservedAbove - 2);
         int wallZ = playerZ - settings.getSetupWallDistance();
         int originX = playerX - (size / 2);
         int originY = groundY + size + 1;
@@ -59,7 +60,7 @@ public final class WallSetupManager implements Listener {
         int minX = originX - settings.getSetupClearPadding();
         int maxX = originX + size + settings.getSetupClearPadding();
         int minY = groundY;
-        int maxY = Math.min(world.getMaxHeight() - 1, originY + 4);
+        int maxY = Math.min(world.getMaxHeight() - 1, originY + reservedAbove);
         int minZ = wallZ - 4;
         int maxZ = wallZ + settings.getSetupClearDepth();
 

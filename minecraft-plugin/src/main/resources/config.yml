@@ -13,6 +13,15 @@ ditheringStrength: 18
 animation:
   enabled: true
   rowsPerTick: 4
+nameplate:
+  enabled: true
+  material: BLACK_CONCRETE
+  maxChars: 16
+  yOffset: 3
+fireworks:
+  mode: gift
+  count: 5
+  power: 1
 setup:
   autoOnJoin: true
   onlyOnce: true

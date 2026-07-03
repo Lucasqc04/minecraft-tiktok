@@ -6,6 +6,9 @@ const defaultConfig = {
   MINECRAFT_PLUGIN_PORT: "4567",
   AVATAR_SIZE: "128",
   AVATAR_DIR: "./avatars",
+  LIKE_GRID_SIZE: "3",
+  GIFT_FULL_PANEL: "true",
+  RESTORE_LIKE_GRID_AFTER_GIFT: "true",
   DURATION_SECONDS: "15",
   ENABLE_LIKE_AVATAR: "true",
   LIKE_AVATAR_COOLDOWN_MS: "5000",
@@ -19,13 +22,13 @@ const defaultConfig = {
 
 const fallbackReleaseData = {
   latest: {
-    version: "1.0.5",
+    version: "1.1.0",
     date: "2026-07-03",
     minecraft: "26.2",
     java: "25",
     jar: "./downloads/TikTokWall.jar",
     pack: "./downloads/tiktok-minecraft-live.zip",
-    summary: "Correcao na ponte local para iniciar o bot com o Username TikTok salvo no painel."
+    summary: "Mosaico de curtidas 1x1 a 4x4, gifts em tela cheia, nome em blocos, fogos configuraveis e tamanho 256."
   },
   history: []
 };
@@ -33,6 +36,8 @@ const fallbackReleaseData = {
 const sharedCommands = [
   "/tiktokwall setup",
   "/tiktokwall size 128",
+  "/tiktokwall nameplate on",
+  "/tiktokwall fireworks gift",
   "/tiktokwall dithering off",
   "/tiktokwall animation on",
   "/tiktokwall animationspeed 8",
@@ -433,6 +438,7 @@ function commandsText() {
     "/tiktokwall size 48",
     "/tiktokwall size 64",
     "/tiktokwall size 128",
+    "/tiktokwall size 256",
     "/tiktokwall dithering on",
     "/tiktokwall dithering off",
     "/tiktokwall ditheringstrength 12",
@@ -441,6 +447,15 @@ function commandsText() {
     "/tiktokwall animationspeed 4",
     "/tiktokwall animationspeed 8",
     "/tiktokwall animationspeed 16",
+    "/tiktokwall nameplate on",
+    "/tiktokwall nameplate off",
+    "/tiktokwall nameplatematerial BLACK_CONCRETE",
+    "/tiktokwall fireworks off",
+    "/tiktokwall fireworks like",
+    "/tiktokwall fireworks gift",
+    "/tiktokwall fireworks any",
+    "/tiktokwall fireworkcount 5",
+    "/tiktokwall fireworkcount 10",
     "/tiktokwall facing NORTH",
     "/tiktokwall facing SOUTH",
     "/tiktokwall facing EAST",

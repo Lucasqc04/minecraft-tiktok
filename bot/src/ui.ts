@@ -24,6 +24,9 @@ const CONFIG_KEYS = [
   "MINECRAFT_PLUGIN_PORT",
   "AVATAR_SIZE",
   "AVATAR_DIR",
+  "LIKE_GRID_SIZE",
+  "GIFT_FULL_PANEL",
+  "RESTORE_LIKE_GRID_AFTER_GIFT",
   "DURATION_SECONDS",
   "ENABLE_LIKE_AVATAR",
   "LIKE_AVATAR_COOLDOWN_MS",
@@ -43,6 +46,9 @@ const DEFAULT_CONFIG: EnvMap = {
   MINECRAFT_PLUGIN_PORT: "4567",
   AVATAR_SIZE: "128",
   AVATAR_DIR: "./avatars",
+  LIKE_GRID_SIZE: "3",
+  GIFT_FULL_PANEL: "true",
+  RESTORE_LIKE_GRID_AFTER_GIFT: "true",
   DURATION_SECONDS: "15",
   ENABLE_LIKE_AVATAR: "true",
   LIKE_AVATAR_COOLDOWN_MS: "5000",
@@ -267,10 +273,11 @@ function normalizeConfigValue(key: string, value: unknown): string {
 
 function validateConfig(config: EnvMap): void {
   const avatarSize = Number.parseInt(config.AVATAR_SIZE, 10);
-  if (![32, 48, 64, 128].includes(avatarSize)) {
-    throw new Error("AVATAR_SIZE deve ser 32, 48, 64 ou 128");
+  if (![32, 48, 64, 128, 256].includes(avatarSize)) {
+    throw new Error("AVATAR_SIZE deve ser 32, 48, 64, 128 ou 256");
   }
 
+  validateInteger(config.LIKE_GRID_SIZE, "Grid de curtidas", 1, 4);
   validateInteger(config.MINECRAFT_PLUGIN_PORT, "Porta do plugin", 1, 65535);
   validateInteger(config.RCON_PORT, "Porta RCON", 1, 65535);
   validateInteger(config.DURATION_SECONDS, "Duracao", 1, 600);
@@ -700,6 +707,15 @@ function renderPage(): string {
               <option>48</option>
               <option>64</option>
               <option>128</option>
+              <option>256</option>
+            </select>
+          </label>
+          <label>Grid de curtidas
+            <select name="LIKE_GRID_SIZE">
+              <option value="1">1x1</option>
+              <option value="2">2x2</option>
+              <option value="3">3x3</option>
+              <option value="4">4x4</option>
             </select>
           </label>
           <label>Duracao na parede em segundos
@@ -735,6 +751,8 @@ function renderPage(): string {
         </div>
         <div class="row" style="margin-top:14px">
           <label class="check"><input name="ENABLE_LIKE_AVATAR" type="checkbox" /> Curtida mostra avatar</label>
+          <label class="check"><input name="GIFT_FULL_PANEL" type="checkbox" /> Gift em tela cheia</label>
+          <label class="check"><input name="RESTORE_LIKE_GRID_AFTER_GIFT" type="checkbox" /> Restaurar mosaico apos gift</label>
           <label class="check"><input name="ENABLE_EXTENDED_GIFT_INFO" type="checkbox" /> Gift info avancado</label>
         </div>
         <div class="row" style="margin-top:14px">
@@ -760,6 +778,11 @@ function renderPage(): string {
           <button data-rcon="tiktokwall test" type="button">Testar parede</button>
           <button data-rcon="tiktokwall clear" type="button">Limpar parede</button>
           <button data-rcon="tiktokwall size 128" type="button">Size 128</button>
+          <button data-rcon="tiktokwall size 256" type="button">Size 256</button>
+          <button data-rcon="tiktokwall nameplate on" type="button">Nome on</button>
+          <button data-rcon="tiktokwall fireworks gift" type="button">Fogos gift</button>
+          <button data-rcon="tiktokwall fireworks any" type="button">Fogos sempre</button>
+          <button data-rcon="tiktokwall fireworks off" type="button">Fogos off</button>
           <button data-rcon="tiktokwall dithering off" type="button">Dithering off</button>
           <button data-rcon="tiktokwall animation on" type="button">Animacao on</button>
           <button data-rcon="tiktokwall animationspeed 8" type="button">Animacao 8</button>

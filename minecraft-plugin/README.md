@@ -45,6 +45,15 @@ ditheringStrength: 18
 animation:
   enabled: true
   rowsPerTick: 4
+nameplate:
+  enabled: true
+  material: BLACK_CONCRETE
+  maxChars: 16
+  yOffset: 3
+fireworks:
+  mode: gift
+  count: 5
+  power: 1
 setup:
   autoOnJoin: true
   onlyOnce: true
@@ -96,13 +105,18 @@ Com `setup.autoOnJoin: true`, o primeiro join depois do restart prepara tudo aut
 /tiktokwall setpos
 /tiktokwall clear
 /tiktokwall test
-/tiktokwall size <32|48|64|128>
+/tiktokwall size <32|48|64|128|256>
 /tiktokwall info
 /tiktokwall facing <NORTH|SOUTH|EAST|WEST>
 /tiktokwall dithering <on|off>
 /tiktokwall ditheringstrength <0-64>
 /tiktokwall animation <on|off>
 /tiktokwall animationspeed <1-32>
+/tiktokwall nameplate <on|off>
+/tiktokwall nameplatematerial <MATERIAL>
+/tiktokwall fireworks <off|like|gift|any>
+/tiktokwall fireworkcount <1-20>
+/tiktokwall fireworkpower <0-3>
 ```
 
 Use `/tiktokwall setup` para refazer a preparação automática a qualquer momento. Ele usa a posição atual do jogador como referência e cria a parede alguns blocos à frente.
@@ -134,15 +148,19 @@ Use `/tiktokwall animation on` para a imagem entrar de cima para baixo e limpar 
 
 Valores maiores deixam a transição mais rápida. Para `128x128`, `4` ou `8` costuma ficar bom.
 
-O tamanho máximo suportado agora é `128x128`. Para testar:
+Use `/tiktokwall nameplate on` para mostrar o nome do último usuário acima da parede com blocos.
+
+Use `/tiktokwall fireworks gift` para fogos só em gifts, `/tiktokwall fireworks like` para curtidas, `/tiktokwall fireworks any` para todos os eventos ou `/tiktokwall fireworks off` para desligar.
+
+O tamanho máximo suportado agora é `256x256`. Para testar:
 
 ```text
-/tiktokwall size 128
+/tiktokwall size 256
 /tiktokwall setup
 /tiktokwall test
 ```
 
-Se for usar o bot em `128`, ajuste também `AVATAR_SIZE=128` no `bot/.env` e reinicie o bot.
+Se for usar o bot em `256`, ajuste também `AVATAR_SIZE=256` no `bot/.env` e reinicie o bot.
 
 ## Endpoints HTTP
 
@@ -162,7 +180,8 @@ Body de `/render`:
   "eventLabel": "curtiu a live",
   "imageBase64": "png_base64",
   "size": 48,
-  "durationSeconds": 15
+  "durationSeconds": 15,
+  "clearAfter": true
 }
 ```
 

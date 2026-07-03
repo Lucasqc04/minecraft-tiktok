@@ -152,6 +152,66 @@ export async function createFakeAvatar(params: {
   };
 }
 
+export async function createAvatarGrid(params: {
+  avatars: Buffer[];
+  username: string;
+  size: number;
+  gridSize: number;
+  avatarDir: string;
+}): Promise<ProcessedAvatar> {
+  await fs.mkdir(params.avatarDir, { recursive: true });
+
+  const gridSize = Math.min(4, Math.max(1, params.gridSize));
+  const maxItems = gridSize * gridSize;
+  const gap = gridSize > 1 ? Math.max(1, Math.floor(params.size / 128)) : 0;
+
+  const composites = await Promise.all(
+    params.avatars.slice(0, maxItems).map(async (avatar, index) => {
+      const col = index % gridSize;
+      const row = Math.floor(index / gridSize);
+      const left = Math.floor((col * params.size) / gridSize);
+      const top = Math.floor((row * params.size) / gridSize);
+      const right = Math.floor(((col + 1) * params.size) / gridSize);
+      const bottom = Math.floor(((row + 1) * params.size) / gridSize);
+      const width = Math.max(1, right - left - gap * 2);
+      const height = Math.max(1, bottom - top - gap * 2);
+
+      return {
+        input: await sharp(avatar)
+          .resize(width, height, {
+            fit: "cover",
+            position: "center"
+          })
+          .png()
+          .toBuffer(),
+        left: left + gap,
+        top: top + gap
+      };
+    })
+  );
+
+  const pngBuffer = await sharp({
+    create: {
+      width: params.size,
+      height: params.size,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 1 }
+    }
+  })
+    .composite(composites)
+    .png()
+    .toBuffer();
+
+  const filePath = path.join(params.avatarDir, `${safeFilePart(params.username)}-grid-${Date.now()}.png`);
+  await fs.writeFile(filePath, pngBuffer);
+
+  return {
+    filePath,
+    pngBuffer,
+    imageBase64: pngBuffer.toString("base64")
+  };
+}
+
 async function processImageBuffer(source: Buffer, size: number): Promise<Buffer> {
   return sharp(source)
     .resize(size, size, {

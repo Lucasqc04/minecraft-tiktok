@@ -6,6 +6,7 @@ export interface RenderPayload {
   imageBase64: string;
   size: number;
   durationSeconds: number;
+  clearAfter?: boolean;
 }
 
 export interface MinecraftClientOptions {

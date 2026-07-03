@@ -92,6 +92,15 @@
               <option>48</option>
               <option>64</option>
               <option>128</option>
+              <option>256</option>
+            </select>
+          </label>
+          <label>Grid de curtidas
+            <select name="LIKE_GRID_SIZE">
+              <option value="1">1x1</option>
+              <option value="2">2x2</option>
+              <option value="3">3x3</option>
+              <option value="4">4x4</option>
             </select>
           </label>
           <label>Duração na parede
@@ -125,6 +134,8 @@
             <input name="RCON_PASSWORD" type="password" autocomplete="new-password" />
           </label>
           <label class="toggle"><input name="ENABLE_LIKE_AVATAR" type="checkbox" /> Curtidas mostram avatar</label>
+          <label class="toggle"><input name="GIFT_FULL_PANEL" type="checkbox" /> Gifts usam painel inteiro</label>
+          <label class="toggle"><input name="RESTORE_LIKE_GRID_AFTER_GIFT" type="checkbox" /> Restaurar mosaico após gift</label>
           <label class="toggle"><input name="ENABLE_EXTENDED_GIFT_INFO" type="checkbox" /> Gift info avançado</label>
         </div>
       </form>
@@ -155,6 +166,7 @@
             <button class="button" data-rcon="tiktokwall size 48" type="button">48</button>
             <button class="button" data-rcon="tiktokwall size 64" type="button">64</button>
             <button class="button" data-rcon="tiktokwall size 128" type="button">128</button>
+            <button class="button" data-rcon="tiktokwall size 256" type="button">256</button>
           </div>
         </div>
 
@@ -170,6 +182,21 @@
             <button class="button" data-rcon="tiktokwall animationspeed 4" type="button">Velocidade 4</button>
             <button class="button" data-rcon="tiktokwall animationspeed 8" type="button">Velocidade 8</button>
             <button class="button" data-rcon="tiktokwall animationspeed 16" type="button">Velocidade 16</button>
+          </div>
+        </div>
+
+        <div class="command-group">
+          <h3>Nome e fogos</h3>
+          <div class="command-buttons">
+            <button class="button" data-rcon="tiktokwall nameplate on" type="button">Nome on</button>
+            <button class="button" data-rcon="tiktokwall nameplate off" type="button">Nome off</button>
+            <button class="button" data-rcon="tiktokwall nameplatematerial BLACK_CONCRETE" type="button">Nome preto</button>
+            <button class="button" data-rcon="tiktokwall fireworks off" type="button">Fogos off</button>
+            <button class="button" data-rcon="tiktokwall fireworks like" type="button">Fogos curtida</button>
+            <button class="button" data-rcon="tiktokwall fireworks gift" type="button">Fogos gift</button>
+            <button class="button" data-rcon="tiktokwall fireworks any" type="button">Fogos sempre</button>
+            <button class="button" data-rcon="tiktokwall fireworkcount 5" type="button">5 fogos</button>
+            <button class="button" data-rcon="tiktokwall fireworkcount 10" type="button">10 fogos</button>
           </div>
         </div>
 

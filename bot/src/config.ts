@@ -18,6 +18,9 @@ export interface Config {
   enableExtendedGiftInfo: boolean;
   roseGiftNames: string[];
   roseGiftIds: string[];
+  likeGridSize: number;
+  giftFullPanel: boolean;
+  restoreLikeGridAfterGift: boolean;
 }
 
 function intFromEnv(name: string, fallback: number): number {
@@ -57,8 +60,12 @@ function listFromEnv(name: string, fallback: string[]): string[] {
 
 export function loadConfig(): Config {
   const avatarSize = intFromEnv("AVATAR_SIZE", 48);
-  if (![32, 48, 64, 128].includes(avatarSize)) {
-    throw new Error("AVATAR_SIZE must be 32, 48, 64, or 128");
+  if (![32, 48, 64, 128, 256].includes(avatarSize)) {
+    throw new Error("AVATAR_SIZE must be 32, 48, 64, 128, or 256");
+  }
+  const likeGridSize = intFromEnv("LIKE_GRID_SIZE", 3);
+  if (likeGridSize < 1 || likeGridSize > 4) {
+    throw new Error("LIKE_GRID_SIZE must be between 1 and 4");
   }
 
   return {
@@ -75,6 +82,9 @@ export function loadConfig(): Config {
     likeAvatarCooldownMs: Math.max(0, intFromEnv("LIKE_AVATAR_COOLDOWN_MS", 5000)),
     enableExtendedGiftInfo: boolFromEnv("ENABLE_EXTENDED_GIFT_INFO", false),
     roseGiftNames: listFromEnv("ROSE_GIFT_NAMES", ["rose", "rosa"]),
-    roseGiftIds: listFromEnv("ROSE_GIFT_IDS", [])
+    roseGiftIds: listFromEnv("ROSE_GIFT_IDS", []),
+    likeGridSize,
+    giftFullPanel: boolFromEnv("GIFT_FULL_PANEL", true),
+    restoreLikeGridAfterGift: boolFromEnv("RESTORE_LIKE_GRID_AFTER_GIFT", true)
   };
 }

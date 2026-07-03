@@ -8,6 +8,7 @@ public class RenderRequest {
     private String imageBase64;
     private int size;
     private int durationSeconds;
+    private Boolean clearAfter;
 
     public String username() {
         return username == null || username.isBlank() ? "unknown" : username;
@@ -44,5 +45,9 @@ public class RenderRequest {
 
     public int durationSeconds(int fallback) {
         return durationSeconds > 0 ? durationSeconds : fallback;
+    }
+
+    public boolean clearAfter() {
+        return clearAfter == null || clearAfter;
     }
 }

@@ -4,21 +4,30 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.text.Normalizer;
 import java.util.Base64;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.imageio.ImageIO;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 public final class WallRenderer {
     private static final int[][] BAYER_4X4 = {
@@ -27,6 +36,50 @@ public final class WallRenderer {
         {3, 11, 1, 9},
         {15, 7, 13, 5}
     };
+    private static final int FONT_HEIGHT = 7;
+    private static final int FONT_WIDTH = 5;
+    private static final int FONT_GAP = 1;
+    private static final Map<Character, String[]> FONT = Map.ofEntries(
+        Map.entry('A', new String[] {"01110", "10001", "10001", "11111", "10001", "10001", "10001"}),
+        Map.entry('B', new String[] {"11110", "10001", "10001", "11110", "10001", "10001", "11110"}),
+        Map.entry('C', new String[] {"01111", "10000", "10000", "10000", "10000", "10000", "01111"}),
+        Map.entry('D', new String[] {"11110", "10001", "10001", "10001", "10001", "10001", "11110"}),
+        Map.entry('E', new String[] {"11111", "10000", "10000", "11110", "10000", "10000", "11111"}),
+        Map.entry('F', new String[] {"11111", "10000", "10000", "11110", "10000", "10000", "10000"}),
+        Map.entry('G', new String[] {"01111", "10000", "10000", "10111", "10001", "10001", "01111"}),
+        Map.entry('H', new String[] {"10001", "10001", "10001", "11111", "10001", "10001", "10001"}),
+        Map.entry('I', new String[] {"11111", "00100", "00100", "00100", "00100", "00100", "11111"}),
+        Map.entry('J', new String[] {"00111", "00010", "00010", "00010", "10010", "10010", "01100"}),
+        Map.entry('K', new String[] {"10001", "10010", "10100", "11000", "10100", "10010", "10001"}),
+        Map.entry('L', new String[] {"10000", "10000", "10000", "10000", "10000", "10000", "11111"}),
+        Map.entry('M', new String[] {"10001", "11011", "10101", "10101", "10001", "10001", "10001"}),
+        Map.entry('N', new String[] {"10001", "11001", "10101", "10011", "10001", "10001", "10001"}),
+        Map.entry('O', new String[] {"01110", "10001", "10001", "10001", "10001", "10001", "01110"}),
+        Map.entry('P', new String[] {"11110", "10001", "10001", "11110", "10000", "10000", "10000"}),
+        Map.entry('Q', new String[] {"01110", "10001", "10001", "10001", "10101", "10010", "01101"}),
+        Map.entry('R', new String[] {"11110", "10001", "10001", "11110", "10100", "10010", "10001"}),
+        Map.entry('S', new String[] {"01111", "10000", "10000", "01110", "00001", "00001", "11110"}),
+        Map.entry('T', new String[] {"11111", "00100", "00100", "00100", "00100", "00100", "00100"}),
+        Map.entry('U', new String[] {"10001", "10001", "10001", "10001", "10001", "10001", "01110"}),
+        Map.entry('V', new String[] {"10001", "10001", "10001", "10001", "10001", "01010", "00100"}),
+        Map.entry('W', new String[] {"10001", "10001", "10001", "10101", "10101", "10101", "01010"}),
+        Map.entry('X', new String[] {"10001", "10001", "01010", "00100", "01010", "10001", "10001"}),
+        Map.entry('Y', new String[] {"10001", "10001", "01010", "00100", "00100", "00100", "00100"}),
+        Map.entry('Z', new String[] {"11111", "00001", "00010", "00100", "01000", "10000", "11111"}),
+        Map.entry('0', new String[] {"01110", "10001", "10011", "10101", "11001", "10001", "01110"}),
+        Map.entry('1', new String[] {"00100", "01100", "00100", "00100", "00100", "00100", "01110"}),
+        Map.entry('2', new String[] {"01110", "10001", "00001", "00010", "00100", "01000", "11111"}),
+        Map.entry('3', new String[] {"11110", "00001", "00001", "01110", "00001", "00001", "11110"}),
+        Map.entry('4', new String[] {"00010", "00110", "01010", "10010", "11111", "00010", "00010"}),
+        Map.entry('5', new String[] {"11111", "10000", "10000", "11110", "00001", "00001", "11110"}),
+        Map.entry('6', new String[] {"01110", "10000", "10000", "11110", "10001", "10001", "01110"}),
+        Map.entry('7', new String[] {"11111", "00001", "00010", "00100", "01000", "01000", "01000"}),
+        Map.entry('8', new String[] {"01110", "10001", "10001", "01110", "10001", "10001", "01110"}),
+        Map.entry('9', new String[] {"01110", "10001", "10001", "01111", "00001", "00001", "01110"}),
+        Map.entry('_', new String[] {"00000", "00000", "00000", "00000", "00000", "00000", "11111"}),
+        Map.entry('-', new String[] {"00000", "00000", "00000", "11111", "00000", "00000", "00000"}),
+        Map.entry(' ', new String[] {"00000", "00000", "00000", "00000", "00000", "00000", "00000"})
+    );
 
     private final JavaPlugin plugin;
     private final WallSettings settings;
@@ -116,18 +169,28 @@ public final class WallRenderer {
 
             activeFrame = frame;
             long animationTicks = renderImage(world, frame, image);
+            renderNameplate(world, frame, request.nickname());
+            launchFireworks(world, frame, request.eventType());
 
             Bukkit.broadcast(Component.text("[TikTokWall] " + request.nickname() + " " + request.eventLabel()));
             plugin.getLogger().info("Rendered " + request.eventType() + " avatar for "
                 + request.username() + " (" + request.nickname() + ")");
 
-            long durationTicks = durationSeconds * 20L;
-            long clearAnimationTicks = settings.isAnimationEnabled() ? animationTicksFor(frame.size()) : 0L;
-            long clearDelayTicks = Math.max(animationTicks + 1L, durationTicks - clearAnimationTicks);
-            clearTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                clearTask = null;
-                clearFrameWithConfiguredAnimation(frame, () -> activeFrame = null);
-            }, clearDelayTicks);
+            if (request.clearAfter()) {
+                long durationTicks = durationSeconds * 20L;
+                long clearAnimationTicks = settings.isAnimationEnabled() ? animationTicksFor(frame.size()) : 0L;
+                long clearDelayTicks = Math.max(animationTicks + 1L, durationTicks - clearAnimationTicks);
+                clearTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    clearTask = null;
+                    clearFrameWithConfiguredAnimation(frame, () -> activeFrame = null);
+                }, clearDelayTicks);
+            } else {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    if (activeFrame == frame) {
+                        activeFrame = null;
+                    }
+                }, animationTicks + 1L);
+            }
 
             return RenderResponse.ok("rendered");
         } catch (Exception error) {
@@ -236,6 +299,127 @@ public final class WallRenderer {
         return (int) Math.round(value);
     }
 
+    private void renderNameplate(World world, ActiveFrame frame, String rawName) {
+        if (!settings.isNameplateEnabled()) {
+            return;
+        }
+
+        clearNameplateArea(world, frame);
+
+        String text = normalizeNameplateText(rawName);
+        if (text.isBlank()) {
+            return;
+        }
+
+        int textWidth = text.length() * FONT_WIDTH + Math.max(0, text.length() - 1) * FONT_GAP;
+        int startX = Math.max(0, (frame.size() - textWidth) / 2);
+        int baseY = frame.originY() + settings.getNameplateYOffset();
+
+        for (int charIndex = 0; charIndex < text.length(); charIndex++) {
+            String[] glyph = FONT.getOrDefault(text.charAt(charIndex), FONT.get(' '));
+            int charX = startX + charIndex * (FONT_WIDTH + FONT_GAP);
+            for (int row = 0; row < FONT_HEIGHT; row++) {
+                String pattern = glyph[row];
+                int y = baseY + (FONT_HEIGHT - 1 - row);
+                for (int col = 0; col < FONT_WIDTH; col++) {
+                    if (pattern.charAt(col) == '1') {
+                        setWallRelativeBlock(world, frame, charX + col, y, settings.getNameplateMaterial());
+                    }
+                }
+            }
+        }
+    }
+
+    private void clearNameplateArea(World world, ActiveFrame frame) {
+        int baseY = frame.originY() + settings.getNameplateYOffset();
+        for (int y = baseY; y < baseY + FONT_HEIGHT; y++) {
+            for (int horizontal = 0; horizontal < frame.size(); horizontal++) {
+                setWallRelativeBlock(world, frame, horizontal, y, Material.AIR);
+            }
+        }
+    }
+
+    private String normalizeNameplateText(String value) {
+        String normalized = Normalizer.normalize(value == null ? "" : value, Normalizer.Form.NFD)
+            .replaceAll("\\p{M}", "")
+            .toUpperCase(Locale.ROOT)
+            .replaceAll("[^A-Z0-9_\\- ]", "")
+            .trim();
+
+        if (normalized.length() > settings.getNameplateMaxChars()) {
+            return normalized.substring(0, settings.getNameplateMaxChars()).trim();
+        }
+
+        return normalized;
+    }
+
+    private void launchFireworks(World world, ActiveFrame frame, String eventType) {
+        if (!shouldLaunchFireworks(eventType)) {
+            return;
+        }
+
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        for (int index = 0; index < settings.getFireworksCount(); index++) {
+            int horizontal = random.nextInt(Math.max(1, frame.size()));
+            Location location = fireworkLocation(world, frame, horizontal, random.nextDouble(2.0, 8.0));
+            Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK_ROCKET);
+            FireworkMeta meta = firework.getFireworkMeta();
+            meta.setPower(settings.getFireworksPower());
+            meta.addEffect(FireworkEffect.builder()
+                .with(FireworkEffect.Type.BALL_LARGE)
+                .withColor(org.bukkit.Color.fromRGB(random.nextInt(80, 256), random.nextInt(80, 256), random.nextInt(80, 256)))
+                .withFade(org.bukkit.Color.WHITE)
+                .trail(true)
+                .flicker(true)
+                .build());
+            firework.setFireworkMeta(meta);
+        }
+    }
+
+    private boolean shouldLaunchFireworks(String eventType) {
+        String mode = settings.getFireworksMode();
+        if ("off".equals(mode)) {
+            return false;
+        }
+        if ("any".equals(mode)) {
+            return true;
+        }
+
+        String normalized = eventType == null ? "" : eventType.toLowerCase(Locale.ROOT);
+        boolean like = normalized.contains("like");
+        boolean gift = normalized.contains("gift") || normalized.contains("rose") || normalized.contains("rosa");
+
+        return ("like".equals(mode) && like) || ("gift".equals(mode) && gift);
+    }
+
+    private Location fireworkLocation(World world, ActiveFrame frame, int horizontal, double yOffset) {
+        double x = frame.originX() + 0.5;
+        double y = Math.min(world.getMaxHeight() - 2.0, frame.originY() + yOffset);
+        double z = frame.originZ() + 0.5;
+
+        switch (frame.facing()) {
+            case NORTH -> {
+                x -= horizontal;
+                z += 4.0;
+            }
+            case SOUTH -> {
+                x += horizontal;
+                z -= 4.0;
+            }
+            case EAST -> {
+                z -= horizontal;
+                x -= 4.0;
+            }
+            case WEST -> {
+                z += horizontal;
+                x += 4.0;
+            }
+            default -> x += horizontal;
+        }
+
+        return new Location(world, x, y, z);
+    }
+
     private void clearFrame(ActiveFrame frame) {
         World world = Bukkit.getWorld(frame.worldName());
         if (world == null) {
@@ -248,6 +432,7 @@ public final class WallRenderer {
                 blockAt(world, frame, pixelX, pixelY).setType(frame.clearMaterial(), false);
             }
         }
+        clearNameplateArea(world, frame);
     }
 
     private void clearFrameWithConfiguredAnimation(ActiveFrame frame, Runnable onDone) {
@@ -297,6 +482,25 @@ public final class WallRenderer {
             animationTask.cancel();
             animationTask = null;
         }
+    }
+
+    private void setWallRelativeBlock(World world, ActiveFrame frame, int horizontal, int y, Material material) {
+        if (horizontal < 0 || horizontal >= frame.size() || y < world.getMinHeight() || y >= world.getMaxHeight()) {
+            return;
+        }
+
+        int x = frame.originX();
+        int z = frame.originZ();
+
+        switch (frame.facing()) {
+            case NORTH -> x -= horizontal;
+            case SOUTH -> x += horizontal;
+            case EAST -> z -= horizontal;
+            case WEST -> z += horizontal;
+            default -> x += horizontal;
+        }
+
+        world.getBlockAt(x, y, z).setType(material, false);
     }
 
     private Block blockAt(World world, ActiveFrame frame, int pixelX, int pixelY) {

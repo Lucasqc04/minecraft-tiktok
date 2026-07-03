@@ -4,10 +4,11 @@ Integração local para lives do TikTok:
 
 ```text
 TikTok Live
--> curtida ou gift Rose/Rosa
+-> curtida monta/atualiza mosaico de avatares
+-> gift Rose/Rosa pode ocupar o painel inteiro
 -> bot baixa o avatar do usuario
 -> plugin Paper desenha a imagem em blocos no Minecraft
--> a parede limpa depois do tempo configurado
+-> nome, animacao, fogos e limpeza seguem a configuracao
 ```
 
 O projeto tem:
@@ -82,6 +83,7 @@ Ela permite:
 - enviar imagem fake para a parede;
 - ver logs;
 - enviar alguns comandos `/tiktokwall` por RCON, se a senha RCON estiver configurada.
+- configurar mosaico de curtidas 1x1 a 4x4, gift em tela cheia e tamanho ate 256.
 
 ## Portal Online
 
