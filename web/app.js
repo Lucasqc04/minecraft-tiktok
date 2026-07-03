@@ -30,22 +30,22 @@ const fallbackReleaseData = {
   history: []
 };
 
-const sharedCommands = ["/tiktokwall setup", "/tiktokwall size 128", "/tiktokwall dithering off", "/tiktokwall animation on", "/tiktokwall animationspeed 8", "/tiktokwall test"];
+const sharedCommands = [
+  "/tiktokwall setup",
+  "/tiktokwall size 128",
+  "/tiktokwall dithering off",
+  "/tiktokwall animation on",
+  "/tiktokwall animationspeed 8",
+  "/tiktokwall test"
+];
 
 const platformContent = {
   windows: {
     name: "Windows",
     bridgeScript: "start-interface-windows.bat",
     minecraftDir: "C:\\MinecraftLive",
+    projectDir: "C:\\TikTokMinecraftLive",
     startBridge: "start-interface-windows.bat",
-    startPaper: "start-paper.bat",
-    pluginPath: "C:\\MinecraftLive\\plugins\\TikTokWall.jar",
-    paperCommands: [
-      "Criar C:\\MinecraftLive",
-      "Baixar o Paper da mesma versao do Minecraft Java",
-      "Renomear o arquivo baixado para paper.jar",
-      "Copiar paper.jar e start-paper.bat para C:\\MinecraftLive"
-    ],
     steps: [
       {
         label: "Passo 1",
@@ -105,19 +105,19 @@ const platformContent = {
       {
         label: "Passo 6",
         title: "Entre no servidor e prepare a parede automaticamente.",
-        body: "Entre em localhost pelo Minecraft Java. Se precisar de permissão, use op SeuNick no console do Paper.",
+        body: "Entre em localhost pelo Minecraft Java. Se precisar de permissao, use op SeuNick no console do Paper.",
         commands: sharedCommands
       },
       {
         label: "Passo 7",
-        title: "Abra a ponte local e salve a configuração da live.",
-        body: "A ponte local é o start-interface-windows.bat. Ela salva a configuração neste computador, roda testes e inicia o bot.",
+        title: "Abra a ponte local e salve a configuracao da live.",
+        body: "A ponte local salva a configuracao neste computador, roda testes e inicia o bot.",
         commands: ["Abrir C:\\TikTokMinecraftLive\\start-interface-windows.bat", "http://127.0.0.1:3333", "Salvar configuracao"]
       },
       {
         label: "Passo 8",
         title: "Teste uma imagem e inicie o bot quando a live estiver aberta.",
-        body: "A conta TikTok precisa estar ao vivo e pública. Deixe Gift info avançado desligado se não tiver plano EulerStream.",
+        body: "A conta TikTok precisa estar ao vivo e publica. Deixe Gift info avancado desligado se nao tiver plano EulerStream.",
         commands: ["Enviar imagem teste", "Iniciar bot", "Aguardar curtida ou rosa na live"]
       }
     ]
@@ -126,15 +126,8 @@ const platformContent = {
     name: "Linux",
     bridgeScript: "start-interface-linux.sh",
     minecraftDir: "~/MinecraftLive",
+    projectDir: "~/Downloads/tiktok-minecraft-live",
     startBridge: "./start-interface-linux.sh",
-    startPaper: "./start-paper.sh",
-    pluginPath: "~/MinecraftLive/plugins/TikTokWall.jar",
-    paperCommands: [
-      "mkdir -p ~/MinecraftLive",
-      "cp ~/Downloads/tiktok-minecraft-live/scripts/linux/start-paper.sh ~/MinecraftLive/start-paper.sh",
-      "chmod +x ~/MinecraftLive/start-paper.sh",
-      "cd ~/MinecraftLive && ./start-paper.sh"
-    ],
     steps: [
       {
         label: "Passo 1",
@@ -198,46 +191,24 @@ const platformContent = {
       {
         label: "Passo 6",
         title: "Entre no servidor e prepare a parede automaticamente.",
-        body: "Entre em localhost pelo Minecraft Java. Se precisar de permissão, use op SeuNick no console do Paper.",
+        body: "Entre em localhost pelo Minecraft Java. Se precisar de permissao, use op SeuNick no console do Paper.",
         commands: sharedCommands
       },
       {
         label: "Passo 7",
-        title: "Abra a ponte local e salve a configuração da live.",
-        body: "A ponte local é o start-interface-linux.sh. Ela salva a configuração neste computador, roda testes e inicia o bot.",
+        title: "Abra a ponte local e salve a configuracao da live.",
+        body: "A ponte local salva a configuracao neste computador, roda testes e inicia o bot.",
         commands: ["cd ~/Downloads/tiktok-minecraft-live", "chmod +x start-interface-linux.sh", "./start-interface-linux.sh", "http://127.0.0.1:3333"]
       },
       {
         label: "Passo 8",
         title: "Teste uma imagem e inicie o bot quando a live estiver aberta.",
-        body: "A conta TikTok precisa estar ao vivo e pública. Deixe Gift info avançado desligado se não tiver plano EulerStream.",
+        body: "A conta TikTok precisa estar ao vivo e publica. Deixe Gift info avancado desligado se nao tiver plano EulerStream.",
         commands: ["Enviar imagem teste", "Iniciar bot", "Aguardar curtida ou rosa na live"]
       }
     ]
   }
 };
-
-const form = document.getElementById("configForm");
-const toast = document.getElementById("toast");
-const logs = document.getElementById("logs");
-const bridgeStatus = document.getElementById("bridgeStatus");
-const bridgeValue = document.getElementById("bridgeValue");
-const botValue = document.getElementById("botValue");
-const pluginValue = document.getElementById("pluginValue");
-const previewState = document.getElementById("previewState");
-const stepPanel = document.getElementById("stepPanel");
-const stepCommands = document.getElementById("stepCommands");
-const aiContextPreview = document.getElementById("aiContextPreview");
-const bridgeScriptName = document.getElementById("bridgeScriptName");
-const latestVersionValue = document.getElementById("latestVersionValue");
-const installedVersionValue = document.getElementById("installedVersionValue");
-const releaseCompatibilityValue = document.getElementById("releaseCompatibilityValue");
-const updateStatusPill = document.getElementById("updateStatusPill");
-const updateSummary = document.getElementById("updateSummary");
-const updateSteps = document.getElementById("updateSteps");
-const releaseHistory = document.getElementById("releaseHistory");
-const latestJarLink = document.getElementById("latestJarLink");
-const latestPackLink = document.getElementById("latestPackLink");
 
 let currentConfig = { ...defaultConfig };
 let localLogs = [];
@@ -245,7 +216,15 @@ let selectedPlatform = /Linux|X11/i.test(navigator.userAgent) ? "linux" : "windo
 let releaseData = fallbackReleaseData;
 let installedPluginVersion = "";
 
+const $ = (id) => document.getElementById(id);
+const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
 function showToast(message) {
+  const toast = $("toast");
+  if (!toast) {
+    console.log(message);
+    return;
+  }
   toast.textContent = message;
   toast.classList.add("show");
   window.clearTimeout(showToast.timeout);
@@ -264,22 +243,40 @@ async function bridgeApi(path, options = {}) {
   return body;
 }
 
+function setText(id, value) {
+  const element = $(id);
+  if (element) element.textContent = value;
+}
+
+function setBridgeConnected(connected) {
+  const bridgeStatus = $("bridgeStatus");
+  if (!bridgeStatus) return;
+  bridgeStatus.classList.toggle("connected", connected);
+  const label = bridgeStatus.querySelector("span:last-child");
+  if (label) label.textContent = connected ? "Ponte local conectada" : "Ponte local desconectada";
+}
+
 function fillForm(config) {
   currentConfig = { ...defaultConfig, ...config };
-  for (const [key, value] of Object.entries(currentConfig)) {
-    const field = form.elements.namedItem(key);
-    if (!field) continue;
-    if (field.type === "checkbox") {
-      field.checked = String(value).toLowerCase() === "true";
-    } else {
-      field.value = value ?? "";
+  const form = $("configForm");
+  if (form) {
+    for (const [key, value] of Object.entries(currentConfig)) {
+      const field = form.elements.namedItem(key);
+      if (!field) continue;
+      if (field.type === "checkbox") {
+        field.checked = String(value).toLowerCase() === "true";
+      } else {
+        field.value = value ?? "";
+      }
     }
   }
   renderAiContext();
 }
 
 function collectForm() {
+  const form = $("configForm");
   const data = {};
+  if (!form) return data;
   for (const element of form.elements) {
     if (!element.name) continue;
     data[element.name] = element.type === "checkbox" ? element.checked : element.value;
@@ -290,14 +287,17 @@ function collectForm() {
 async function refreshBridge() {
   try {
     const status = await bridgeApi("/api/status");
-    bridgeStatus.classList.add("connected");
-    bridgeStatus.querySelector("span:last-child").textContent = "Ponte local conectada";
-    bridgeValue.textContent = "Conectada";
-    botValue.textContent = status.bot === "running" ? "Rodando" : "Parado";
-    previewState.textContent = status.bot === "running" ? "bot online" : "bridge online";
+    setBridgeConnected(true);
+    setText("bridgeValue", "Conectada");
+    setText("botValue", status.bot === "running" ? "Rodando" : "Parado");
+    setText("previewState", status.bot === "running" ? "bot online" : "bridge online");
+
     localLogs = status.logs || [];
-    logs.textContent = localLogs.join("\n");
-    logs.scrollTop = logs.scrollHeight;
+    const logs = $("logs");
+    if (logs) {
+      logs.textContent = localLogs.join("\n");
+      logs.scrollTop = logs.scrollHeight;
+    }
 
     const configResult = await bridgeApi("/api/config");
     fillForm(configResult.config);
@@ -306,24 +306,29 @@ async function refreshBridge() {
       const health = await bridgeApi("/api/plugin/health");
       const pluginHealth = health.health || {};
       installedPluginVersion = normalizeVersion(pluginHealth.version || "");
-      pluginValue.textContent = pluginHealth.version
-        ? `${pluginHealth.busy ? "Ocupado" : "OK"} ${pluginHealth.version}`
-        : pluginHealth.busy ? "Ocupado" : "OK";
+      setText(
+        "pluginValue",
+        pluginHealth.version
+          ? `${pluginHealth.busy ? "Ocupado" : "OK"} ${pluginHealth.version}`
+          : pluginHealth.busy ? "Ocupado" : "OK"
+      );
       renderUpdates();
     } catch {
-      pluginValue.textContent = "Sem resposta";
       installedPluginVersion = "";
+      setText("pluginValue", "Sem resposta");
       renderUpdates();
     }
   } catch {
-    bridgeStatus.classList.remove("connected");
-    bridgeStatus.querySelector("span:last-child").textContent = "Ponte local desconectada";
-    bridgeValue.textContent = "Desconectada";
-    botValue.textContent = "-";
-    pluginValue.textContent = "-";
+    setBridgeConnected(false);
+    setText("bridgeValue", "Desconectada");
+    setText("botValue", "-");
+    setText("pluginValue", "-");
+    setText("previewState", "bridge offline");
     installedPluginVersion = "";
-    previewState.textContent = "bridge offline";
-    logs.textContent = `Abra ${platformContent[selectedPlatform].bridgeScript} no computador da live para conectar o portal ao Minecraft local.`;
+    const logs = $("logs");
+    if (logs) {
+      logs.textContent = `Abra ${platformContent[selectedPlatform].bridgeScript} no computador da live para conectar o portal ao Minecraft local.`;
+    }
     fillForm(currentConfig);
     renderUpdates();
   }
@@ -331,13 +336,12 @@ async function refreshBridge() {
 
 async function saveConfig(event) {
   event.preventDefault();
-  const data = collectForm();
   const result = await bridgeApi("/api/config", {
     method: "POST",
-    body: JSON.stringify(data)
+    body: JSON.stringify(collectForm())
   });
   fillForm(result.config);
-  showToast("Configuração salva no computador local.");
+  showToast("Configuracao salva no computador local.");
 }
 
 async function botAction(path, message) {
@@ -356,25 +360,25 @@ async function rcon(command) {
 }
 
 function renderStep(index) {
-  const step = platformContent[selectedPlatform].steps[index];
-  document.querySelectorAll("#steps li").forEach((item, itemIndex) => {
-    item.classList.toggle("active", itemIndex === index);
-  });
-  document.querySelectorAll("[data-os]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.os === selectedPlatform);
-  });
-  bridgeScriptName.textContent = platformContent[selectedPlatform].bridgeScript;
-  stepPanel.querySelector(".system-label").textContent = step.label;
-  stepPanel.querySelector("h3").textContent = step.title;
-  stepPanel.querySelector("p:not(.system-label)").textContent = step.body;
+  const stepPanel = $("stepPanel");
+  const stepCommands = $("stepCommands");
+  if (!stepPanel || !stepCommands) return;
+
+  const step = platformContent[selectedPlatform].steps[index] || platformContent[selectedPlatform].steps[0];
+  $$("#steps li").forEach((item, itemIndex) => item.classList.toggle("active", itemIndex === index));
+  $$("[data-os]").forEach((button) => button.classList.toggle("active", button.dataset.os === selectedPlatform));
+  setText("bridgeScriptName", platformContent[selectedPlatform].bridgeScript);
+
+  const label = stepPanel.querySelector(".system-label");
+  const title = stepPanel.querySelector("h3");
+  const body = stepPanel.querySelector("p:not(.system-label)");
+  if (label) label.textContent = step.label;
+  if (title) title.textContent = step.title;
+  if (body) body.textContent = step.body;
+
   stepCommands.innerHTML = "";
   for (const command of step.commands) {
-    const row = document.createElement("div");
-    row.className = "copy-row";
-    row.innerHTML = `<code></code><button class="button small" type="button">Copiar</button>`;
-    row.querySelector("code").textContent = command;
-    row.querySelector("button").addEventListener("click", () => copyText(command, "Copiado."));
-    stepCommands.appendChild(row);
+    stepCommands.appendChild(copyRow(command));
   }
 }
 
@@ -391,16 +395,37 @@ function currentStepIndex() {
   return Number(active?.dataset.step ?? 0);
 }
 
+function copyRow(text) {
+  const row = document.createElement("div");
+  row.className = "copy-row";
+  row.innerHTML = `<code></code><button class="button small" type="button">Copiar</button>`;
+  row.querySelector("code").textContent = text;
+  row.querySelector("button").addEventListener("click", () => copyText(text, "Copiado."));
+  return row;
+}
+
 function commandsText() {
   return [
     "/tiktokwall setup",
-    "/tiktokwall size 128",
-    "/tiktokwall dithering off",
-    "/tiktokwall animation on",
-    "/tiktokwall animationspeed 8",
+    "/tiktokwall info",
     "/tiktokwall test",
     "/tiktokwall clear",
-    "/tiktokwall info"
+    "/tiktokwall size 32",
+    "/tiktokwall size 48",
+    "/tiktokwall size 64",
+    "/tiktokwall size 128",
+    "/tiktokwall dithering on",
+    "/tiktokwall dithering off",
+    "/tiktokwall ditheringstrength 12",
+    "/tiktokwall animation on",
+    "/tiktokwall animation off",
+    "/tiktokwall animationspeed 4",
+    "/tiktokwall animationspeed 8",
+    "/tiktokwall animationspeed 16",
+    "/tiktokwall facing NORTH",
+    "/tiktokwall facing SOUTH",
+    "/tiktokwall facing EAST",
+    "/tiktokwall facing WEST"
   ].join("\n");
 }
 
@@ -415,14 +440,13 @@ function serverPropsText() {
 async function loadReleaseData() {
   try {
     const response = await fetch("./updates.json", { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`updates.json ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`updates.json ${response.status}`);
     releaseData = await response.json();
   } catch {
     releaseData = fallbackReleaseData;
   }
   renderUpdates();
+  renderAiContext();
 }
 
 function renderUpdates() {
@@ -431,19 +455,22 @@ function renderUpdates() {
   const installedVersion = normalizeVersion(installedPluginVersion);
   const comparison = compareVersions(installedVersion, latestVersion);
 
-  latestVersionValue.textContent = latestVersion || "-";
-  installedVersionValue.textContent = installedVersion || "Não verificada";
-  releaseCompatibilityValue.textContent = `MC ${latest.minecraft || "-"} / Java ${latest.java || "-"}`;
-  updateSummary.textContent = latest.summary || "Baixe o JAR mais recente e substitua o arquivo dentro da pasta plugins do Paper.";
-  latestJarLink.href = latest.jar || "./downloads/TikTokWall.jar";
-  latestPackLink.href = latest.pack || "./downloads/tiktok-minecraft-live.zip";
+  setText("latestVersionValue", latestVersion || "-");
+  setText("installedVersionValue", installedVersion || "Nao verificada");
+  setText("releaseCompatibilityValue", `MC ${latest.minecraft || "-"} / Java ${latest.java || "-"}`);
+  setText("updateSummary", latest.summary || "Baixe o JAR mais recente e substitua o arquivo dentro da pasta plugins do Paper.");
+
+  const latestJarLink = $("latestJarLink");
+  const latestPackLink = $("latestPackLink");
+  if (latestJarLink) latestJarLink.href = latest.jar || "./downloads/TikTokWall.jar";
+  if (latestPackLink) latestPackLink.href = latest.pack || "./downloads/tiktok-minecraft-live.zip";
 
   if (!installedVersion) {
-    setUpdateStatus("unknown", "Não verificado");
+    setUpdateStatus("unknown", "Nao verificado");
   } else if (comparison == null) {
-    setUpdateStatus("warning", "Versão desconhecida");
+    setUpdateStatus("warning", "Versao desconhecida");
   } else if (comparison < 0) {
-    setUpdateStatus("danger", "Atualização disponível");
+    setUpdateStatus("danger", "Atualizacao disponivel");
   } else if (comparison === 0) {
     setUpdateStatus("ok", "Atualizado");
   } else {
@@ -455,24 +482,25 @@ function renderUpdates() {
 }
 
 function setUpdateStatus(type, text) {
-  updateStatusPill.className = `status-pill ${type}`;
-  updateStatusPill.textContent = text;
+  const pill = $("updateStatusPill");
+  if (!pill) return;
+  pill.className = `status-pill ${type}`;
+  pill.textContent = text;
 }
 
 function renderUpdateSteps() {
-  updateSteps.innerHTML = "";
+  const container = $("updateSteps");
+  if (!container) return;
+  container.innerHTML = "";
   for (const step of updateStepsText().split("\n").filter(Boolean)) {
-    const row = document.createElement("div");
-    row.className = "copy-row";
-    row.innerHTML = `<code></code><button class="button small" type="button">Copiar</button>`;
-    row.querySelector("code").textContent = step;
-    row.querySelector("button").addEventListener("click", () => copyText(step, "Copiado."));
-    updateSteps.appendChild(row);
+    container.appendChild(copyRow(step));
   }
 }
 
 function renderReleaseHistory() {
-  releaseHistory.innerHTML = "";
+  const container = $("releaseHistory");
+  if (!container) return;
+  container.innerHTML = "";
   const history = Array.isArray(releaseData.history) ? releaseData.history : [];
   for (const release of history) {
     const article = document.createElement("article");
@@ -493,27 +521,27 @@ function renderReleaseHistory() {
     }
 
     article.append(header, list);
-    releaseHistory.appendChild(article);
+    container.appendChild(article);
   }
 }
 
 function updateStepsText() {
   if (selectedPlatform === "linux") {
     return [
-      "1. Baixe TikTokWall.jar pelo botão desta seção.",
+      "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.",
       "2. No console do Paper, digite stop.",
       "3. Rode: cp ~/Downloads/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar",
       "4. Rode: cd ~/MinecraftLive && ./start-paper.sh",
-      "5. Volte ao portal e clique Verificar versão."
+      "5. Volte ao portal e clique Verificar versao."
     ].join("\n");
   }
 
   return [
-    "1. Baixe TikTokWall.jar pelo botão desta seção.",
+    "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.",
     "2. No console do Paper, digite stop.",
     "3. Substitua C:\\MinecraftLive\\plugins\\TikTokWall.jar pelo arquivo novo baixado.",
     "4. Abra C:\\MinecraftLive\\start-paper.bat.",
-    "5. Volte ao portal e clique Verificar versão."
+    "5. Volte ao portal e clique Verificar versao."
   ].join("\n");
 }
 
@@ -522,14 +550,10 @@ function normalizeVersion(value) {
 }
 
 function compareVersions(current, latest) {
-  if (!current || !latest) {
-    return null;
-  }
+  if (!current || !latest) return null;
   const currentParts = current.split(".").map((part) => Number.parseInt(part, 10));
   const latestParts = latest.split(".").map((part) => Number.parseInt(part, 10));
-  if (currentParts.some(Number.isNaN) || latestParts.some(Number.isNaN)) {
-    return null;
-  }
+  if (currentParts.some(Number.isNaN) || latestParts.some(Number.isNaN)) return null;
   const length = Math.max(currentParts.length, latestParts.length);
   for (let index = 0; index < length; index += 1) {
     const left = currentParts[index] || 0;
@@ -541,93 +565,105 @@ function compareVersions(current, latest) {
 }
 
 function formatDate(value) {
-  if (!value) {
-    return "";
-  }
+  if (!value) return "";
   const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
+  if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(date);
 }
 
 function quickStartText() {
   const platform = platformContent[selectedPlatform];
-  const platformSpecific = selectedPlatform === "linux"
-    ? [
-        "1. Baixe o pack em ~/Downloads, rode unzip tiktok-minecraft-live.zip e entre em ~/Downloads/tiktok-minecraft-live.",
-        "2. Instale Java JDK 25 e Node.js LTS; confirme com java -version, node -v e npm -v.",
-        "3. No launcher do Minecraft, veja a versao Java que sera usada. Baixe Paper dessa mesma versao em https://papermc.io/downloads/paper.",
-        "4. Crie ~/MinecraftLive, copie o Paper como ~/MinecraftLive/paper.jar e copie scripts/linux/start-paper.sh para ~/MinecraftLive/start-paper.sh.",
-        "5. Rode cd ~/MinecraftLive && ./start-paper.sh uma vez, aceite eula.txt trocando eula=false por eula=true, rode ./start-paper.sh de novo e depois digite stop.",
-        "6. Copie ~/Downloads/tiktok-minecraft-live/TikTokWall.jar para ~/MinecraftLive/plugins/TikTokWall.jar.",
-        "7. Ative RCON em ~/MinecraftLive/server.properties: enable-rcon=true, rcon.port=25575 e rcon.password=uma-senha.",
-        "8. Reinicie o Paper com cd ~/MinecraftLive && ./start-paper.sh.",
-        "9. Entre no Minecraft em localhost, rode /tiktokwall setup e depois /tiktokwall test.",
-        "10. Abra cd ~/Downloads/tiktok-minecraft-live && ./start-interface-linux.sh.",
-        "11. No portal, salve o username TikTok, clique Enviar imagem teste e depois Iniciar bot."
-      ]
-    : [
-        "1. Baixe o pack e extraia em C:\\TikTokMinecraftLive.",
-        "2. Instale Java JDK 25 e Node.js LTS; confirme com java -version, node -v e npm -v.",
-        "3. No launcher do Minecraft, veja a versao Java que sera usada. Baixe Paper dessa mesma versao em https://papermc.io/downloads/paper.",
-        "4. Crie C:\\MinecraftLive, copie o Paper como C:\\MinecraftLive\\paper.jar e copie scripts\\windows\\start-paper.bat para C:\\MinecraftLive\\start-paper.bat.",
-        "5. Abra start-paper.bat uma vez, aceite eula.txt trocando eula=false por eula=true, abra start-paper.bat de novo e depois digite stop.",
-        "6. Copie C:\\TikTokMinecraftLive\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar.",
-        "7. Ative RCON em C:\\MinecraftLive\\server.properties: enable-rcon=true, rcon.port=25575 e rcon.password=uma-senha.",
-        "8. Reinicie o Paper abrindo C:\\MinecraftLive\\start-paper.bat.",
-        "9. Entre no Minecraft em localhost, rode /tiktokwall setup e depois /tiktokwall test.",
-        "10. Abra C:\\TikTokMinecraftLive\\start-interface-windows.bat.",
-        "11. No portal, salve o username TikTok, clique Enviar imagem teste e depois Iniciar bot."
-      ];
-
   return [
     `Sistema: ${platform.name}`,
-    `Pasta sugerida do servidor: ${platform.minecraftDir}`,
+    `Pasta do projeto: ${platform.projectDir}`,
+    `Pasta do servidor: ${platform.minecraftDir}`,
     `Ponte local: ${platform.startBridge}`,
     "",
-    ...platformSpecific
+    ...platform.steps.map((step, index) => [
+      `${index + 1}. ${step.title}`,
+      step.body,
+      ...step.commands.map((command) => `   - ${command}`)
+    ].join("\n"))
+  ].join("\n\n");
+}
+
+function zipMapText() {
+  return [
+    "Arquivos principais do ZIP:",
+    "- TikTokWall.jar: plugin pronto para copiar para a pasta plugins do Paper.",
+    "- start-interface-windows.bat: abre a ponte local no Windows e instala dependencias do bot.",
+    "- start-interface-linux.sh: abre a ponte local no Linux e instala dependencias do bot.",
+    "- scripts/windows/start-paper.bat: inicia o servidor Paper no Windows.",
+    "- scripts/linux/start-paper.sh: inicia o servidor Paper no Linux.",
+    "- bot/: codigo Node.js que conecta TikTok Live, processa avatar e fala com o plugin.",
+    "- bot/.env.example: modelo de configuracao; o .env real fica apenas no computador da live.",
+    "- minecraft-plugin/: codigo Java Paper do plugin TikTokWall.",
+    "- docs/LEIAME_WINDOWS.md: guia Windows completo.",
+    "- docs/LEIAME_LINUX.md: guia Linux completo.",
+    "- web/: portal estatico com downloads, setup, painel admin, atualizacoes e contexto para IA.",
+    "- web/updates.json: historico de versoes usado pela pagina Atualizacoes."
   ].join("\n");
 }
 
 function aiContextText() {
   const config = { ...currentConfig, RCON_PASSWORD: currentConfig.RCON_PASSWORD ? "[preenchido]" : "" };
-  return `Quero ajuda com o projeto TikTok Minecraft Live.
+  return `Voce e uma IA ajudando uma pessoa a instalar e operar o projeto TikTok Minecraft Live. Responda passo a passo, sem assumir que a pessoa programa.
+
+Objetivo do projeto:
+- Quando alguem curte ou manda rosa na live do TikTok, o bot pega a foto de perfil e envia para o plugin Paper.
+- O plugin TikTokWall renderiza a imagem como pixel art de blocos em uma parede vertical no Minecraft.
+- Depois do tempo configurado, a parede limpa e a proxima pessoa da fila aparece.
 
 Arquitetura:
-- Portal online: tela de download, setup guiado e controle. Ele nao guarda credenciais; conversa com a ponte local aberta no computador da live.
-- Ponte local: ${platformContent[selectedPlatform].bridgeScript} abre http://127.0.0.1:3333 no computador.
-- Bot Node: conecta na live TikTok, pega curtidas/rosas e baixa avatar.
-- Plugin Paper: TikTokWall.jar roda no Minecraft local e renderiza avatar em blocos.
+- Portal online: downloads, setup guiado, painel admin, atualizacoes e contexto para IA.
+- Ponte local: ${platformContent[selectedPlatform].bridgeScript} abre http://127.0.0.1:3333 no computador da live.
+- Bot Node: conecta na live TikTok, detecta curtidas/rosas, baixa avatar, processa PNG com sharp e envia ao plugin.
+- Plugin Paper: TikTokWall.jar roda no servidor Paper local e abre HTTP em 127.0.0.1:4567.
 - Minecraft: servidor Paper local; o jogador entra em localhost.
-- Sistema escolhido no portal: ${platformContent[selectedPlatform].name}
+- Sistema selecionado no portal: ${platformContent[selectedPlatform].name}
 - Versao publicada no portal: ${normalizeVersion(releaseData.latest?.version || fallbackReleaseData.latest.version)}
 - Versao local detectada: ${installedPluginVersion || "nao verificada"}
 
-Config atual:
+${zipMapText()}
+
+Config atual do bot, com senha mascarada:
 ${JSON.stringify(config, null, 2)}
 
-Passos de instalacao:
+Passo a passo completo para este sistema:
 ${quickStartText()}
 
-Comandos Minecraft:
+Comandos Minecraft disponiveis:
 ${commandsText()}
 
-server.properties:
+server.properties minimo:
 ${serverPropsText()}
 
-Problemas comuns:
-- Imagem no canto: /tiktokwall size deve bater com AVATAR_SIZE.
-- Pontos rosas: /tiktokwall dithering off.
-- Plugin sem resposta: Paper fechado, porta errada ou plugin nao carregou.
-- Plugin defasado: abrir Atualizacoes no portal, baixar TikTokWall.jar, parar o Paper, substituir o JAR em plugins e reiniciar.
-- Bot nao conecta: live nao esta publica/ao vivo, username errado ou Gift info avancado ligado sem plano EulerStream.
+Atualizacao do plugin:
+${updateStepsText()}
 
-Me guie passo a passo, sem assumir que sou programador.`;
+Painel admin:
+- Salvar configuracao escreve bot/.env no computador local.
+- Iniciar bot roda npm run dev dentro de bot/.
+- Parar bot finaliza o processo do bot.
+- Enviar imagem teste usa npm run test:image e nao precisa TikTok.
+- Botoes RCON so funcionam se RCON_PASSWORD estiver preenchido e o server.properties estiver com RCON ativo.
+- Verificar versao compara web/updates.json com /api/plugin/health.
+
+Problemas comuns:
+- cp para plugins falha: criar ~/MinecraftLive/plugins ou rodar o Paper uma vez.
+- ./start-paper.sh nao existe: copiar scripts/linux/start-paper.sh para ~/MinecraftLive/start-paper.sh e rodar chmod +x.
+- Plugin sem resposta: Paper fechado, porta errada, plugin nao carregou ou firewall bloqueando Java.
+- Imagem em um canto: AVATAR_SIZE do bot e /tiktokwall size precisam bater.
+- Pontos rosas/ruido: usar /tiktokwall dithering off.
+- Bot nao conecta: live nao esta publica/ao vivo, username errado ou Gift info avancado ligado sem plano EulerStream.
+- Curtidas nao aparecem: ENABLE_LIKE_AVATAR precisa estar ligado e cooldown pode estar alto.
+
+Peça logs especificos antes de concluir que algo nao funciona.`;
 }
 
 function renderAiContext() {
-  aiContextPreview.textContent = aiContextText();
+  const preview = $("aiContextPreview");
+  if (preview) preview.textContent = aiContextText();
 }
 
 async function copyText(text, message) {
@@ -635,46 +671,52 @@ async function copyText(text, message) {
   showToast(message);
 }
 
-document.querySelectorAll("#steps button").forEach((button) => {
-  button.addEventListener("click", () => renderStep(Number(button.dataset.step)));
-});
+function on(id, event, handler) {
+  const element = $(id);
+  if (element) element.addEventListener(event, handler);
+}
 
-document.querySelectorAll("[data-os]").forEach((button) => {
-  button.addEventListener("click", () => setPlatform(button.dataset.os));
-});
+function bindEvents() {
+  $$("#steps button").forEach((button) => {
+    button.addEventListener("click", () => renderStep(Number(button.dataset.step)));
+  });
 
-form.addEventListener("submit", (event) => {
-  saveConfig(event).catch((error) => showToast(error.message));
-});
+  $$("[data-os]").forEach((button) => {
+    button.addEventListener("click", () => setPlatform(button.dataset.os));
+  });
 
-document.getElementById("refreshBridge").addEventListener("click", () => refreshBridge());
-document.getElementById("startBot").addEventListener("click", () => botAction("/api/bot/start", "Bot iniciado."));
-document.getElementById("stopBot").addEventListener("click", () => botAction("/api/bot/stop", "Bot parado."));
-document.getElementById("testImage").addEventListener("click", () => botAction("/api/test-image", "Imagem teste enviada."));
-document.getElementById("clearLocalLog").addEventListener("click", () => {
-  logs.textContent = "";
-  showToast("Tela de logs limpa.");
-});
-document.getElementById("checkUpdates").addEventListener("click", () => {
-  refreshBridge()
-    .then(() => showToast("Versão verificada."))
-    .catch((error) => showToast(error.message));
-});
+  const form = $("configForm");
+  if (form) form.addEventListener("submit", (event) => saveConfig(event).catch((error) => showToast(error.message)));
 
-document.querySelectorAll("[data-rcon]").forEach((button) => {
-  button.addEventListener("click", () => rcon(button.dataset.rcon).catch((error) => showToast(error.message)));
-});
+  on("refreshBridge", "click", () => refreshBridge());
+  on("healthButton", "click", () => bridgeApi("/api/plugin/health").then((result) => showToast(`Plugin OK: ${JSON.stringify(result.health)}`)).catch((error) => showToast(error.message)));
+  on("startBot", "click", () => botAction("/api/bot/start", "Bot iniciado.").catch((error) => showToast(error.message)));
+  on("stopBot", "click", () => botAction("/api/bot/stop", "Bot parado.").catch((error) => showToast(error.message)));
+  on("testImage", "click", () => botAction("/api/test-image", "Imagem teste enviada.").catch((error) => showToast(error.message)));
+  on("clearLocalLog", "click", () => {
+    const logs = $("logs");
+    if (logs) logs.textContent = "";
+    showToast("Tela de logs limpa.");
+  });
+  on("checkUpdates", "click", () => refreshBridge().then(() => showToast("Versao verificada.")).catch((error) => showToast(error.message)));
 
-document.getElementById("copyQuickStart").addEventListener("click", () => copyText(quickStartText(), "Passo a passo copiado."));
-document.getElementById("copyUpdateSteps").addEventListener("click", () => copyText(updateStepsText(), "Passos de atualização copiados."));
-document.getElementById("copyAiContext").addEventListener("click", () => copyText(aiContextText(), "Contexto para IA copiado."));
-document.getElementById("copyCommands").addEventListener("click", () => copyText(commandsText(), "Comandos copiados."));
-document.getElementById("copyServerProps").addEventListener("click", () => copyText(serverPropsText(), "server.properties copiado."));
+  $$("[data-rcon]").forEach((button) => {
+    button.addEventListener("click", () => rcon(button.dataset.rcon).catch((error) => showToast(error.message)));
+  });
+
+  on("copyQuickStart", "click", () => copyText(quickStartText(), "Passo a passo copiado."));
+  on("copyUpdateSteps", "click", () => copyText(updateStepsText(), "Passos de atualizacao copiados."));
+  on("copyAiContext", "click", () => copyText(aiContextText(), "Contexto para IA copiado."));
+  on("copyCommands", "click", () => copyText(commandsText(), "Comandos copiados."));
+  on("copyServerProps", "click", () => copyText(serverPropsText(), "server.properties copiado."));
+  on("copyZipMap", "click", () => copyText(zipMapText(), "Mapa do ZIP copiado."));
+}
 
 window.addEventListener("unhandledrejection", (event) => {
   showToast(event.reason?.message || String(event.reason));
 });
 
+bindEvents();
 renderStep(0);
 fillForm(defaultConfig);
 loadReleaseData();

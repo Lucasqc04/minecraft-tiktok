@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Setup guiado do TikTok Minecraft Live." />
+  <title>Setup - TikTok Minecraft Live</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="setup">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="TikTok Minecraft Live">
+      <span class="brand-mark" aria-hidden="true">TML</span>
+      <span>
+        <strong>TikTok Minecraft Live</strong>
+        <small>Portal do criador</small>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="./index.html">Início</a>
+      <a class="active" href="./setup.html">Setup</a>
+      <a href="./admin.html">Painel</a>
+      <a href="./updates.html">Atualizações</a>
+      <a href="./ai.html">IA</a>
+    </nav>
+    <div class="bridge-status" id="bridgeStatus">
+      <span class="status-dot"></span>
+      <span>Ponte local desconectada</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero">
+      <p class="system-label">Setup guiado</p>
+      <h1>Instale sem adivinhar a ordem.</h1>
+      <p class="lead">
+        O Paper precisa criar `eula.txt`, `server.properties` e `plugins/` antes de instalar o TikTokWall.
+        Esta página mantém a sequência certa e separa Windows/Linux.
+      </p>
+      <div class="actions">
+        <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
+        <a class="button" href="./downloads/TikTokWall.jar" download>Baixar só o plugin</a>
+        <button class="button" id="copyQuickStart" type="button">Copiar setup completo</button>
+      </div>
+    </section>
+
+    <section class="workspace two-col page-workspace">
+      <aside class="setup-rail">
+        <p class="system-label">Sistema</p>
+        <h2>Escolha o ambiente.</h2>
+        <div class="os-switch" aria-label="Sistema operacional">
+          <button class="active" data-os="windows" type="button">Windows</button>
+          <button data-os="linux" type="button">Linux</button>
+        </div>
+        <ol class="steps" id="steps">
+          <li class="active"><button type="button" data-step="0"><span>1</span>Baixar o pack</button></li>
+          <li><button type="button" data-step="1"><span>2</span>Instalar Java e Node</button></li>
+          <li><button type="button" data-step="2"><span>3</span>Baixar Paper correto</button></li>
+          <li><button type="button" data-step="3"><span>4</span>Iniciar servidor</button></li>
+          <li><button type="button" data-step="4"><span>5</span>Instalar plugin</button></li>
+          <li><button type="button" data-step="5"><span>6</span>Entrar e preparar</button></li>
+          <li><button type="button" data-step="6"><span>7</span>Abrir ponte</button></li>
+          <li><button type="button" data-step="7"><span>8</span>Testar live</button></li>
+        </ol>
+      </aside>
+
+      <div class="instruction-panel" id="stepPanel">
+        <div>
+          <p class="system-label">Passo 1</p>
+          <h3>Baixe o pack completo e extraia em uma pasta simples.</h3>
+          <p>Use uma pasta como C:\TikTokMinecraftLive. Evite OneDrive, Desktop sincronizado ou pastas com acentos.</p>
+        </div>
+        <div class="command-list" id="stepCommands"></div>
+      </div>
+    </section>
+
+    <section class="workspace doc-grid">
+      <div class="panel">
+        <p class="system-label">Dentro do ZIP</p>
+        <h2>O que cada arquivo faz.</h2>
+        <div class="file-map">
+          <div><code>TikTokWall.jar</code><span>Plugin pronto para copiar para `plugins/` do Paper.</span></div>
+          <div><code>start-interface-windows.bat</code><span>Abre a ponte local no Windows e instala dependências do bot.</span></div>
+          <div><code>start-interface-linux.sh</code><span>Abre a ponte local no Linux e instala dependências do bot.</span></div>
+          <div><code>scripts/windows/start-paper.bat</code><span>Script para iniciar o Paper no Windows.</span></div>
+          <div><code>scripts/linux/start-paper.sh</code><span>Script para iniciar o Paper no Linux.</span></div>
+          <div><code>bot/</code><span>Bot Node.js que conecta TikTok Live, processa avatar e fala com o plugin.</span></div>
+          <div><code>docs/</code><span>Guias completos para Windows e Linux.</span></div>
+          <div><code>web/updates.json</code><span>Histórico de versões usado pela página de atualizações.</span></div>
+        </div>
+        <div class="actions compact">
+          <button class="button" id="copyZipMap" type="button">Copiar mapa do ZIP</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <p class="system-label">Depois do setup</p>
+        <h2>Checklist antes da live.</h2>
+        <div class="command-list compact-list">
+          <div class="copy-row"><code>Paper aberto e TikTokWall carregado sem erro.</code><button class="button small" type="button" id="healthButton">Checar</button></div>
+          <div class="copy-row"><code>Minecraft Java conectado em localhost.</code><button class="button small" type="button" id="copyServerProps">RCON</button></div>
+          <div class="copy-row"><code>/tiktokwall setup e /tiktokwall test funcionando.</code><button class="button small" type="button" id="copyCommands">Comandos</button></div>
+          <div class="copy-row"><code>Ponte local aberta e portal mostrando conectada.</code><button class="button small" type="button" id="refreshBridge">Atualizar</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>

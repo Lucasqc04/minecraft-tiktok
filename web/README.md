@@ -36,6 +36,14 @@ chmod +x start-interface-linux.sh
 
 O portal tem seletor Windows/Linux no checklist para trocar caminhos e comandos copiados.
 
+## Paginas
+
+- `/index.html`: entrada do portal.
+- `/setup.html`: passo a passo completo e mapa do ZIP.
+- `/admin.html`: painel admin local, configuracao, logs e comandos RCON.
+- `/updates.html`: status de versao do plugin, historico e download do JAR.
+- `/ai.html`: contexto grande para copiar e mandar para uma IA.
+
 ## Downloads
 
 Arquivos servidos pelo site:

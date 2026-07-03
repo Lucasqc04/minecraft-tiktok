@@ -8,6 +8,13 @@ Voce pode receber um link publico do portal TikTok Minecraft Live. Ele concentra
 
 O Minecraft, o Paper, o plugin e o bot rodam no seu computador. O portal so consegue controlar tudo quando a ponte local esta aberta.
 
+Paginas principais do portal:
+
+- `Setup`: instalacao passo a passo.
+- `Painel`: configuracao, logs, bot e comandos Minecraft.
+- `Atualizacoes`: verifica se o TikTokWall.jar local esta defasado.
+- `IA`: copia um contexto grande para pedir ajuda.
+
 Para o portal conseguir controlar o bot local, abra:
 
 ```bash
@@ -242,7 +249,7 @@ Se a imagem apareceu na parede, clique em `Iniciar bot` quando a live estiver ab
 
 ## Atualizar O Plugin
 
-No portal, abra a seção `Atualizações`.
+No portal, abra a pagina `Atualizações`.
 
 Se aparecer `Atualização disponível`:
 

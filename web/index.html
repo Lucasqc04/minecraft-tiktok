@@ -7,9 +7,9 @@
   <title>TikTok Minecraft Live</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
+<body data-page="home">
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="TikTok Minecraft Live">
+    <a class="brand" href="./index.html" aria-label="TikTok Minecraft Live">
       <span class="brand-mark" aria-hidden="true">TML</span>
       <span>
         <strong>TikTok Minecraft Live</strong>
@@ -17,11 +17,11 @@
       </span>
     </a>
     <nav aria-label="Principal">
-      <a href="#download">Download</a>
-      <a href="#updates">Atualizações</a>
-      <a href="#setup">Setup</a>
-      <a href="#control">Controle</a>
-      <a href="#ai">IA</a>
+      <a class="active" href="./index.html">Início</a>
+      <a href="./setup.html">Setup</a>
+      <a href="./admin.html">Painel</a>
+      <a href="./updates.html">Atualizações</a>
+      <a href="./ai.html">IA</a>
     </nav>
     <div class="bridge-status" id="bridgeStatus">
       <span class="status-dot"></span>
@@ -29,19 +29,19 @@
     </div>
   </header>
 
-  <main id="top">
+  <main>
     <section class="hero">
       <div class="hero-copy">
         <p class="system-label">Portal online + ponte local</p>
-        <h1>Transforme curtidas e rosas em avatares de blocos no Minecraft.</h1>
+        <h1>TikTok Live virando parede de blocos no Minecraft.</h1>
         <p class="lead">
-          Baixe o pack, prepare o Paper e controle o bot pelo navegador. O Minecraft,
-          o plugin e as credenciais continuam no computador de quem está transmitindo.
+          Baixe o pack, instale o plugin Paper, configure a live e opere tudo pelo navegador.
+          O servidor, o bot e as credenciais continuam no computador da transmissão.
         </p>
         <div class="actions">
-          <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
-          <a class="button" href="./downloads/TikTokWall.jar" download>Baixar só o plugin</a>
-          <button class="button" id="copyQuickStart" type="button">Copiar passo a passo</button>
+          <a class="button primary" href="./setup.html">Começar setup</a>
+          <a class="button" href="./admin.html">Abrir painel</a>
+          <a class="button" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
         </div>
       </div>
       <div class="wall-preview" aria-label="Preview de parede em blocos">
@@ -63,232 +63,27 @@
       </div>
     </section>
 
-    <section id="download" class="download-band">
-      <div>
-        <p class="system-label">Primeira instalação</p>
-        <h2>Um ZIP para instalar, um JAR para colocar no Paper.</h2>
-      </div>
-      <div class="download-actions">
-        <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Pack completo</a>
-        <a class="button" href="./downloads/TikTokWall.jar" download>TikTokWall.jar</a>
-        <a class="button" href="https://papermc.io/downloads/paper" target="_blank" rel="noreferrer">Baixar Paper</a>
-      </div>
-    </section>
-
-    <section id="updates" class="workspace updates-grid">
-      <div class="update-copy">
+    <section class="workspace home-grid">
+      <a class="panel link-panel" href="./setup.html">
+        <p class="system-label">Setup</p>
+        <h2>Instalação guiada.</h2>
+        <p>Passo a passo separado por Windows e Linux, com comandos copiáveis e ordem correta do Paper.</p>
+      </a>
+      <a class="panel link-panel" href="./admin.html">
+        <p class="system-label">Painel</p>
+        <h2>Operação da live.</h2>
+        <p>Configuração do bot, testes, comandos RCON, logs, tamanho da parede, animação e dithering.</p>
+      </a>
+      <a class="panel link-panel" href="./updates.html">
         <p class="system-label">Atualizações</p>
-        <h2>Confira a versão instalada antes da live.</h2>
-        <p class="lead slim">
-          Com a ponte local aberta, o portal compara o TikTokWall carregado no Paper com a versão mais recente publicada aqui.
-        </p>
-        <div class="actions">
-          <a class="button primary" id="latestJarLink" href="./downloads/TikTokWall.jar" download>Baixar TikTokWall.jar</a>
-          <a class="button" id="latestPackLink" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
-          <button class="button" id="checkUpdates" type="button">Verificar versão</button>
-        </div>
-      </div>
-
-      <div class="update-status-panel panel">
-        <div class="panel-head">
-          <div>
-            <p class="system-label">Status</p>
-            <h2>Plugin local.</h2>
-          </div>
-          <span class="status-pill unknown" id="updateStatusPill">Não verificado</span>
-        </div>
-        <div class="version-grid">
-          <div>
-            <span>Versão publicada</span>
-            <strong id="latestVersionValue">-</strong>
-          </div>
-          <div>
-            <span>Versão instalada</span>
-            <strong id="installedVersionValue">-</strong>
-          </div>
-          <div>
-            <span>Compatibilidade</span>
-            <strong id="releaseCompatibilityValue">-</strong>
-          </div>
-        </div>
-        <p class="note" id="updateSummary">Carregando histórico de atualizações...</p>
-        <div class="command-list compact-list" id="updateSteps"></div>
-        <div class="actions compact">
-          <button class="button" id="copyUpdateSteps" type="button">Copiar passos de atualização</button>
-        </div>
-      </div>
-
-      <div class="history-panel panel">
-        <div class="panel-head">
-          <div>
-            <p class="system-label">Histórico</p>
-            <h2>O que mudou.</h2>
-          </div>
-        </div>
-        <div class="release-history" id="releaseHistory"></div>
-      </div>
-    </section>
-
-    <section id="setup" class="workspace two-col">
-      <aside class="setup-rail">
-        <p class="system-label">Checklist</p>
-        <h2>Ordem certa para não se perder.</h2>
-        <div class="os-switch" aria-label="Sistema operacional">
-          <button class="active" data-os="windows" type="button">Windows</button>
-          <button data-os="linux" type="button">Linux</button>
-        </div>
-        <ol class="steps" id="steps">
-          <li class="active"><button type="button" data-step="0"><span>1</span>Baixar o pack</button></li>
-          <li><button type="button" data-step="1"><span>2</span>Instalar Java e Node</button></li>
-          <li><button type="button" data-step="2"><span>3</span>Baixar Paper correto</button></li>
-          <li><button type="button" data-step="3"><span>4</span>Iniciar servidor</button></li>
-          <li><button type="button" data-step="4"><span>5</span>Instalar plugin</button></li>
-          <li><button type="button" data-step="5"><span>6</span>Entrar e preparar</button></li>
-          <li><button type="button" data-step="6"><span>7</span>Abrir ponte</button></li>
-          <li><button type="button" data-step="7"><span>8</span>Testar live</button></li>
-        </ol>
-      </aside>
-
-      <div class="instruction-panel" id="stepPanel">
-        <div>
-          <p class="system-label">Passo 1</p>
-          <h3>Baixe o pack completo e extraia em uma pasta simples.</h3>
-          <p>Use uma pasta como <code>C:\TikTokMinecraftLive</code>. Evite OneDrive, Desktop sincronizado ou pastas com acentos.</p>
-        </div>
-        <div class="command-list" id="stepCommands"></div>
-      </div>
-    </section>
-
-    <section id="control" class="workspace control-grid">
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <p class="system-label">Ponte local</p>
-            <h2>Controle o bot e a parede pelo navegador.</h2>
-          </div>
-          <button class="button small" id="refreshBridge" type="button">Atualizar</button>
-        </div>
-        <div class="status-grid">
-          <div>
-            <span>Status da ponte</span>
-            <strong id="bridgeValue">Desconectada</strong>
-          </div>
-          <div>
-            <span>Bot</span>
-            <strong id="botValue">-</strong>
-          </div>
-          <div>
-            <span>Plugin</span>
-            <strong id="pluginValue">-</strong>
-          </div>
-        </div>
-        <div class="actions compact">
-          <button class="button primary" id="startBot" type="button">Iniciar bot</button>
-          <button class="button danger" id="stopBot" type="button">Parar bot</button>
-          <button class="button" id="testImage" type="button">Enviar imagem teste</button>
-        </div>
-        <p class="note">
-          Para conectar esta página ao seu Minecraft, abra <code id="bridgeScriptName">o script da ponte local</code>.
-        </p>
-      </div>
-
-      <form class="panel config-panel" id="configForm">
-        <div class="panel-head">
-          <div>
-            <p class="system-label">Configuração</p>
-            <h2>Live, parede e eventos.</h2>
-          </div>
-          <button class="button primary small" type="submit">Salvar</button>
-        </div>
-        <div class="form-grid">
-          <label>Username TikTok sem @
-            <input name="TIKTOK_USERNAME" placeholder="usuario_da_live" />
-          </label>
-          <label>Tamanho
-            <select name="AVATAR_SIZE">
-              <option>32</option>
-              <option>48</option>
-              <option>64</option>
-              <option>128</option>
-            </select>
-          </label>
-          <label>Duração na parede
-            <input name="DURATION_SECONDS" type="number" min="1" max="600" />
-          </label>
-          <label>Cooldown de curtida
-            <input name="LIKE_AVATAR_COOLDOWN_MS" type="number" min="0" max="600000" />
-          </label>
-          <label>Host plugin
-            <input name="MINECRAFT_PLUGIN_HOST" />
-          </label>
-          <label>Porta plugin
-            <input name="MINECRAFT_PLUGIN_PORT" type="number" min="1" max="65535" />
-          </label>
-          <label>Rosa por nome
-            <input name="ROSE_GIFT_NAMES" />
-          </label>
-          <label>IDs opcionais
-            <input name="ROSE_GIFT_IDS" />
-          </label>
-          <label>RCON host
-            <input name="RCON_HOST" />
-          </label>
-          <label>RCON porta
-            <input name="RCON_PORT" type="number" min="1" max="65535" />
-          </label>
-          <label class="wide">RCON senha
-            <input name="RCON_PASSWORD" type="password" autocomplete="new-password" />
-          </label>
-          <label class="toggle"><input name="ENABLE_LIKE_AVATAR" type="checkbox" /> Curtidas mostram avatar</label>
-          <label class="toggle"><input name="ENABLE_EXTENDED_GIFT_INFO" type="checkbox" /> Gift info avançado</label>
-        </div>
-      </form>
-
-      <div class="panel command-panel">
-        <div class="panel-head">
-          <div>
-            <p class="system-label">Minecraft</p>
-            <h2>Comandos seguros via RCON.</h2>
-          </div>
-        </div>
-        <div class="command-buttons">
-          <button class="button" data-rcon="tiktokwall setup" type="button">Setup</button>
-          <button class="button" data-rcon="tiktokwall test" type="button">Testar</button>
-          <button class="button" data-rcon="tiktokwall clear" type="button">Limpar</button>
-          <button class="button" data-rcon="tiktokwall size 128" type="button">Size 128</button>
-          <button class="button" data-rcon="tiktokwall dithering off" type="button">Dithering off</button>
-          <button class="button" data-rcon="tiktokwall animation on" type="button">Animação on</button>
-          <button class="button" data-rcon="tiktokwall animationspeed 8" type="button">Velocidade 8</button>
-        </div>
-      </div>
-
-      <div class="panel log-panel">
-        <div class="panel-head">
-          <div>
-            <p class="system-label">Logs</p>
-            <h2>O que está acontecendo.</h2>
-          </div>
-          <button class="button small" id="clearLocalLog" type="button">Limpar tela</button>
-        </div>
-        <pre id="logs"></pre>
-      </div>
-    </section>
-
-    <section id="ai" class="workspace ai-grid">
-      <div>
-        <p class="system-label">Suporte assistido</p>
-        <h2>Contexto pronto para mandar para uma IA.</h2>
-        <p class="lead slim">
-          O botão copia um resumo completo do projeto, instalação, comandos, arquitetura e problemas comuns.
-          Assim a pessoa consegue pedir ajuda para qualquer IA sem explicar tudo do zero.
-        </p>
-        <div class="actions">
-          <button class="button primary" id="copyAiContext" type="button">Copiar contexto para IA</button>
-          <button class="button" id="copyCommands" type="button">Copiar comandos Minecraft</button>
-          <button class="button" id="copyServerProps" type="button">Copiar server.properties</button>
-        </div>
-      </div>
-      <pre id="aiContextPreview"></pre>
+        <h2>Versão do JAR.</h2>
+        <p>Veja se o plugin local está defasado, baixe o JAR novo e copie os passos de atualização.</p>
+      </a>
+      <a class="panel link-panel" href="./ai.html">
+        <p class="system-label">IA</p>
+        <h2>Contexto completo.</h2>
+        <p>Copie um prompt grande com arquitetura, arquivos do ZIP, setup, comandos e problemas comuns.</p>
+      </a>
     </section>
   </main>
 

@@ -32,6 +32,13 @@ http://127.0.0.1:3333
 
 Quando a ponte esta aberta, o portal consegue salvar configuracoes no seu proprio computador, iniciar/parar o bot, mandar teste e enviar comandos seguros para o plugin.
 
+Paginas principais do portal:
+
+- `Setup`: instalacao passo a passo.
+- `Painel`: configuracao, logs, bot e comandos Minecraft.
+- `Atualizacoes`: verifica se o TikTokWall.jar local esta defasado.
+- `IA`: copia um contexto grande para pedir ajuda.
+
 Sua senha RCON e o arquivo `.env` ficam no computador da live. Nao publique esses arquivos.
 
 ## Programas Necessarios
@@ -279,7 +286,7 @@ Se apareceu imagem na parede, a parte Minecraft esta funcionando.
 
 ## Atualizar O Plugin
 
-No portal, abra a seção `Atualizações`.
+No portal, abra a pagina `Atualizações`.
 
 Se aparecer `Atualização disponível`:
 

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Atualizações do TikTokWall.jar." />
+  <title>Atualizações - TikTok Minecraft Live</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="updates">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="TikTok Minecraft Live">
+      <span class="brand-mark" aria-hidden="true">TML</span>
+      <span>
+        <strong>TikTok Minecraft Live</strong>
+        <small>Portal do criador</small>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="./index.html">Início</a>
+      <a href="./setup.html">Setup</a>
+      <a href="./admin.html">Painel</a>
+      <a class="active" href="./updates.html">Atualizações</a>
+      <a href="./ai.html">IA</a>
+    </nav>
+    <div class="bridge-status" id="bridgeStatus">
+      <span class="status-dot"></span>
+      <span>Ponte local desconectada</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero compact-hero">
+      <p class="system-label">Atualizações</p>
+      <h1>Veja se o TikTokWall.jar está defasado.</h1>
+      <p class="lead">
+        Com a ponte local aberta, o portal compara o plugin carregado no Paper com a versão publicada em `updates.json`.
+      </p>
+    </section>
+
+    <section class="workspace updates-grid">
+      <div class="update-copy">
+        <p class="system-label">Downloads</p>
+        <h2>Atualize sem reinstalar tudo.</h2>
+        <p class="lead slim">
+          Na maioria das vezes basta parar o Paper, substituir `TikTokWall.jar` dentro de `plugins/` e iniciar o servidor de novo.
+        </p>
+        <div class="actions">
+          <a class="button primary" id="latestJarLink" href="./downloads/TikTokWall.jar" download>Baixar TikTokWall.jar</a>
+          <a class="button" id="latestPackLink" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
+          <button class="button" id="checkUpdates" type="button">Verificar versão</button>
+        </div>
+      </div>
+
+      <div class="update-status-panel panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Status</p>
+            <h2>Plugin local.</h2>
+          </div>
+          <span class="status-pill unknown" id="updateStatusPill">Não verificado</span>
+        </div>
+        <div class="version-grid">
+          <div>
+            <span>Versão publicada</span>
+            <strong id="latestVersionValue">-</strong>
+          </div>
+          <div>
+            <span>Versão instalada</span>
+            <strong id="installedVersionValue">-</strong>
+          </div>
+          <div>
+            <span>Compatibilidade</span>
+            <strong id="releaseCompatibilityValue">-</strong>
+          </div>
+        </div>
+        <p class="note" id="updateSummary">Carregando histórico de atualizações...</p>
+        <div class="command-list compact-list" id="updateSteps"></div>
+        <div class="actions compact">
+          <button class="button" id="copyUpdateSteps" type="button">Copiar passos de atualização</button>
+        </div>
+      </div>
+
+      <div class="history-panel panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Histórico</p>
+            <h2>O que mudou.</h2>
+          </div>
+        </div>
+        <div class="release-history" id="releaseHistory"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>

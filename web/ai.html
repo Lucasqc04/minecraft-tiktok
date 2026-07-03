@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Contexto para IA ajudar com TikTok Minecraft Live." />
+  <title>IA - TikTok Minecraft Live</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="ai">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="TikTok Minecraft Live">
+      <span class="brand-mark" aria-hidden="true">TML</span>
+      <span>
+        <strong>TikTok Minecraft Live</strong>
+        <small>Portal do criador</small>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="./index.html">Início</a>
+      <a href="./setup.html">Setup</a>
+      <a href="./admin.html">Painel</a>
+      <a href="./updates.html">Atualizações</a>
+      <a class="active" href="./ai.html">IA</a>
+    </nav>
+    <div class="bridge-status" id="bridgeStatus">
+      <span class="status-dot"></span>
+      <span>Ponte local desconectada</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero compact-hero">
+      <p class="system-label">Suporte assistido</p>
+      <h1>Copie um contexto completo para qualquer IA.</h1>
+      <p class="lead">
+        O texto inclui arquitetura, arquivos do ZIP, setup do sistema selecionado, comandos do Minecraft,
+        configuração atual mascarada, atualização e problemas comuns.
+      </p>
+    </section>
+
+    <section class="workspace ai-grid">
+      <div class="panel ai-actions-panel">
+        <p class="system-label">Contexto</p>
+        <h2>Escolha o que copiar.</h2>
+        <div class="os-switch" aria-label="Sistema operacional">
+          <button class="active" data-os="windows" type="button">Windows</button>
+          <button data-os="linux" type="button">Linux</button>
+        </div>
+        <div class="actions vertical-actions">
+          <button class="button primary" id="copyAiContext" type="button">Copiar contexto completo</button>
+          <button class="button" id="copyQuickStart" type="button">Copiar só o setup</button>
+          <button class="button" id="copyZipMap" type="button">Copiar arquivos do ZIP</button>
+          <button class="button" id="copyCommands" type="button">Copiar comandos Minecraft</button>
+          <button class="button" id="copyServerProps" type="button">Copiar server.properties</button>
+          <button class="button" id="copyUpdateSteps" type="button">Copiar atualização do JAR</button>
+        </div>
+        <p class="note">
+          Use o contexto completo quando a pessoa estiver travada. Use os botões menores quando a IA só precisar de uma parte.
+        </p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Prévia</p>
+            <h2>Texto que será enviado.</h2>
+          </div>
+          <button class="button small" id="refreshBridge" type="button">Atualizar status</button>
+        </div>
+        <pre id="aiContextPreview"></pre>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>

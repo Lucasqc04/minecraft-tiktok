@@ -14,7 +14,7 @@ O projeto tem:
 
 - `bot/`: bot Node.js + TypeScript, com interface web local.
 - `minecraft-plugin/`: plugin Paper Java `TikTokWall`.
-- `web/`: portal online estatico para download, setup guiado e controle.
+- `web/`: portal online estatico em paginas separadas para inicio, setup, painel, atualizacoes e IA.
 - `web/updates.json`: historico publico de versoes e fonte da verificacao de atualizacao.
 - `start-interface-windows.bat`: atalho para abrir a interface no Windows.
 - `start-interface-linux.sh`: atalho para abrir a interface no Linux.
@@ -87,6 +87,11 @@ Ela permite:
 
 O site em `web/` e um portal estatico com:
 
+- `index.html`: entrada e atalhos principais;
+- `setup.html`: passo a passo detalhado e mapa do ZIP;
+- `admin.html`: painel da live, configuracao, logs e comandos RCON;
+- `updates.html`: status de versao, historico e passos para atualizar o JAR;
+- `ai.html`: contexto completo para mandar para uma IA;
 - download do pack e do `TikTokWall.jar`;
 - status da versao instalada do plugin;
 - historico publico de atualizacoes;

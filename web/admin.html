@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Painel admin local do TikTok Minecraft Live." />
+  <title>Painel - TikTok Minecraft Live</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="admin">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="TikTok Minecraft Live">
+      <span class="brand-mark" aria-hidden="true">TML</span>
+      <span>
+        <strong>TikTok Minecraft Live</strong>
+        <small>Portal do criador</small>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="./index.html">Início</a>
+      <a href="./setup.html">Setup</a>
+      <a class="active" href="./admin.html">Painel</a>
+      <a href="./updates.html">Atualizações</a>
+      <a href="./ai.html">IA</a>
+    </nav>
+    <div class="bridge-status" id="bridgeStatus">
+      <span class="status-dot"></span>
+      <span>Ponte local desconectada</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero compact-hero">
+      <p class="system-label">Painel admin</p>
+      <h1>Controle da live, bot e parede.</h1>
+      <p class="lead">
+        Use esta página durante a transmissão: salve configuração, inicie o bot, rode testes e ajuste a parede via RCON.
+      </p>
+    </section>
+
+    <section class="workspace admin-grid">
+      <div class="panel status-panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Status</p>
+            <h2>Conexões locais.</h2>
+          </div>
+          <button class="button small" id="refreshBridge" type="button">Atualizar</button>
+        </div>
+        <div class="status-grid wide-status">
+          <div>
+            <span>Ponte</span>
+            <strong id="bridgeValue">Desconectada</strong>
+          </div>
+          <div>
+            <span>Bot</span>
+            <strong id="botValue">-</strong>
+          </div>
+          <div>
+            <span>Plugin</span>
+            <strong id="pluginValue">-</strong>
+          </div>
+          <div>
+            <span>Versão publicada</span>
+            <strong id="latestVersionValue">-</strong>
+          </div>
+        </div>
+        <div class="actions compact">
+          <button class="button primary" id="startBot" type="button">Iniciar bot</button>
+          <button class="button danger" id="stopBot" type="button">Parar bot</button>
+          <button class="button" id="testImage" type="button">Enviar imagem teste</button>
+          <button class="button" id="healthButton" type="button">Checar plugin</button>
+        </div>
+        <p class="note">Abra <code id="bridgeScriptName">o script da ponte local</code> no computador da live antes de usar o painel.</p>
+      </div>
+
+      <form class="panel config-panel" id="configForm">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Configuração</p>
+            <h2>TikTok, avatar e eventos.</h2>
+          </div>
+          <button class="button primary small" type="submit">Salvar</button>
+        </div>
+        <div class="form-grid">
+          <label>Username TikTok sem @
+            <input name="TIKTOK_USERNAME" placeholder="usuario_da_live" />
+          </label>
+          <label>Tamanho do avatar
+            <select name="AVATAR_SIZE">
+              <option>32</option>
+              <option>48</option>
+              <option>64</option>
+              <option>128</option>
+            </select>
+          </label>
+          <label>Duração na parede
+            <input name="DURATION_SECONDS" type="number" min="1" max="600" />
+          </label>
+          <label>Cooldown de curtida em ms
+            <input name="LIKE_AVATAR_COOLDOWN_MS" type="number" min="0" max="600000" />
+          </label>
+          <label>Host plugin
+            <input name="MINECRAFT_PLUGIN_HOST" />
+          </label>
+          <label>Porta plugin
+            <input name="MINECRAFT_PLUGIN_PORT" type="number" min="1" max="65535" />
+          </label>
+          <label>Rosa por nome
+            <input name="ROSE_GIFT_NAMES" />
+          </label>
+          <label>IDs de gift opcionais
+            <input name="ROSE_GIFT_IDS" />
+          </label>
+          <label>RCON host
+            <input name="RCON_HOST" />
+          </label>
+          <label>RCON porta
+            <input name="RCON_PORT" type="number" min="1" max="65535" />
+          </label>
+          <label>Diretório de avatares
+            <input name="AVATAR_DIR" />
+          </label>
+          <label class="wide">RCON senha
+            <input name="RCON_PASSWORD" type="password" autocomplete="new-password" />
+          </label>
+          <label class="toggle"><input name="ENABLE_LIKE_AVATAR" type="checkbox" /> Curtidas mostram avatar</label>
+          <label class="toggle"><input name="ENABLE_EXTENDED_GIFT_INFO" type="checkbox" /> Gift info avançado</label>
+        </div>
+      </form>
+
+      <div class="panel command-panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Minecraft</p>
+            <h2>Comandos via RCON.</h2>
+          </div>
+          <button class="button small" id="copyCommands" type="button">Copiar lista</button>
+        </div>
+
+        <div class="command-group">
+          <h3>Operação</h3>
+          <div class="command-buttons">
+            <button class="button" data-rcon="tiktokwall setup" type="button">Setup</button>
+            <button class="button" data-rcon="tiktokwall info" type="button">Info</button>
+            <button class="button" data-rcon="tiktokwall test" type="button">Testar</button>
+            <button class="button" data-rcon="tiktokwall clear" type="button">Limpar</button>
+          </div>
+        </div>
+
+        <div class="command-group">
+          <h3>Tamanho</h3>
+          <div class="command-buttons">
+            <button class="button" data-rcon="tiktokwall size 32" type="button">32</button>
+            <button class="button" data-rcon="tiktokwall size 48" type="button">48</button>
+            <button class="button" data-rcon="tiktokwall size 64" type="button">64</button>
+            <button class="button" data-rcon="tiktokwall size 128" type="button">128</button>
+          </div>
+        </div>
+
+        <div class="command-group">
+          <h3>Visual</h3>
+          <div class="command-buttons">
+            <button class="button" data-rcon="tiktokwall dithering off" type="button">Dithering off</button>
+            <button class="button" data-rcon="tiktokwall dithering on" type="button">Dithering on</button>
+            <button class="button" data-rcon="tiktokwall ditheringstrength 8" type="button">Dither 8</button>
+            <button class="button" data-rcon="tiktokwall ditheringstrength 12" type="button">Dither 12</button>
+            <button class="button" data-rcon="tiktokwall animation on" type="button">Animação on</button>
+            <button class="button" data-rcon="tiktokwall animation off" type="button">Animação off</button>
+            <button class="button" data-rcon="tiktokwall animationspeed 4" type="button">Velocidade 4</button>
+            <button class="button" data-rcon="tiktokwall animationspeed 8" type="button">Velocidade 8</button>
+            <button class="button" data-rcon="tiktokwall animationspeed 16" type="button">Velocidade 16</button>
+          </div>
+        </div>
+
+        <div class="command-group">
+          <h3>Direção da parede</h3>
+          <div class="command-buttons">
+            <button class="button" data-rcon="tiktokwall facing NORTH" type="button">NORTH</button>
+            <button class="button" data-rcon="tiktokwall facing SOUTH" type="button">SOUTH</button>
+            <button class="button" data-rcon="tiktokwall facing EAST" type="button">EAST</button>
+            <button class="button" data-rcon="tiktokwall facing WEST" type="button">WEST</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel log-panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Logs</p>
+            <h2>O que está acontecendo.</h2>
+          </div>
+          <button class="button small" id="clearLocalLog" type="button">Limpar tela</button>
+        </div>
+        <pre id="logs"></pre>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
