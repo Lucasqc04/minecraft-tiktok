@@ -181,7 +181,8 @@ Body de `/render`:
   "imageBase64": "png_base64",
   "size": 48,
   "durationSeconds": 15,
-  "clearAfter": true
+  "clearAfter": true,
+  "animate": true
 }
 ```
 

@@ -9,6 +9,7 @@ public class RenderRequest {
     private int size;
     private int durationSeconds;
     private Boolean clearAfter;
+    private Boolean animate;
 
     public String username() {
         return username == null || username.isBlank() ? "unknown" : username;
@@ -49,5 +50,9 @@ public class RenderRequest {
 
     public boolean clearAfter() {
         return clearAfter == null || clearAfter;
+    }
+
+    public boolean animate(boolean fallback) {
+        return animate == null ? fallback : animate;
     }
 }

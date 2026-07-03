@@ -1,14 +1,26 @@
 {
   "latest": {
-    "version": "1.1.0",
+    "version": "1.1.1",
     "date": "2026-07-03",
     "minecraft": "26.2",
     "java": "25",
     "jar": "./downloads/TikTokWall.jar",
     "pack": "./downloads/tiktok-minecraft-live.zip",
-    "summary": "Mosaico de curtidas 1x1 a 4x4, gifts em tela cheia, nome em blocos, fogos configuraveis e tamanho 256."
+    "summary": "Configuracao em runtime, painel sem resetar campos editados e mosaico de curtidas sem animacao por padrao."
   },
   "history": [
+    {
+      "version": "1.1.1",
+      "date": "2026-07-03",
+      "title": "Configuracao ao vivo",
+      "changes": [
+        "O painel nao sobrescreve mais campos que estao sendo editados durante o refresh automatico.",
+        "O bot relê o .env a cada evento para aplicar grid, cooldown, tamanho e animacao sem reiniciar a ponte local.",
+        "Curtidas atualizam o mosaico sem animacao por padrao.",
+        "Cooldown padrao de curtida reduzido para 750ms.",
+        "Botoes RCON salvam a configuracao atual antes de enviar comandos."
+      ]
+    },
     {
       "version": "1.1.0",
       "date": "2026-07-03",

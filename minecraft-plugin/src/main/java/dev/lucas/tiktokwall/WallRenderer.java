@@ -166,9 +166,10 @@ public final class WallRenderer {
         try {
             BufferedImage image = decodeImage(request.imageBase64(), size);
             ActiveFrame frame = ActiveFrame.fromSettings(settings, size);
+            boolean animate = request.animate(settings.isAnimationEnabled());
 
             activeFrame = frame;
-            long animationTicks = renderImage(world, frame, image);
+            long animationTicks = renderImage(world, frame, image, animate);
             renderNameplate(world, frame, request.nickname());
             launchFireworks(world, frame, request.eventType());
 
@@ -178,11 +179,11 @@ public final class WallRenderer {
 
             if (request.clearAfter()) {
                 long durationTicks = durationSeconds * 20L;
-                long clearAnimationTicks = settings.isAnimationEnabled() ? animationTicksFor(frame.size()) : 0L;
+                long clearAnimationTicks = animate ? animationTicksFor(frame.size()) : 0L;
                 long clearDelayTicks = Math.max(animationTicks + 1L, durationTicks - clearAnimationTicks);
                 clearTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     clearTask = null;
-                    clearFrameWithConfiguredAnimation(frame, () -> activeFrame = null);
+                    clearFrameWithConfiguredAnimation(frame, animate, () -> activeFrame = null);
                 }, clearDelayTicks);
             } else {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -199,12 +200,12 @@ public final class WallRenderer {
         }
     }
 
-    private long renderImage(World world, ActiveFrame frame, BufferedImage image) {
+    private long renderImage(World world, ActiveFrame frame, BufferedImage image, boolean animate) {
         Material[][] materials = settings.isDithering()
             ? imageToMaterialsDithered(image, frame.size())
             : imageToMaterialsNearest(image, frame.size());
 
-        if (!settings.isAnimationEnabled()) {
+        if (!animate) {
             applyMaterials(world, frame, materials);
             return 0L;
         }
@@ -435,8 +436,8 @@ public final class WallRenderer {
         clearNameplateArea(world, frame);
     }
 
-    private void clearFrameWithConfiguredAnimation(ActiveFrame frame, Runnable onDone) {
-        if (!settings.isAnimationEnabled()) {
+    private void clearFrameWithConfiguredAnimation(ActiveFrame frame, boolean animate, Runnable onDone) {
+        if (!animate) {
             clearFrame(frame);
             onDone.run();
             return;

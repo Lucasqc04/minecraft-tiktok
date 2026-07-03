@@ -1,5 +1,5 @@
 name: TikTokWall
-version: 1.1.0
+version: 1.1.1
 main: dev.lucas.tiktokwall.TikTokWallPlugin
 api-version: '26.2'
 author: lucas

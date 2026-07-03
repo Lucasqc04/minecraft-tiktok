@@ -85,6 +85,8 @@ Ela permite:
 - enviar alguns comandos `/tiktokwall` por RCON, se a senha RCON estiver configurada.
 - configurar mosaico de curtidas 1x1 a 4x4, gift em tela cheia e tamanho ate 256.
 
+O bot relê a configuração salva durante a execução para aplicar grid, cooldown, tamanho, animação e comportamento de gift sem reiniciar a ponte local. Se mudar usuário TikTok, Gift info avançado ou regras de identificação de rosa, a ponte reinicia apenas o processo do bot.
+
 ## Portal Online
 
 O site em `web/` e um portal estatico com:

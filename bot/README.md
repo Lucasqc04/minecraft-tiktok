@@ -21,12 +21,14 @@ AVATAR_DIR=./avatars
 LIKE_GRID_SIZE=3
 GIFT_FULL_PANEL=true
 RESTORE_LIKE_GRID_AFTER_GIFT=true
+LIKE_GRID_ANIMATION=false
+GIFT_ANIMATION=true
 RCON_HOST=127.0.0.1
 RCON_PORT=25575
 RCON_PASSWORD=sua_senha_rcon
 DURATION_SECONDS=15
 ENABLE_LIKE_AVATAR=true
-LIKE_AVATAR_COOLDOWN_MS=5000
+LIKE_AVATAR_COOLDOWN_MS=750
 ENABLE_EXTENDED_GIFT_INFO=false
 ROSE_GIFT_NAMES=rose,rosa
 ROSE_GIFT_IDS=
@@ -47,6 +49,8 @@ npm run test:image
 
 `npm run test:image` gera uma imagem fake e envia para o plugin, sem conectar no TikTok.
 
+O bot relê `.env` a cada evento para aplicar grid, cooldown, tamanho e animação sem reiniciar a ponte local. Mudanças que alteram a conexão com o TikTok, como `TIKTOK_USERNAME`, `ENABLE_EXTENDED_GIFT_INFO`, `ROSE_GIFT_NAMES` ou `ROSE_GIFT_IDS`, fazem a ponte reiniciar apenas o processo do bot.
+
 Também é possível enviar uma imagem local:
 
 ```bash
@@ -62,6 +66,8 @@ npm run test:image -- ./avatars/minha-imagem.png
 - `LIKE_GRID_SIZE` controla o mosaico das curtidas: `1`, `2`, `3` ou `4`.
 - Com `GIFT_FULL_PANEL=true`, rosa/gift ocupa o painel inteiro.
 - Com `RESTORE_LIKE_GRID_AFTER_GIFT=true`, o mosaico de curtidas volta depois do gift.
+- Com `LIKE_GRID_ANIMATION=false`, curtidas atualizam o mosaico direto, sem varrer a parede.
+- Com `GIFT_ANIMATION=true`, gifts continuam entrando com animação.
 - Curtida aparece no chat como `curtiu a live`; rosa aparece como `enviou uma rosa`.
 - `LIKE_AVATAR_COOLDOWN_MS` evita rajadas infinitas de avatar quando a live recebe muitas curtidas.
 - `ENABLE_EXTENDED_GIFT_INFO=false` evita a chamada paga da EulerStream para buscar lista de gifts.

@@ -27,6 +27,8 @@ const CONFIG_KEYS = [
   "LIKE_GRID_SIZE",
   "GIFT_FULL_PANEL",
   "RESTORE_LIKE_GRID_AFTER_GIFT",
+  "LIKE_GRID_ANIMATION",
+  "GIFT_ANIMATION",
   "DURATION_SECONDS",
   "ENABLE_LIKE_AVATAR",
   "LIKE_AVATAR_COOLDOWN_MS",
@@ -49,9 +51,11 @@ const DEFAULT_CONFIG: EnvMap = {
   LIKE_GRID_SIZE: "3",
   GIFT_FULL_PANEL: "true",
   RESTORE_LIKE_GRID_AFTER_GIFT: "true",
+  LIKE_GRID_ANIMATION: "false",
+  GIFT_ANIMATION: "true",
   DURATION_SECONDS: "15",
   ENABLE_LIKE_AVATAR: "true",
-  LIKE_AVATAR_COOLDOWN_MS: "5000",
+  LIKE_AVATAR_COOLDOWN_MS: "750",
   ENABLE_EXTENDED_GIFT_INFO: "false",
   ROSE_GIFT_NAMES: "rose,rosa",
   ROSE_GIFT_IDS: "",
@@ -64,7 +68,14 @@ const DEFAULT_CONFIG: EnvMap = {
 
 let botProcess: ChildProcessWithoutNullStreams | null = null;
 let botStartedAt = "";
+let restartBotAfterExit = false;
 const logLines: string[] = [];
+const RECONNECT_CONFIG_KEYS = [
+  "TIKTOK_USERNAME",
+  "ENABLE_EXTENDED_GIFT_INFO",
+  "ROSE_GIFT_NAMES",
+  "ROSE_GIFT_IDS"
+] as const;
 
 async function main(): Promise<void> {
   await ensureEnvFile();
@@ -215,6 +226,9 @@ async function writeConfig(input: unknown): Promise<EnvMap> {
   validateConfig(next);
   await fs.writeFile(ENV_PATH, serializeEnv(next), "utf8");
   applyConfigToProcessEnv(next);
+  if (botStatus() === "running" && requiresBotReconnect(current, next)) {
+    await restartBotForConfigChange();
+  }
   return next;
 }
 
@@ -292,6 +306,16 @@ function validateInteger(value: string, label: string, min: number, max: number)
   }
 }
 
+function requiresBotReconnect(current: EnvMap, next: EnvMap): boolean {
+  return RECONNECT_CONFIG_KEYS.some((key) => (current[key] ?? "") !== (next[key] ?? ""));
+}
+
+async function restartBotForConfigChange(): Promise<void> {
+  appendLog("[ui] configuracao de conexao mudou; reiniciando apenas o bot...");
+  restartBotAfterExit = true;
+  await stopBot();
+}
+
 async function startBot(): Promise<void> {
   if (botProcess && !botProcess.killed) {
     appendLog("[ui] bot ja esta rodando");
@@ -316,6 +340,10 @@ async function startBot(): Promise<void> {
     appendLog(`[ui] bot finalizado code=${code ?? "-"} signal=${signal ?? "-"}`);
     botProcess = null;
     botStartedAt = "";
+    if (restartBotAfterExit) {
+      restartBotAfterExit = false;
+      startBot().catch((error) => appendLog(`[ui] falha ao reiniciar bot: ${error instanceof Error ? error.message : String(error)}`));
+    }
   });
 }
 
@@ -753,6 +781,8 @@ function renderPage(): string {
           <label class="check"><input name="ENABLE_LIKE_AVATAR" type="checkbox" /> Curtida mostra avatar</label>
           <label class="check"><input name="GIFT_FULL_PANEL" type="checkbox" /> Gift em tela cheia</label>
           <label class="check"><input name="RESTORE_LIKE_GRID_AFTER_GIFT" type="checkbox" /> Restaurar mosaico apos gift</label>
+          <label class="check"><input name="LIKE_GRID_ANIMATION" type="checkbox" /> Animar mosaico de curtidas</label>
+          <label class="check"><input name="GIFT_ANIMATION" type="checkbox" /> Animar gift em tela cheia</label>
           <label class="check"><input name="ENABLE_EXTENDED_GIFT_INFO" type="checkbox" /> Gift info avancado</label>
         </div>
         <div class="row" style="margin-top:14px">

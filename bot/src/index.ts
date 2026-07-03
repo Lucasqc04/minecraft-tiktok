@@ -4,11 +4,6 @@ import { MinecraftClient } from "./minecraftClient.js";
 import { TaskQueue } from "./queue.js";
 import { connectTikTok, type LikeEvent, type RoseGiftEvent } from "./tiktok.js";
 
-const config = loadConfig();
-const minecraft = new MinecraftClient({
-  host: config.minecraftPluginHost,
-  port: config.minecraftPluginPort
-});
 const queue = new TaskQueue();
 let lastLikeAvatarAt = 0;
 const recentLikeAvatars: LikeGridEntry[] = [];
@@ -19,7 +14,15 @@ interface LikeGridEntry {
   pngBuffer: Buffer;
 }
 
+function minecraftClient(config = loadConfig()): MinecraftClient {
+  return new MinecraftClient({
+    host: config.minecraftPluginHost,
+    port: config.minecraftPluginPort
+  });
+}
+
 async function processRose(gift: RoseGiftEvent): Promise<void> {
+  const config = loadConfig();
   console.log(
     `[gift] rose from @${gift.username} (${gift.nickname}), repeat=${gift.repeatCount}, queue=${queue.size}`
   );
@@ -57,6 +60,7 @@ async function renderProfileAvatar(params: {
   eventLabel: string;
   clearAfter: boolean;
 }): Promise<ProcessedAvatar> {
+  const config = loadConfig();
   const avatar = await loadProfileAvatar(params);
 
   await renderWithBusyRetry({
@@ -67,7 +71,10 @@ async function renderProfileAvatar(params: {
     imageBase64: avatar.imageBase64,
     size: config.avatarSize,
     durationSeconds: config.durationSeconds,
-    clearAfter: params.clearAfter
+    clearAfter: params.clearAfter,
+    animate: params.eventType === "like" || params.eventType === "like-grid"
+      ? config.likeGridAnimation
+      : config.giftAnimation
   }, config.durationSeconds * 1000);
 
   return avatar;
@@ -77,6 +84,7 @@ async function loadProfileAvatar(params: {
   username: string;
   profilePictureUrl: string;
 }): Promise<ProcessedAvatar> {
+  const config = loadConfig();
   const imageUrl = params.profilePictureUrl || (await resolveTikTokAvatarUrl(params.username));
   if (!imageUrl) {
     throw new Error(`Could not resolve avatar URL for @${params.username}`);
@@ -126,6 +134,7 @@ async function processLikeStyleAvatar(params: {
 }
 
 function rememberLikeAvatar(entry: LikeGridEntry): void {
+  const config = loadConfig();
   const existingIndex = recentLikeAvatars.findIndex((item) => item.username === entry.username);
   if (existingIndex >= 0) {
     recentLikeAvatars.splice(existingIndex, 1);
@@ -135,6 +144,7 @@ function rememberLikeAvatar(entry: LikeGridEntry): void {
 }
 
 async function renderLikeGrid(username: string, nickname: string, eventType = "like", eventLabel = "curtiu a live"): Promise<void> {
+  const config = loadConfig();
   if (recentLikeAvatars.length === 0) {
     return;
   }
@@ -156,11 +166,13 @@ async function renderLikeGrid(username: string, nickname: string, eventType = "l
     imageBase64: grid.imageBase64,
     size: config.avatarSize,
     durationSeconds: config.durationSeconds,
-    clearAfter: false
+    clearAfter: false,
+    animate: config.likeGridAnimation
   }, 1500, 5);
 }
 
 async function restoreLikeGridAfterGift(): Promise<void> {
+  const config = loadConfig();
   if (!config.restoreLikeGridAfterGift || recentLikeAvatars.length === 0) {
     return;
   }
@@ -177,7 +189,7 @@ async function renderWithBusyRetry(
 ): Promise<void> {
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
-      await minecraft.render(payload);
+      await minecraftClient().render(payload);
       return;
     } catch (error) {
       if (!isBusyError(error) || attempt === attempts) {
@@ -194,6 +206,7 @@ function isBusyError(error: unknown): boolean {
 }
 
 async function sleepAfterWallRender(): Promise<void> {
+  const config = loadConfig();
   await sleepMs(config.durationSeconds * 1000 + 500);
 }
 
@@ -204,22 +217,23 @@ async function sleepMs(milliseconds: number): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  const config = loadConfig();
   console.log("[bot] starting TikTok Minecraft Live bot");
   console.log(
     `[bot] minecraft plugin http://${config.minecraftPluginHost}:${config.minecraftPluginPort}, avatar size ${config.avatarSize}`
   );
   console.log(
-    `[bot] like avatar ${config.enableLikeAvatar ? "enabled" : "disabled"}, cooldown ${config.likeAvatarCooldownMs}ms, grid ${config.likeGridSize}x${config.likeGridSize}`
+    `[bot] like avatar ${config.enableLikeAvatar ? "enabled" : "disabled"}, cooldown ${config.likeAvatarCooldownMs}ms, grid ${config.likeGridSize}x${config.likeGridSize}, grid animation ${config.likeGridAnimation ? "on" : "off"}`
   );
   console.log(
-    `[bot] gift full panel ${config.giftFullPanel ? "enabled" : "disabled"}, restore like grid ${config.restoreLikeGridAfterGift ? "enabled" : "disabled"}`
+    `[bot] gift full panel ${config.giftFullPanel ? "enabled" : "disabled"}, gift animation ${config.giftAnimation ? "on" : "off"}, restore like grid ${config.restoreLikeGridAfterGift ? "enabled" : "disabled"}`
   );
   console.log(
     `[bot] extended gift info ${config.enableExtendedGiftInfo ? "enabled" : "disabled"}, rose names=${config.roseGiftNames.join(",") || "-"}, rose ids=${config.roseGiftIds.join(",") || "-"}`
   );
 
   try {
-    const health = await minecraft.health();
+    const health = await minecraftClient(config).health();
     console.log("[minecraft] health:", health);
   } catch (error) {
     console.warn("[minecraft] health check failed; continuing anyway:", error);
@@ -237,19 +251,22 @@ async function main(): Promise<void> {
         await processRose(gift);
       });
     },
-    config.enableLikeAvatar
-      ? (like) => {
-          const now = Date.now();
-          if (now - lastLikeAvatarAt < config.likeAvatarCooldownMs) {
-            return;
-          }
+    (like) => {
+      const currentConfig = loadConfig();
+      if (!currentConfig.enableLikeAvatar) {
+        return;
+      }
 
-          lastLikeAvatarAt = now;
-          queue.enqueue(async () => {
-            await processLikeAvatar(like);
-          });
-        }
-      : undefined
+      const now = Date.now();
+      if (now - lastLikeAvatarAt < currentConfig.likeAvatarCooldownMs) {
+        return;
+      }
+
+      lastLikeAvatarAt = now;
+      queue.enqueue(async () => {
+        await processLikeAvatar(like);
+      });
+    }
   );
 }
 

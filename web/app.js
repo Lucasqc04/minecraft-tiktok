@@ -9,9 +9,11 @@ const defaultConfig = {
   LIKE_GRID_SIZE: "3",
   GIFT_FULL_PANEL: "true",
   RESTORE_LIKE_GRID_AFTER_GIFT: "true",
+  LIKE_GRID_ANIMATION: "false",
+  GIFT_ANIMATION: "true",
   DURATION_SECONDS: "15",
   ENABLE_LIKE_AVATAR: "true",
-  LIKE_AVATAR_COOLDOWN_MS: "5000",
+  LIKE_AVATAR_COOLDOWN_MS: "750",
   ENABLE_EXTENDED_GIFT_INFO: "false",
   ROSE_GIFT_NAMES: "rose,rosa",
   ROSE_GIFT_IDS: "",
@@ -22,13 +24,13 @@ const defaultConfig = {
 
 const fallbackReleaseData = {
   latest: {
-    version: "1.1.0",
+    version: "1.1.1",
     date: "2026-07-03",
     minecraft: "26.2",
     java: "25",
     jar: "./downloads/TikTokWall.jar",
     pack: "./downloads/tiktok-minecraft-live.zip",
-    summary: "Mosaico de curtidas 1x1 a 4x4, gifts em tela cheia, nome em blocos, fogos configuraveis e tamanho 256."
+    summary: "Configuracao em runtime, painel sem resetar campos editados e mosaico de curtidas sem animacao por padrao."
   },
   history: []
 };
@@ -218,6 +220,7 @@ const platformContent = {
 };
 
 let currentConfig = { ...defaultConfig };
+let formDirty = false;
 let localLogs = [];
 let selectedPlatform = /Linux|X11/i.test(navigator.userAgent) ? "linux" : "windows";
 let releaseData = fallbackReleaseData;
@@ -263,8 +266,14 @@ function setBridgeConnected(connected) {
   if (label) label.textContent = connected ? "Ponte local conectada" : "Ponte local desconectada";
 }
 
-function fillForm(config) {
-  currentConfig = { ...defaultConfig, ...config };
+function fillForm(config, options = {}) {
+  const nextConfig = { ...defaultConfig, ...config };
+  if (formDirty && !options.force) {
+    renderAiContext();
+    return;
+  }
+
+  currentConfig = nextConfig;
   const form = $("configForm");
   if (form) {
     for (const [key, value] of Object.entries(currentConfig)) {
@@ -277,6 +286,12 @@ function fillForm(config) {
       }
     }
   }
+  renderAiContext();
+}
+
+function markFormDirty() {
+  formDirty = true;
+  currentConfig = { ...currentConfig, ...collectForm() };
   renderAiContext();
 }
 
@@ -346,7 +361,8 @@ async function saveCurrentConfig() {
     method: "POST",
     body: JSON.stringify(collectForm())
   });
-  fillForm(result.config);
+  formDirty = false;
+  fillForm(result.config, { force: true });
   return result.config;
 }
 
@@ -363,6 +379,7 @@ async function botAction(path, message) {
 }
 
 async function rcon(command) {
+  await saveCurrentConfig();
   const result = await bridgeApi("/api/rcon", {
     method: "POST",
     body: JSON.stringify({ command })
@@ -740,7 +757,11 @@ function bindEvents() {
   });
 
   const form = $("configForm");
-  if (form) form.addEventListener("submit", (event) => saveConfig(event).catch((error) => showToast(error.message)));
+  if (form) {
+    form.addEventListener("input", markFormDirty);
+    form.addEventListener("change", markFormDirty);
+    form.addEventListener("submit", (event) => saveConfig(event).catch((error) => showToast(error.message)));
+  }
 
   on("refreshBridge", "click", () => refreshBridge());
   on("healthButton", "click", () => bridgeApi("/api/plugin/health").then((result) => showToast(`Plugin OK: ${JSON.stringify(result.health)}`)).catch((error) => showToast(error.message)));
@@ -772,7 +793,7 @@ window.addEventListener("unhandledrejection", (event) => {
 
 bindEvents();
 renderStep(0);
-fillForm(defaultConfig);
+fillForm(defaultConfig, { force: true });
 loadReleaseData();
 refreshBridge();
 window.setInterval(refreshBridge, 4000);

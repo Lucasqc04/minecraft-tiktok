@@ -7,6 +7,7 @@ export interface RenderPayload {
   size: number;
   durationSeconds: number;
   clearAfter?: boolean;
+  animate?: boolean;
 }
 
 export interface MinecraftClientOptions {
