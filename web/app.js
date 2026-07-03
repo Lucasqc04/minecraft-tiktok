@@ -19,13 +19,13 @@ const defaultConfig = {
 
 const fallbackReleaseData = {
   latest: {
-    version: "1.0.4",
+    version: "1.0.5",
     date: "2026-07-03",
     minecraft: "26.2",
     java: "25",
     jar: "./downloads/TikTokWall.jar",
     pack: "./downloads/tiktok-minecraft-live.zip",
-    summary: "Versao atual com setup guiado, parede automatica, tamanho 128, animacao, curtidas com avatar e guias revisados."
+    summary: "Correcao na ponte local para iniciar o bot com o Username TikTok salvo no painel."
   },
   history: []
 };
@@ -336,13 +336,18 @@ async function refreshBridge() {
   }
 }
 
-async function saveConfig(event) {
-  event.preventDefault();
+async function saveCurrentConfig() {
   const result = await bridgeApi("/api/config", {
     method: "POST",
     body: JSON.stringify(collectForm())
   });
   fillForm(result.config);
+  return result.config;
+}
+
+async function saveConfig(event) {
+  event.preventDefault();
+  await saveCurrentConfig();
   showToast("Configuracao salva no computador local.");
 }
 
@@ -699,7 +704,7 @@ function bindEvents() {
 
   on("refreshBridge", "click", () => refreshBridge());
   on("healthButton", "click", () => bridgeApi("/api/plugin/health").then((result) => showToast(`Plugin OK: ${JSON.stringify(result.health)}`)).catch((error) => showToast(error.message)));
-  on("startBot", "click", () => botAction("/api/bot/start", "Bot iniciado.").catch((error) => showToast(error.message)));
+  on("startBot", "click", () => saveCurrentConfig().then(() => botAction("/api/bot/start", "Configuracao salva. Bot iniciado.")).catch((error) => showToast(error.message)));
   on("stopBot", "click", () => botAction("/api/bot/stop", "Bot parado.").catch((error) => showToast(error.message)));
   on("testImage", "click", () => botAction("/api/test-image", "Imagem teste enviada.").catch((error) => showToast(error.message)));
   on("clearLocalLog", "click", () => {

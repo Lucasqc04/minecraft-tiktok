@@ -1,14 +1,24 @@
 {
   "latest": {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "date": "2026-07-03",
     "minecraft": "26.2",
     "java": "25",
     "jar": "./downloads/TikTokWall.jar",
     "pack": "./downloads/tiktok-minecraft-live.zip",
-    "summary": "Versao atual com setup guiado, parede automatica, tamanho 128, animacao, curtidas com avatar e guias revisados."
+    "summary": "Correcao na ponte local para iniciar o bot com o Username TikTok salvo no painel."
   },
   "history": [
+    {
+      "version": "1.0.5",
+      "date": "2026-07-03",
+      "title": "Correcao do username no painel",
+      "changes": [
+        "A ponte local agora relê o .env salvo e passa a configuracao diretamente para o processo do bot.",
+        "O botao Iniciar bot salva a configuracao atual antes de abrir o bot.",
+        "Quando o username estiver vazio, o painel mostra uma mensagem clara pedindo para preencher o campo."
+      ]
+    },
     {
       "version": "1.0.4",
       "date": "2026-07-03",

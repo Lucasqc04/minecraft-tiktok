@@ -137,7 +137,7 @@ async function route(request: IncomingMessage, response: ServerResponse): Promis
   }
 
   if (request.method === "POST" && url.pathname === "/api/bot/start") {
-    startBot();
+    await startBot();
     sendJson(response, 200, { ok: true, bot: botStatus() });
     return;
   }
@@ -208,6 +208,7 @@ async function writeConfig(input: unknown): Promise<EnvMap> {
 
   validateConfig(next);
   await fs.writeFile(ENV_PATH, serializeEnv(next), "utf8");
+  applyConfigToProcessEnv(next);
   return next;
 }
 
@@ -284,17 +285,22 @@ function validateInteger(value: string, label: string, min: number, max: number)
   }
 }
 
-function startBot(): void {
+async function startBot(): Promise<void> {
   if (botProcess && !botProcess.killed) {
     appendLog("[ui] bot ja esta rodando");
     return;
+  }
+
+  const config = await readConfig();
+  if (!config.TIKTOK_USERNAME.trim()) {
+    throw new Error("Preencha o Username TikTok, clique em Salvar e tente iniciar o bot de novo");
   }
 
   appendLog("[ui] iniciando bot TikTok...");
   botStartedAt = new Date().toLocaleString();
   botProcess = spawn(npmCommand(), ["run", "dev"], {
     cwd: BOT_DIR,
-    env: process.env
+    env: childEnvFromConfig(config)
   });
 
   botProcess.stdout.on("data", (chunk) => appendLog(chunk.toString()));
@@ -342,12 +348,18 @@ function appendLog(text: string): void {
 }
 
 async function runNpm(args: string[]): Promise<string> {
-  return runCommand(npmCommand(), args, BOT_DIR);
+  const config = await readConfig();
+  return runCommand(npmCommand(), args, BOT_DIR, childEnvFromConfig(config));
 }
 
-function runCommand(command: string, args: string[], cwd = BOT_DIR): Promise<string> {
+function runCommand(
+  command: string,
+  args: string[],
+  cwd = BOT_DIR,
+  env: NodeJS.ProcessEnv = process.env
+): Promise<string> {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd });
+    const child = spawn(command, args, { cwd, env });
     let output = "";
     child.stdout.on("data", (chunk) => {
       output += chunk.toString();
@@ -407,6 +419,19 @@ async function sendRcon(rawCommand: string): Promise<string> {
 
 function npmCommand(): string {
   return process.platform === "win32" ? "npm.cmd" : "npm";
+}
+
+function childEnvFromConfig(config: EnvMap): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    ...config
+  };
+}
+
+function applyConfigToProcessEnv(config: EnvMap): void {
+  for (const key of CONFIG_KEYS) {
+    process.env[key] = config[key] ?? "";
+  }
 }
 
 async function readJson(request: IncomingMessage): Promise<Record<string, unknown>> {
@@ -824,8 +849,12 @@ function renderPage(): string {
     });
 
     document.getElementById("startBot").addEventListener("click", async () => {
+      await api("/api/config", {
+        method: "POST",
+        body: JSON.stringify(collectConfig())
+      });
       await api("/api/bot/start", { method: "POST" });
-      setMessage("Bot iniciado.");
+      setMessage("Configuracao salva. Bot iniciado.");
       await refreshStatus();
     });
 
