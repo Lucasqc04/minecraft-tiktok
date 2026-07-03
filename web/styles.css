@@ -381,7 +381,7 @@ h3 {
 
 .os-switch {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
   margin-top: 18px;
   border: 1px solid var(--line);
@@ -978,6 +978,7 @@ pre {
   .status-grid,
   .version-grid,
   .command-doc-grid,
+  .os-switch,
   .file-map div {
     grid-template-columns: 1fr;
   }

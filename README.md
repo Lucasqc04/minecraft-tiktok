@@ -19,7 +19,7 @@ O projeto tem:
 - `web/updates.json`: historico publico de versoes e fonte da verificacao de atualizacao.
 - `start-interface-windows.bat`: atalho para abrir a interface no Windows.
 - `start-interface-linux.sh`: atalho para abrir a interface no Linux.
-- `docs/LEIAME_WINDOWS.md`: passo a passo Windows para criador que nao programa.
+- `docs/LEIAME_WINDOWS.md`: passo a passo Windows com modo PowerShell e modo explicado.
 - `docs/LEIAME_LINUX.md`: passo a passo Linux.
 
 ## Para Quem Vai Usar No Windows Ou Linux
@@ -45,6 +45,11 @@ Resumo do fluxo:
 12. Configurar o usuario TikTok, likes, rosa, tempo e tamanho.
 13. Clicar em `Enviar imagem teste`.
 14. Clicar em `Iniciar bot`.
+
+No Windows existem dois jeitos no guia e no portal:
+
+- `Windows PowerShell`: comandos para copiar e colar, parecido com o fluxo Linux.
+- `Windows explicado`: roteiro visual para quem prefere usar Explorador de Arquivos e Bloco de Notas.
 
 ## Interface Local
 
@@ -92,7 +97,7 @@ O bot relê a configuração salva durante a execução para aplicar grid, coold
 O site em `web/` e um portal estatico com:
 
 - `index.html`: entrada e atalhos principais;
-- `setup.html`: passo a passo detalhado e mapa do ZIP;
+- `setup.html`: passo a passo detalhado com Windows PowerShell, Windows explicado, Linux e mapa do ZIP;
 - `admin.html`: painel da live, configuracao, logs e comandos RCON;
 - `commands.html`: wiki dos comandos do TikTokWall.jar e endpoints HTTP do plugin;
 - `updates.html`: status de versao, historico e passos para atualizar o JAR;

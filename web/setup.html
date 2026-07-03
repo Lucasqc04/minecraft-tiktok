@@ -36,7 +36,7 @@
       <h1>Instale sem adivinhar a ordem.</h1>
       <p class="lead">
         O Paper precisa criar `eula.txt`, `server.properties` e `plugins/` antes de instalar o TikTokWall.
-        Esta página mantém a sequência certa e separa Windows/Linux.
+        Esta página mantém a sequência certa e separa Windows por PowerShell, Windows explicado e Linux.
       </p>
       <div class="actions">
         <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
@@ -50,7 +50,8 @@
         <p class="system-label">Sistema</p>
         <h2>Escolha o ambiente.</h2>
         <div class="os-switch" aria-label="Sistema operacional">
-          <button class="active" data-os="windows" type="button">Windows</button>
+          <button class="active" data-os="windowsPowerShell" type="button">Windows PowerShell</button>
+          <button data-os="windowsManual" type="button">Windows explicado</button>
           <button data-os="linux" type="button">Linux</button>
         </div>
         <ol class="steps" id="steps">
@@ -68,8 +69,8 @@
       <div class="instruction-panel" id="stepPanel">
         <div>
           <p class="system-label">Passo 1</p>
-          <h3>Baixe o pack completo e extraia em uma pasta simples.</h3>
-          <p>Use uma pasta como C:\TikTokMinecraftLive. Evite OneDrive, Desktop sincronizado ou pastas com acentos.</p>
+          <h3>Baixe o pack completo e extraia pelo PowerShell.</h3>
+          <p>Este caminho assume que o ZIP esta em Downloads. Abra o PowerShell e copie uma linha por vez.</p>
         </div>
         <div class="command-list" id="stepCommands"></div>
       </div>

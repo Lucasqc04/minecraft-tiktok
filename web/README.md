@@ -34,7 +34,7 @@ chmod +x start-interface-linux.sh
 ./start-interface-linux.sh
 ```
 
-O portal tem seletor Windows/Linux no checklist para trocar caminhos e comandos copiados.
+O portal tem seletor `Windows PowerShell`, `Windows explicado` e `Linux` no checklist para trocar caminhos e comandos copiados.
 
 ## Paginas
 

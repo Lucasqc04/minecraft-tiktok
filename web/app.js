@@ -47,67 +47,72 @@ const sharedCommands = [
 ];
 
 const platformContent = {
-  windows: {
-    name: "Windows",
+  windowsPowerShell: {
+    name: "Windows PowerShell",
     bridgeScript: "start-interface-windows.bat",
     minecraftDir: "C:\\MinecraftLive",
-    projectDir: "C:\\TikTokMinecraftLive",
-    startBridge: "start-interface-windows.bat",
+    projectDir: "$env:USERPROFILE\\Downloads\\tiktok-minecraft-live",
+    startBridge: ".\\start-interface-windows.bat",
     steps: [
       {
         label: "Passo 1",
-        title: "Baixe o pack completo e extraia em uma pasta simples.",
-        body: "Use C:\\TikTokMinecraftLive. Evite OneDrive, Desktop sincronizado ou pastas com acentos.",
-        commands: ["Baixar pack completo", "Extrair em C:\\TikTokMinecraftLive", "Entrar na pasta C:\\TikTokMinecraftLive"]
+        title: "Baixe o pack completo e extraia pelo PowerShell.",
+        body: "Este caminho assume que o ZIP esta em Downloads. Abra o PowerShell e copie uma linha por vez.",
+        commands: [
+          "cd \"$env:USERPROFILE\\Downloads\"",
+          "Expand-Archive -Force .\\tiktok-minecraft-live.zip -DestinationPath .",
+          "cd .\\tiktok-minecraft-live"
+        ]
       },
       {
         label: "Passo 2",
-        title: "Instale Java JDK 25 e Node.js LTS.",
-        body: "O plugin foi compilado para Java 25. Depois de instalar, abra o PowerShell e confirme as versoes.",
+        title: "Instale Java JDK 25 e Node.js LTS pelo winget.",
+        body: "Se o Windows pedir confirmacao, aceite. Se os comandos de versao nao aparecerem, feche e abra o PowerShell de novo.",
         commands: [
-          "https://adoptium.net/temurin/releases/?version=25",
-          "https://nodejs.org/en/download",
+          "winget install --id EclipseAdoptium.Temurin.25.JDK -e",
+          "winget install --id OpenJS.NodeJS.LTS -e",
           "java -version",
           "node -v",
-          "npm -v"
+          "npm -v",
+          { text: "Se winget nao existir, instale manualmente: https://adoptium.net/temurin/releases/?version=25 e https://nodejs.org/en/download", copy: false }
         ]
       },
       {
         label: "Passo 3",
-        title: "Baixe o Paper da mesma versao do Minecraft.",
-        body: "No launcher do Minecraft, veja a versao Java que voce vai abrir. Baixe o Paper dessa mesma versao.",
+        title: "Baixe o Paper correto e crie C:\\MinecraftLive.",
+        body: "Baixe o Paper da mesma versao do Minecraft Java. Depois copie os comandos; eles pegam o Paper mais recente em Downloads e colocam como paper.jar.",
         commands: [
-          "https://papermc.io/downloads/paper",
-          "Criar C:\\MinecraftLive",
-          "Renomear o arquivo baixado para paper.jar",
-          "Copiar paper.jar para C:\\MinecraftLive\\paper.jar",
-          "Copiar C:\\TikTokMinecraftLive\\scripts\\windows\\start-paper.bat para C:\\MinecraftLive\\start-paper.bat"
+          { text: "Baixe o Paper em https://papermc.io/downloads/paper antes de rodar os proximos comandos.", copy: false },
+          "$server = \"C:\\MinecraftLive\"",
+          "New-Item -ItemType Directory -Force $server",
+          "$paper = Get-ChildItem \"$env:USERPROFILE\\Downloads\\paper-*.jar\" | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
+          "Copy-Item $paper.FullName \"$server\\paper.jar\" -Force",
+          "Copy-Item \"$env:USERPROFILE\\Downloads\\tiktok-minecraft-live\\scripts\\windows\\start-paper.bat\" \"$server\\start-paper.bat\" -Force"
         ]
       },
       {
         label: "Passo 4",
-        title: "Inicie o Paper pela primeira vez e aceite a EULA.",
-        body: "A primeira abertura cria eula.txt, server.properties e a pasta plugins. Depois aceite a EULA e abra de novo.",
+        title: "Inicie o Paper e aceite a EULA por comando.",
+        body: "O primeiro start cria eula.txt, server.properties e plugins/. Quando ele parar por causa da EULA, rode a linha que troca eula para true e inicie de novo.",
         commands: [
-          "Abrir C:\\MinecraftLive\\start-paper.bat",
-          "Editar C:\\MinecraftLive\\eula.txt",
-          "Trocar eula=false por eula=true",
-          "Abrir C:\\MinecraftLive\\start-paper.bat novamente",
-          "Quando terminar de carregar, digitar stop no console"
+          "cd C:\\MinecraftLive",
+          ".\\start-paper.bat",
+          "(Get-Content .\\eula.txt) -replace 'eula=false','eula=true' | Set-Content .\\eula.txt",
+          ".\\start-paper.bat",
+          { text: "Quando aparecer Done no console do Paper, digite stop e aperte Enter.", copy: false }
         ]
       },
       {
         label: "Passo 5",
-        title: "Instale o plugin e ligue o RCON.",
-        body: "Agora a pasta plugins ja existe. Copie o JAR, abra server.properties, edite as linhas do RCON, salve o arquivo e reinicie o Paper.",
+        title: "Instale o plugin e ligue o RCON por PowerShell.",
+        body: "Pare o Paper antes deste passo. O comando abaixo copia o JAR e ajusta enable-rcon, porta e senha no server.properties.",
         commands: [
-          { text: "Copiar C:\\TikTokMinecraftLive\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar", copy: true },
-          { text: "Abrir C:\\MinecraftLive\\server.properties no Bloco de Notas.", copy: false },
-          { text: "Procure enable-rcon. Se estiver enable-rcon=false, troque para enable-rcon=true.", copy: false },
-          { text: "Confirme rcon.port=25575. Se estiver diferente, troque para 25575.", copy: false },
-          { text: "Procure rcon.password e coloque uma senha sua, por exemplo rcon.password=minha-senha-forte.", copy: false },
-          { text: "Salve o arquivo no Bloco de Notas com Ctrl+S.", copy: false },
-          { text: "Abrir C:\\MinecraftLive\\start-paper.bat", copy: true }
+          "New-Item -ItemType Directory -Force \"C:\\MinecraftLive\\plugins\"",
+          "Copy-Item \"$env:USERPROFILE\\Downloads\\tiktok-minecraft-live\\TikTokWall.jar\" \"C:\\MinecraftLive\\plugins\\TikTokWall.jar\" -Force",
+          { text: "Configurar RCON automaticamente com senha temporaria.", copyText: "$props=\"C:\\MinecraftLive\\server.properties\"; (Get-Content $props) -replace '^enable-rcon=.*','enable-rcon=true' -replace '^rcon.port=.*','rcon.port=25575' -replace '^rcon.password=.*','rcon.password=troque-essa-senha' | Set-Content $props" },
+          { text: "Depois troque troque-essa-senha pela senha que voce quer usar na live.", copy: false },
+          "cd C:\\MinecraftLive",
+          ".\\start-paper.bat"
         ]
       },
       {
@@ -120,7 +125,108 @@ const platformContent = {
         label: "Passo 7",
         title: "Abra a ponte local e salve a configuracao da live.",
         body: "A ponte local salva a configuracao neste computador, roda testes e inicia o bot.",
-        commands: ["Abrir C:\\TikTokMinecraftLive\\start-interface-windows.bat", "http://127.0.0.1:3333", "Salvar configuracao"]
+        commands: [
+          "cd \"$env:USERPROFILE\\Downloads\\tiktok-minecraft-live\"",
+          ".\\start-interface-windows.bat",
+          "http://127.0.0.1:3333",
+          "Salvar configuracao no painel"
+        ]
+      },
+      {
+        label: "Passo 8",
+        title: "Teste uma imagem e inicie o bot quando a live estiver aberta.",
+        body: "A conta TikTok precisa estar ao vivo e publica. Deixe Gift info avancado desligado se nao tiver plano EulerStream.",
+        commands: ["Enviar imagem teste", "Iniciar bot", "Aguardar curtida ou rosa na live"]
+      }
+    ]
+  },
+  windowsManual: {
+    name: "Windows explicado",
+    bridgeScript: "start-interface-windows.bat",
+    minecraftDir: "C:\\MinecraftLive",
+    projectDir: "Downloads\\tiktok-minecraft-live",
+    startBridge: "start-interface-windows.bat",
+    steps: [
+      {
+        label: "Passo 1",
+        title: "Baixe o pack completo e extraia sem terminal.",
+        body: "Use este caminho se a pessoa prefere clicar nas pastas. Evite OneDrive e pastas com acentos.",
+        commands: [
+          { text: "Baixe tiktok-minecraft-live.zip pelo botao Baixar pack completo.", copy: false },
+          { text: "Abra a pasta Downloads no Explorador de Arquivos.", copy: false },
+          { text: "Clique com o botao direito no ZIP e escolha Extrair tudo.", copy: false },
+          { text: "Deixe o Windows criar a pasta tiktok-minecraft-live dentro de Downloads.", copy: false },
+          { text: "Abra a pasta extraida e confirme que existe TikTokWall.jar, bot/, docs/ e start-interface-windows.bat.", copy: false }
+        ]
+      },
+      {
+        label: "Passo 2",
+        title: "Instale Java JDK 25 e Node.js LTS pelos instaladores.",
+        body: "Baixe os instaladores, avance com as opcoes padrao e depois confira as versoes no PowerShell.",
+        commands: [
+          { text: "Java JDK 25: https://adoptium.net/temurin/releases/?version=25", copy: true },
+          { text: "Node.js LTS: https://nodejs.org/en/download", copy: true },
+          { text: "Depois de instalar, abra o menu Iniciar, procure PowerShell e abra.", copy: false },
+          "java -version",
+          "node -v",
+          "npm -v",
+          { text: "java -version precisa mostrar Java 25. node -v e npm -v precisam mostrar numeros de versao.", copy: false }
+        ]
+      },
+      {
+        label: "Passo 3",
+        title: "Baixe o Paper e monte a pasta C:\\MinecraftLive.",
+        body: "O Paper precisa ser da mesma versao que voce vai abrir no Minecraft Java.",
+        commands: [
+          { text: "Abra o Minecraft Launcher e veja a versao Java que sera usada na live.", copy: false },
+          { text: "Baixe o Paper da mesma versao: https://papermc.io/downloads/paper", copy: true },
+          { text: "Crie a pasta C:\\MinecraftLive.", copy: false },
+          { text: "Renomeie o arquivo baixado do Paper para paper.jar.", copy: false },
+          { text: "Coloque paper.jar dentro de C:\\MinecraftLive.", copy: false },
+          { text: "Copie scripts\\windows\\start-paper.bat do pack para C:\\MinecraftLive\\start-paper.bat.", copy: false }
+        ]
+      },
+      {
+        label: "Passo 4",
+        title: "Inicie o Paper pela primeira vez e aceite a EULA.",
+        body: "A primeira abertura cria os arquivos do servidor. Depois voce precisa aceitar a EULA e abrir de novo.",
+        commands: [
+          { text: "De duplo clique em C:\\MinecraftLive\\start-paper.bat.", copy: false },
+          { text: "Quando o Paper fechar por causa da EULA, abra C:\\MinecraftLive\\eula.txt no Bloco de Notas.", copy: false },
+          { text: "Troque eula=false por eula=true e salve com Ctrl+S.", copy: false },
+          { text: "De duplo clique em C:\\MinecraftLive\\start-paper.bat de novo.", copy: false },
+          { text: "Quando aparecer Done no console, digite stop e aperte Enter.", copy: false }
+        ]
+      },
+      {
+        label: "Passo 5",
+        title: "Instale o TikTokWall.jar e edite o RCON com calma.",
+        body: "Agora a pasta plugins ja existe. Copie o plugin e edite server.properties no Bloco de Notas.",
+        commands: [
+          { text: "Copie Downloads\\tiktok-minecraft-live\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar.", copy: false },
+          { text: "Abra C:\\MinecraftLive\\server.properties no Bloco de Notas.", copy: false },
+          { text: "Use Ctrl+F e procure enable-rcon. Deixe enable-rcon=true.", copy: false },
+          { text: "Procure rcon.port. Deixe rcon.port=25575.", copy: false },
+          { text: "Procure rcon.password. Coloque uma senha sua, por exemplo rcon.password=minha-senha-forte.", copy: false },
+          { text: "Salve com Ctrl+S e feche o Bloco de Notas.", copy: false },
+          { text: "De duplo clique em C:\\MinecraftLive\\start-paper.bat para reiniciar o servidor.", copy: false }
+        ]
+      },
+      {
+        label: "Passo 6",
+        title: "Entre no servidor e prepare a parede automaticamente.",
+        body: "Entre em localhost pelo Minecraft Java. Se precisar de permissao, use op SeuNick no console do Paper.",
+        commands: sharedCommands
+      },
+      {
+        label: "Passo 7",
+        title: "Abra a ponte local e salve a configuracao da live.",
+        body: "A ponte local abre uma interface no computador e permite que o portal controle bot, testes e comandos.",
+        commands: [
+          { text: "De duplo clique em Downloads\\tiktok-minecraft-live\\start-interface-windows.bat.", copy: false },
+          "http://127.0.0.1:3333",
+          { text: "No painel, preencha usuario TikTok, tamanho, curtidas, rosa, RCON senha e clique Salvar.", copy: false }
+        ]
       },
       {
         label: "Passo 8",
@@ -222,7 +328,7 @@ const platformContent = {
 let currentConfig = { ...defaultConfig };
 let formDirty = false;
 let localLogs = [];
-let selectedPlatform = /Linux|X11/i.test(navigator.userAgent) ? "linux" : "windows";
+let selectedPlatform = /Linux|X11/i.test(navigator.userAgent) ? "linux" : "windowsPowerShell";
 let releaseData = fallbackReleaseData;
 let installedPluginVersion = "";
 
@@ -412,6 +518,7 @@ function renderStep(index) {
 }
 
 function setPlatform(platform) {
+  if (!platformContent[platform]) return;
   selectedPlatform = platform;
   renderStep(currentStepIndex());
   renderAiContext();
@@ -604,6 +711,22 @@ function updateStepItems() {
       {
         text: "4. Rode: cd ~/MinecraftLive && ./start-paper.sh",
         copyText: "cd ~/MinecraftLive && ./start-paper.sh"
+      },
+      { text: "5. Volte ao portal e clique Verificar versao.", copy: false }
+    ];
+  }
+
+  if (selectedPlatform === "windowsPowerShell") {
+    return [
+      { text: "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.", copy: false },
+      { text: "2. No console do Paper, digite stop.", copyText: "stop" },
+      {
+        text: "3. Rode: Copy-Item \"$env:USERPROFILE\\Downloads\\TikTokWall.jar\" \"C:\\MinecraftLive\\plugins\\TikTokWall.jar\" -Force",
+        copyText: "Copy-Item \"$env:USERPROFILE\\Downloads\\TikTokWall.jar\" \"C:\\MinecraftLive\\plugins\\TikTokWall.jar\" -Force"
+      },
+      {
+        text: "4. Rode: cd C:\\MinecraftLive; .\\start-paper.bat",
+        copyText: "cd C:\\MinecraftLive; .\\start-paper.bat"
       },
       { text: "5. Volte ao portal e clique Verificar versao.", copy: false }
     ];
