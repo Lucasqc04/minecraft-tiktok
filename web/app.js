@@ -405,6 +405,7 @@ function currentStepIndex() {
 function copyRow(item) {
   const text = typeof item === "string" ? item : item.text;
   const canCopy = typeof item === "string" ? true : item.copy !== false;
+  const clipboardText = typeof item === "string" ? text : item.copyText || text;
   const row = document.createElement("div");
   row.className = canCopy ? "copy-row" : "copy-row note-row";
   row.innerHTML = canCopy
@@ -413,9 +414,13 @@ function copyRow(item) {
   row.querySelector("code").textContent = text;
   const button = row.querySelector("button");
   if (button) {
-    button.addEventListener("click", () => copyText(text, "Copiado."));
+    button.addEventListener("click", () => copyText(clipboardText, "Copiado."));
   }
   return row;
+}
+
+function itemText(item) {
+  return typeof item === "string" ? item : item.text;
 }
 
 function commandsText() {
@@ -506,7 +511,7 @@ function renderUpdateSteps() {
   const container = $("updateSteps");
   if (!container) return;
   container.innerHTML = "";
-  for (const step of updateStepsText().split("\n").filter(Boolean)) {
+  for (const step of updateStepItems()) {
     container.appendChild(copyRow(step));
   }
 }
@@ -540,23 +545,43 @@ function renderReleaseHistory() {
 }
 
 function updateStepsText() {
+  return updateStepItems().map((step) => itemText(step)).join("\n");
+}
+
+function updateCommandsText() {
+  return updateStepItems()
+    .filter((step) => step.copy !== false)
+    .map((step) => step.copyText || itemText(step))
+    .join("\n");
+}
+
+function updateStepItems() {
   if (selectedPlatform === "linux") {
     return [
-      "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.",
-      "2. No console do Paper, digite stop.",
-      "3. Rode: cp ~/Downloads/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar",
-      "4. Rode: cd ~/MinecraftLive && ./start-paper.sh",
-      "5. Volte ao portal e clique Verificar versao."
-    ].join("\n");
+      { text: "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.", copy: false },
+      { text: "2. No console do Paper, digite stop.", copyText: "stop" },
+      {
+        text: "3. Rode: cp ~/Downloads/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar",
+        copyText: "cp ~/Downloads/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar"
+      },
+      {
+        text: "4. Rode: cd ~/MinecraftLive && ./start-paper.sh",
+        copyText: "cd ~/MinecraftLive && ./start-paper.sh"
+      },
+      { text: "5. Volte ao portal e clique Verificar versao.", copy: false }
+    ];
   }
 
   return [
-    "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.",
-    "2. No console do Paper, digite stop.",
-    "3. Substitua C:\\MinecraftLive\\plugins\\TikTokWall.jar pelo arquivo novo baixado.",
-    "4. Abra C:\\MinecraftLive\\start-paper.bat.",
-    "5. Volte ao portal e clique Verificar versao."
-  ].join("\n");
+    { text: "1. Baixe TikTokWall.jar pelo botao da pagina Atualizacoes.", copy: false },
+    { text: "2. No console do Paper, digite stop.", copyText: "stop" },
+    { text: "3. Substitua C:\\MinecraftLive\\plugins\\TikTokWall.jar pelo arquivo novo baixado.", copy: false },
+    {
+      text: "4. Abra C:\\MinecraftLive\\start-paper.bat.",
+      copyText: "C:\\MinecraftLive\\start-paper.bat"
+    },
+    { text: "5. Volte ao portal e clique Verificar versao.", copy: false }
+  ];
 }
 
 function normalizeVersion(value) {
@@ -596,7 +621,7 @@ function quickStartText() {
     ...platform.steps.map((step, index) => [
       `${index + 1}. ${step.title}`,
       step.body,
-      ...step.commands.map((command) => `   - ${command}`)
+      ...step.commands.map((command) => `   - ${itemText(command)}`)
     ].join("\n"))
   ].join("\n\n");
 }
@@ -719,7 +744,7 @@ function bindEvents() {
   });
 
   on("copyQuickStart", "click", () => copyText(quickStartText(), "Passo a passo copiado."));
-  on("copyUpdateSteps", "click", () => copyText(updateStepsText(), "Passos de atualizacao copiados."));
+  on("copyUpdateSteps", "click", () => copyText(updateCommandsText(), "Comandos de atualizacao copiados."));
   on("copyAiContext", "click", () => copyText(aiContextText(), "Contexto para IA copiado."));
   on("copyCommands", "click", () => copyText(commandsText(), "Comandos copiados."));
   on("copyServerProps", "click", () => copyText(serverPropsText(), "server.properties copiado."));
