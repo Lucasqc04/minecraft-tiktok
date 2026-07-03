@@ -17,6 +17,19 @@ const defaultConfig = {
   RCON_PASSWORD: ""
 };
 
+const fallbackReleaseData = {
+  latest: {
+    version: "1.0.4",
+    date: "2026-07-03",
+    minecraft: "26.2",
+    java: "25",
+    jar: "./downloads/TikTokWall.jar",
+    pack: "./downloads/tiktok-minecraft-live.zip",
+    summary: "Versao atual com setup guiado, parede automatica, tamanho 128, animacao, curtidas com avatar e guias revisados."
+  },
+  history: []
+};
+
 const sharedCommands = ["/tiktokwall setup", "/tiktokwall size 128", "/tiktokwall dithering off", "/tiktokwall animation on", "/tiktokwall animationspeed 8", "/tiktokwall test"];
 
 const platformContent = {
@@ -216,10 +229,21 @@ const stepPanel = document.getElementById("stepPanel");
 const stepCommands = document.getElementById("stepCommands");
 const aiContextPreview = document.getElementById("aiContextPreview");
 const bridgeScriptName = document.getElementById("bridgeScriptName");
+const latestVersionValue = document.getElementById("latestVersionValue");
+const installedVersionValue = document.getElementById("installedVersionValue");
+const releaseCompatibilityValue = document.getElementById("releaseCompatibilityValue");
+const updateStatusPill = document.getElementById("updateStatusPill");
+const updateSummary = document.getElementById("updateSummary");
+const updateSteps = document.getElementById("updateSteps");
+const releaseHistory = document.getElementById("releaseHistory");
+const latestJarLink = document.getElementById("latestJarLink");
+const latestPackLink = document.getElementById("latestPackLink");
 
 let currentConfig = { ...defaultConfig };
 let localLogs = [];
 let selectedPlatform = /Linux|X11/i.test(navigator.userAgent) ? "linux" : "windows";
+let releaseData = fallbackReleaseData;
+let installedPluginVersion = "";
 
 function showToast(message) {
   toast.textContent = message;
@@ -280,9 +304,16 @@ async function refreshBridge() {
 
     try {
       const health = await bridgeApi("/api/plugin/health");
-      pluginValue.textContent = health.health?.busy ? "Ocupado" : "OK";
+      const pluginHealth = health.health || {};
+      installedPluginVersion = normalizeVersion(pluginHealth.version || "");
+      pluginValue.textContent = pluginHealth.version
+        ? `${pluginHealth.busy ? "Ocupado" : "OK"} ${pluginHealth.version}`
+        : pluginHealth.busy ? "Ocupado" : "OK";
+      renderUpdates();
     } catch {
       pluginValue.textContent = "Sem resposta";
+      installedPluginVersion = "";
+      renderUpdates();
     }
   } catch {
     bridgeStatus.classList.remove("connected");
@@ -290,9 +321,11 @@ async function refreshBridge() {
     bridgeValue.textContent = "Desconectada";
     botValue.textContent = "-";
     pluginValue.textContent = "-";
+    installedPluginVersion = "";
     previewState.textContent = "bridge offline";
     logs.textContent = `Abra ${platformContent[selectedPlatform].bridgeScript} no computador da live para conectar o portal ao Minecraft local.`;
     fillForm(currentConfig);
+    renderUpdates();
   }
 }
 
@@ -349,6 +382,7 @@ function setPlatform(platform) {
   selectedPlatform = platform;
   renderStep(currentStepIndex());
   renderAiContext();
+  renderUpdates();
   refreshBridge().catch(() => {});
 }
 
@@ -376,6 +410,145 @@ function serverPropsText() {
     "rcon.port=25575",
     "rcon.password=troque-essa-senha"
   ].join("\n");
+}
+
+async function loadReleaseData() {
+  try {
+    const response = await fetch("./updates.json", { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`updates.json ${response.status}`);
+    }
+    releaseData = await response.json();
+  } catch {
+    releaseData = fallbackReleaseData;
+  }
+  renderUpdates();
+}
+
+function renderUpdates() {
+  const latest = releaseData.latest || fallbackReleaseData.latest;
+  const latestVersion = normalizeVersion(latest.version || "");
+  const installedVersion = normalizeVersion(installedPluginVersion);
+  const comparison = compareVersions(installedVersion, latestVersion);
+
+  latestVersionValue.textContent = latestVersion || "-";
+  installedVersionValue.textContent = installedVersion || "Não verificada";
+  releaseCompatibilityValue.textContent = `MC ${latest.minecraft || "-"} / Java ${latest.java || "-"}`;
+  updateSummary.textContent = latest.summary || "Baixe o JAR mais recente e substitua o arquivo dentro da pasta plugins do Paper.";
+  latestJarLink.href = latest.jar || "./downloads/TikTokWall.jar";
+  latestPackLink.href = latest.pack || "./downloads/tiktok-minecraft-live.zip";
+
+  if (!installedVersion) {
+    setUpdateStatus("unknown", "Não verificado");
+  } else if (comparison == null) {
+    setUpdateStatus("warning", "Versão desconhecida");
+  } else if (comparison < 0) {
+    setUpdateStatus("danger", "Atualização disponível");
+  } else if (comparison === 0) {
+    setUpdateStatus("ok", "Atualizado");
+  } else {
+    setUpdateStatus("warning", "Mais novo que o portal");
+  }
+
+  renderUpdateSteps();
+  renderReleaseHistory();
+}
+
+function setUpdateStatus(type, text) {
+  updateStatusPill.className = `status-pill ${type}`;
+  updateStatusPill.textContent = text;
+}
+
+function renderUpdateSteps() {
+  updateSteps.innerHTML = "";
+  for (const step of updateStepsText().split("\n").filter(Boolean)) {
+    const row = document.createElement("div");
+    row.className = "copy-row";
+    row.innerHTML = `<code></code><button class="button small" type="button">Copiar</button>`;
+    row.querySelector("code").textContent = step;
+    row.querySelector("button").addEventListener("click", () => copyText(step, "Copiado."));
+    updateSteps.appendChild(row);
+  }
+}
+
+function renderReleaseHistory() {
+  releaseHistory.innerHTML = "";
+  const history = Array.isArray(releaseData.history) ? releaseData.history : [];
+  for (const release of history) {
+    const article = document.createElement("article");
+    article.className = "release-item";
+
+    const header = document.createElement("header");
+    const title = document.createElement("h3");
+    title.textContent = `${release.version} - ${release.title || "Atualizacao"}`;
+    const time = document.createElement("time");
+    time.textContent = formatDate(release.date);
+    header.append(title, time);
+
+    const list = document.createElement("ul");
+    for (const change of release.changes || []) {
+      const item = document.createElement("li");
+      item.textContent = change;
+      list.appendChild(item);
+    }
+
+    article.append(header, list);
+    releaseHistory.appendChild(article);
+  }
+}
+
+function updateStepsText() {
+  if (selectedPlatform === "linux") {
+    return [
+      "1. Baixe TikTokWall.jar pelo botão desta seção.",
+      "2. No console do Paper, digite stop.",
+      "3. Rode: cp ~/Downloads/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar",
+      "4. Rode: cd ~/MinecraftLive && ./start-paper.sh",
+      "5. Volte ao portal e clique Verificar versão."
+    ].join("\n");
+  }
+
+  return [
+    "1. Baixe TikTokWall.jar pelo botão desta seção.",
+    "2. No console do Paper, digite stop.",
+    "3. Substitua C:\\MinecraftLive\\plugins\\TikTokWall.jar pelo arquivo novo baixado.",
+    "4. Abra C:\\MinecraftLive\\start-paper.bat.",
+    "5. Volte ao portal e clique Verificar versão."
+  ].join("\n");
+}
+
+function normalizeVersion(value) {
+  return String(value || "").trim().replace(/^v/i, "");
+}
+
+function compareVersions(current, latest) {
+  if (!current || !latest) {
+    return null;
+  }
+  const currentParts = current.split(".").map((part) => Number.parseInt(part, 10));
+  const latestParts = latest.split(".").map((part) => Number.parseInt(part, 10));
+  if (currentParts.some(Number.isNaN) || latestParts.some(Number.isNaN)) {
+    return null;
+  }
+  const length = Math.max(currentParts.length, latestParts.length);
+  for (let index = 0; index < length; index += 1) {
+    const left = currentParts[index] || 0;
+    const right = latestParts[index] || 0;
+    if (left < right) return -1;
+    if (left > right) return 1;
+  }
+  return 0;
+}
+
+function formatDate(value) {
+  if (!value) {
+    return "";
+  }
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(date);
 }
 
 function quickStartText() {
@@ -428,6 +601,8 @@ Arquitetura:
 - Plugin Paper: TikTokWall.jar roda no Minecraft local e renderiza avatar em blocos.
 - Minecraft: servidor Paper local; o jogador entra em localhost.
 - Sistema escolhido no portal: ${platformContent[selectedPlatform].name}
+- Versao publicada no portal: ${normalizeVersion(releaseData.latest?.version || fallbackReleaseData.latest.version)}
+- Versao local detectada: ${installedPluginVersion || "nao verificada"}
 
 Config atual:
 ${JSON.stringify(config, null, 2)}
@@ -445,6 +620,7 @@ Problemas comuns:
 - Imagem no canto: /tiktokwall size deve bater com AVATAR_SIZE.
 - Pontos rosas: /tiktokwall dithering off.
 - Plugin sem resposta: Paper fechado, porta errada ou plugin nao carregou.
+- Plugin defasado: abrir Atualizacoes no portal, baixar TikTokWall.jar, parar o Paper, substituir o JAR em plugins e reiniciar.
 - Bot nao conecta: live nao esta publica/ao vivo, username errado ou Gift info avancado ligado sem plano EulerStream.
 
 Me guie passo a passo, sem assumir que sou programador.`;
@@ -479,12 +655,18 @@ document.getElementById("clearLocalLog").addEventListener("click", () => {
   logs.textContent = "";
   showToast("Tela de logs limpa.");
 });
+document.getElementById("checkUpdates").addEventListener("click", () => {
+  refreshBridge()
+    .then(() => showToast("Versão verificada."))
+    .catch((error) => showToast(error.message));
+});
 
 document.querySelectorAll("[data-rcon]").forEach((button) => {
   button.addEventListener("click", () => rcon(button.dataset.rcon).catch((error) => showToast(error.message)));
 });
 
 document.getElementById("copyQuickStart").addEventListener("click", () => copyText(quickStartText(), "Passo a passo copiado."));
+document.getElementById("copyUpdateSteps").addEventListener("click", () => copyText(updateStepsText(), "Passos de atualização copiados."));
 document.getElementById("copyAiContext").addEventListener("click", () => copyText(aiContextText(), "Contexto para IA copiado."));
 document.getElementById("copyCommands").addEventListener("click", () => copyText(commandsText(), "Comandos copiados."));
 document.getElementById("copyServerProps").addEventListener("click", () => copyText(serverPropsText(), "server.properties copiado."));
@@ -495,5 +677,6 @@ window.addEventListener("unhandledrejection", (event) => {
 
 renderStep(0);
 fillForm(defaultConfig);
+loadReleaseData();
 refreshBridge();
 window.setInterval(refreshBridge, 4000);

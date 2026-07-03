@@ -18,6 +18,7 @@
     </a>
     <nav aria-label="Principal">
       <a href="#download">Download</a>
+      <a href="#updates">Atualizações</a>
       <a href="#setup">Setup</a>
       <a href="#control">Controle</a>
       <a href="#ai">IA</a>
@@ -71,6 +72,60 @@
         <a class="button primary" href="./downloads/tiktok-minecraft-live.zip" download>Pack completo</a>
         <a class="button" href="./downloads/TikTokWall.jar" download>TikTokWall.jar</a>
         <a class="button" href="https://papermc.io/downloads/paper" target="_blank" rel="noreferrer">Baixar Paper</a>
+      </div>
+    </section>
+
+    <section id="updates" class="workspace updates-grid">
+      <div class="update-copy">
+        <p class="system-label">Atualizações</p>
+        <h2>Confira a versão instalada antes da live.</h2>
+        <p class="lead slim">
+          Com a ponte local aberta, o portal compara o TikTokWall carregado no Paper com a versão mais recente publicada aqui.
+        </p>
+        <div class="actions">
+          <a class="button primary" id="latestJarLink" href="./downloads/TikTokWall.jar" download>Baixar TikTokWall.jar</a>
+          <a class="button" id="latestPackLink" href="./downloads/tiktok-minecraft-live.zip" download>Baixar pack completo</a>
+          <button class="button" id="checkUpdates" type="button">Verificar versão</button>
+        </div>
+      </div>
+
+      <div class="update-status-panel panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Status</p>
+            <h2>Plugin local.</h2>
+          </div>
+          <span class="status-pill unknown" id="updateStatusPill">Não verificado</span>
+        </div>
+        <div class="version-grid">
+          <div>
+            <span>Versão publicada</span>
+            <strong id="latestVersionValue">-</strong>
+          </div>
+          <div>
+            <span>Versão instalada</span>
+            <strong id="installedVersionValue">-</strong>
+          </div>
+          <div>
+            <span>Compatibilidade</span>
+            <strong id="releaseCompatibilityValue">-</strong>
+          </div>
+        </div>
+        <p class="note" id="updateSummary">Carregando histórico de atualizações...</p>
+        <div class="command-list compact-list" id="updateSteps"></div>
+        <div class="actions compact">
+          <button class="button" id="copyUpdateSteps" type="button">Copiar passos de atualização</button>
+        </div>
+      </div>
+
+      <div class="history-panel panel">
+        <div class="panel-head">
+          <div>
+            <p class="system-label">Histórico</p>
+            <h2>O que mudou.</h2>
+          </div>
+        </div>
+        <div class="release-history" id="releaseHistory"></div>
       </div>
     </section>
 

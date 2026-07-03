@@ -277,6 +277,41 @@ Enviar imagem teste
 
 Se apareceu imagem na parede, a parte Minecraft esta funcionando.
 
+## Atualizar O Plugin
+
+No portal, abra a seção `Atualizações`.
+
+Se aparecer `Atualização disponível`:
+
+1. Clique em `Baixar TikTokWall.jar`.
+2. No console do Paper, digite:
+
+```text
+stop
+```
+
+3. Substitua o arquivo antigo:
+
+```text
+C:\MinecraftLive\plugins\TikTokWall.jar
+```
+
+pelo `TikTokWall.jar` novo que voce baixou.
+
+4. Abra de novo:
+
+```text
+C:\MinecraftLive\start-paper.bat
+```
+
+5. Volte no portal e clique em:
+
+```text
+Verificar versão
+```
+
+Se aparecer `Atualizado`, o plugin local esta na versao mais recente.
+
 ## Pedir Ajuda Para IA
 
 No portal, use o botao:

@@ -15,6 +15,7 @@ O projeto tem:
 - `bot/`: bot Node.js + TypeScript, com interface web local.
 - `minecraft-plugin/`: plugin Paper Java `TikTokWall`.
 - `web/`: portal online estatico para download, setup guiado e controle.
+- `web/updates.json`: historico publico de versoes e fonte da verificacao de atualizacao.
 - `start-interface-windows.bat`: atalho para abrir a interface no Windows.
 - `start-interface-linux.sh`: atalho para abrir a interface no Linux.
 - `docs/LEIAME_WINDOWS.md`: passo a passo Windows para criador que nao programa.
@@ -87,6 +88,8 @@ Ela permite:
 O site em `web/` e um portal estatico com:
 
 - download do pack e do `TikTokWall.jar`;
+- status da versao instalada do plugin;
+- historico publico de atualizacoes;
 - checklist de instalacao;
 - configuracao visual da live;
 - controle do bot pela ponte local;
@@ -103,6 +106,18 @@ Para publicar em uma hospedagem estatica:
 O portal online nao roda o Minecraft na nuvem. Ele se comunica, pelo navegador, com a ponte local em `http://127.0.0.1:3333`. Por isso o criador precisa abrir `start-interface-windows.bat` no Windows ou `./start-interface-linux.sh` no Linux antes de controlar o bot pelo portal.
 
 As configuracoes ficam no arquivo `bot/.env` do computador da live. O arquivo real de ambiente nao deve ser publicado.
+
+### Publicar Uma Nova Versao
+
+1. Atualize a versao em `minecraft-plugin/pom.xml` e `minecraft-plugin/src/main/resources/plugin.yml`.
+2. Atualize `web/updates.json` com a nova versao, data, resumo e historico.
+3. Rode:
+
+```bash
+scripts/package-release.sh
+```
+
+4. Faça commit e push. O portal passa a mostrar a nova versao e o download atualizado.
 
 ## Desenvolvimento
 

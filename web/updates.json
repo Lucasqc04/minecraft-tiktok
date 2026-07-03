@@ -1,0 +1,35 @@
+{
+  "latest": {
+    "version": "1.0.4",
+    "date": "2026-07-03",
+    "minecraft": "26.2",
+    "java": "25",
+    "jar": "./downloads/TikTokWall.jar",
+    "pack": "./downloads/tiktok-minecraft-live.zip",
+    "summary": "Versao atual com setup guiado, parede automatica, tamanho 128, animacao, curtidas com avatar e guias revisados."
+  },
+  "history": [
+    {
+      "version": "1.0.4",
+      "date": "2026-07-03",
+      "title": "Setup guiado e atualizacao publica",
+      "changes": [
+        "Portal com passos mais completos para Windows e Linux.",
+        "Scripts start-paper criam a pasta plugins automaticamente.",
+        "Pack de download atualizado com TikTokWall.jar e guias revisados.",
+        "Plugin informa a versao no endpoint /health para comparacao no portal."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-03",
+      "title": "Primeira versao publica",
+      "changes": [
+        "Renderizacao de avatar TikTok em blocos no Paper.",
+        "Eventos de rosa e curtida com fila no bot.",
+        "Comandos /tiktokwall setup, test, clear, size, dithering e animation.",
+        "Ponte local para configurar a live e testar imagem pelo navegador."
+      ]
+    }
+  ]
+}

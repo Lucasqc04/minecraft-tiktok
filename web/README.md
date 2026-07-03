@@ -42,3 +42,14 @@ Arquivos servidos pelo site:
 
 - `/downloads/TikTokWall.jar`
 - `/downloads/tiktok-minecraft-live.zip`
+- `/updates.json`
+
+## Historico De Atualizacoes
+
+Edite `updates.json` sempre que publicar uma nova versao:
+
+1. Atualize `latest.version`, `latest.date`, `latest.summary`, `latest.jar` e `latest.pack`.
+2. Adicione a versao nova no topo de `history`.
+3. Rode `scripts/package-release.sh` a partir da raiz do repositorio.
+
+O portal compara `latest.version` com a versao retornada pela ponte local em `/api/plugin/health`.

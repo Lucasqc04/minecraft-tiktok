@@ -400,6 +400,10 @@ h3 {
   margin-top: 26px;
 }
 
+.compact-list {
+  margin-top: 16px;
+}
+
 .copy-row {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -414,6 +418,117 @@ h3 {
 .copy-row code {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  color: var(--soft);
+}
+
+.updates-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 480px) minmax(520px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.update-copy {
+  position: sticky;
+  top: 92px;
+}
+
+.update-status-panel {
+  grid-column: 2;
+}
+
+.history-panel {
+  grid-column: 2;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 11px;
+  background: #111410;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status-pill.ok {
+  border-color: rgba(135, 239, 172, .45);
+  color: var(--ok);
+}
+
+.status-pill.warning {
+  border-color: rgba(251, 191, 36, .45);
+  color: #fde68a;
+}
+
+.status-pill.danger {
+  border-color: rgba(251, 113, 133, .45);
+  color: #fecdd3;
+}
+
+.version-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.version-grid div {
+  display: grid;
+  gap: 8px;
+  min-height: 82px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #151914;
+  padding: 12px;
+}
+
+.version-grid span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.version-grid strong {
+  align-self: end;
+  font-size: 18px;
+}
+
+.release-history {
+  display: grid;
+  gap: 16px;
+}
+
+.release-item {
+  display: grid;
+  gap: 10px;
+  border-left: 2px solid rgba(45, 212, 191, .45);
+  padding-left: 16px;
+}
+
+.release-item header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.release-item h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.release-item time {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.release-item ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
   color: var(--soft);
 }
 
@@ -601,8 +716,15 @@ pre {
   .hero,
   .two-col,
   .control-grid,
-  .ai-grid {
+  .ai-grid,
+  .updates-grid {
     grid-template-columns: 1fr;
+  }
+  .update-copy,
+  .update-status-panel,
+  .history-panel {
+    position: static;
+    grid-column: auto;
   }
   .wall-preview {
     min-height: 480px;
@@ -625,7 +747,8 @@ pre {
     padding-top: 36px;
   }
   .form-grid,
-  .status-grid {
+  .status-grid,
+  .version-grid {
     grid-template-columns: 1fr;
   }
   .pixel-wall {

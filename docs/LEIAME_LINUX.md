@@ -240,6 +240,40 @@ Clique em `Salvar`, depois `Enviar imagem teste`.
 
 Se a imagem apareceu na parede, clique em `Iniciar bot` quando a live estiver aberta.
 
+## Atualizar O Plugin
+
+No portal, abra a seção `Atualizações`.
+
+Se aparecer `Atualização disponível`:
+
+1. Clique em `Baixar TikTokWall.jar`.
+2. No console do Paper, digite:
+
+```text
+stop
+```
+
+3. Substitua o JAR antigo pelo novo:
+
+```bash
+cp ~/Downloads/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar
+```
+
+4. Inicie o Paper de novo:
+
+```bash
+cd ~/MinecraftLive
+./start-paper.sh
+```
+
+5. Volte no portal e clique em:
+
+```text
+Verificar versão
+```
+
+Se aparecer `Atualizado`, o plugin local esta na versao mais recente.
+
 ## Pedir Ajuda Para IA
 
 No portal, clique em:
