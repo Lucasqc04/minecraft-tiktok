@@ -140,15 +140,39 @@ stop
 
 ## Ativar RCON
 
-Abra `server.properties` dentro de `C:\MinecraftLive` e ajuste:
+Abra `server.properties` dentro de `C:\MinecraftLive` no Bloco de Notas.
+
+Procure por `enable-rcon`. Se estiver assim:
+
+```properties
+enable-rcon=false
+```
+
+troque para:
 
 ```properties
 enable-rcon=true
+```
+
+Procure por `rcon.port` e confirme:
+
+```properties
 rcon.port=25575
+```
+
+Procure por `rcon.password` e coloque uma senha sua:
+
+```properties
 rcon.password=coloque-uma-senha-aqui
 ```
 
-Salve o arquivo.
+Exemplo:
+
+```properties
+rcon.password=minha-senha-forte
+```
+
+Salve o arquivo com `Ctrl+S`.
 
 RCON e opcional para a live funcionar, mas ajuda a interface a mandar comandos de teste.
 

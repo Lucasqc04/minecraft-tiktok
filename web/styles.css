@@ -503,6 +503,19 @@ h3 {
   color: var(--soft);
 }
 
+.note-row {
+  grid-template-columns: 1fr;
+  border-color: rgba(45, 212, 191, .18);
+  background: rgba(45, 212, 191, .06);
+}
+
+.note-row code {
+  color: #d7efe9;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .updates-grid {
   display: grid;
   grid-template-columns: minmax(320px, 480px) minmax(520px, 1fr);

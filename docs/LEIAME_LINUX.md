@@ -152,13 +152,41 @@ Abra `server.properties`:
 nano ~/MinecraftLive/server.properties
 ```
 
-Procure e ajuste estas linhas:
+Dentro do `nano`:
+
+1. Aperte `Ctrl+W`, digite `enable-rcon` e aperte Enter.
+2. Se estiver assim:
+
+```properties
+enable-rcon=false
+```
+
+troque para:
 
 ```properties
 enable-rcon=true
+```
+
+3. Aperte `Ctrl+W`, digite `rcon.port` e confirme que esta assim:
+
+```properties
 rcon.port=25575
+```
+
+4. Aperte `Ctrl+W`, digite `rcon.password` e coloque uma senha sua:
+
+```properties
 rcon.password=troque-essa-senha
 ```
+
+Exemplo:
+
+```properties
+rcon.password=minha-senha-forte
+```
+
+5. Para salvar no `nano`, aperte `Ctrl+O`, depois Enter.
+6. Para sair, aperte `Ctrl+X`.
 
 RCON e opcional para a live funcionar, mas permite que o portal mande comandos de teste para o Minecraft.
 

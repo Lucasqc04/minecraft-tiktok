@@ -92,14 +92,15 @@ const platformContent = {
       {
         label: "Passo 5",
         title: "Instale o plugin e ligue o RCON.",
-        body: "Agora a pasta plugins ja existe. Copie o JAR, configure RCON e reinicie o Paper.",
+        body: "Agora a pasta plugins ja existe. Copie o JAR, abra server.properties, edite as linhas do RCON, salve o arquivo e reinicie o Paper.",
         commands: [
-          "Copiar C:\\TikTokMinecraftLive\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar",
-          "Abrir C:\\MinecraftLive\\server.properties",
-          "enable-rcon=true",
-          "rcon.port=25575",
-          "rcon.password=troque-essa-senha",
-          "Abrir C:\\MinecraftLive\\start-paper.bat"
+          { text: "Copiar C:\\TikTokMinecraftLive\\TikTokWall.jar para C:\\MinecraftLive\\plugins\\TikTokWall.jar", copy: true },
+          { text: "Abrir C:\\MinecraftLive\\server.properties no Bloco de Notas.", copy: false },
+          { text: "Procure enable-rcon. Se estiver enable-rcon=false, troque para enable-rcon=true.", copy: false },
+          { text: "Confirme rcon.port=25575. Se estiver diferente, troque para 25575.", copy: false },
+          { text: "Procure rcon.password e coloque uma senha sua, por exemplo rcon.password=minha-senha-forte.", copy: false },
+          { text: "Salve o arquivo no Bloco de Notas com Ctrl+S.", copy: false },
+          { text: "Abrir C:\\MinecraftLive\\start-paper.bat", copy: true }
         ]
       },
       {
@@ -177,15 +178,16 @@ const platformContent = {
       {
         label: "Passo 5",
         title: "Instale o plugin e ligue o RCON.",
-        body: "Agora plugins/ ja existe. Copie o JAR, configure RCON e reinicie o Paper.",
+        body: "Agora plugins/ ja existe. Copie o JAR, abra server.properties no nano, edite as linhas do RCON, salve e reinicie o Paper.",
         commands: [
-          "mkdir -p ~/MinecraftLive/plugins",
-          "cp ~/Downloads/tiktok-minecraft-live/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar",
-          "nano ~/MinecraftLive/server.properties",
-          "enable-rcon=true",
-          "rcon.port=25575",
-          "rcon.password=troque-essa-senha",
-          "cd ~/MinecraftLive && ./start-paper.sh"
+          { text: "mkdir -p ~/MinecraftLive/plugins", copy: true },
+          { text: "cp ~/Downloads/tiktok-minecraft-live/TikTokWall.jar ~/MinecraftLive/plugins/TikTokWall.jar", copy: true },
+          { text: "nano ~/MinecraftLive/server.properties", copy: true },
+          { text: "Dentro do nano, use Ctrl+W para procurar enable-rcon. Se estiver enable-rcon=false, troque para enable-rcon=true.", copy: false },
+          { text: "Use Ctrl+W para procurar rcon.port. Confirme que esta rcon.port=25575.", copy: false },
+          { text: "Use Ctrl+W para procurar rcon.password. Troque para uma senha sua, por exemplo rcon.password=minha-senha-forte.", copy: false },
+          { text: "Para salvar no nano: Ctrl+O, Enter. Para sair: Ctrl+X.", copy: false },
+          { text: "cd ~/MinecraftLive && ./start-paper.sh", copy: true }
         ]
       },
       {
@@ -395,12 +397,19 @@ function currentStepIndex() {
   return Number(active?.dataset.step ?? 0);
 }
 
-function copyRow(text) {
+function copyRow(item) {
+  const text = typeof item === "string" ? item : item.text;
+  const canCopy = typeof item === "string" ? true : item.copy !== false;
   const row = document.createElement("div");
-  row.className = "copy-row";
-  row.innerHTML = `<code></code><button class="button small" type="button">Copiar</button>`;
+  row.className = canCopy ? "copy-row" : "copy-row note-row";
+  row.innerHTML = canCopy
+    ? `<code></code><button class="button small" type="button">Copiar</button>`
+    : `<code></code>`;
   row.querySelector("code").textContent = text;
-  row.querySelector("button").addEventListener("click", () => copyText(text, "Copiado."));
+  const button = row.querySelector("button");
+  if (button) {
+    button.addEventListener("click", () => copyText(text, "Copiado."));
+  }
   return row;
 }
 
