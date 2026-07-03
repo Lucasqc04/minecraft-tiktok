@@ -1,0 +1,26 @@
+{
+  "name": "tiktok-minecraft-live-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ui": "tsx src/ui.ts",
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "start:ui": "node dist/ui.js",
+    "test:image": "tsx src/testSendImage.ts"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "rcon-client": "^4.2.5",
+    "sharp": "^0.33.5",
+    "tiktok-live-connector": "^2.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,42 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+bot/.env
+bot/.env.*
+!bot/.env.example
+
+# Node
+bot/node_modules/
+bot/dist/
+bot/avatars/
+bot/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Java / Maven
+minecraft-plugin/target/
+*.class
+*.log
+
+# Generated release bundles
+release/
+TikTokWall.jar
+!/web/downloads/TikTokWall.jar
+!/web/downloads/tiktok-minecraft-live.zip
+
+# Minecraft local server files
+minecraft-live/
+server.properties
+eula.txt
+world/
+world_nether/
+world_the_end/
+plugins/TikTokWall/config.yml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

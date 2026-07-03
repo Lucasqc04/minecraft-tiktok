@@ -1,0 +1,37 @@
+world: world
+origin:
+  x: 0
+  y: 80
+  z: 0
+facing: NORTH
+defaultSize: 48
+durationSeconds: 15
+clearMaterial: AIR
+httpPort: 4567
+dithering: false
+ditheringStrength: 18
+animation:
+  enabled: true
+  rowsPerTick: 4
+setup:
+  autoOnJoin: true
+  onlyOnce: true
+  completed: false
+  wallDistance: 10
+  clearPadding: 8
+  clearDepth: 26
+  creativeMode: true
+  teleportPlayer: true
+  runTestAfterSetup: true
+  prepareWorld: true
+  alwaysDay: true
+  clearWeather: true
+  peacefulDifficulty: true
+  disableMobSpawning: true
+  keepInventory: true
+  disableFireSpread: true
+  disableMobGriefing: true
+  disableInsomnia: true
+  floorMaterial: SMOOTH_STONE
+  wallMaterial: BLACK_CONCRETE
+  frameMaterial: WHITE_CONCRETE

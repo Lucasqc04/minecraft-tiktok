@@ -1,0 +1,15 @@
+name: TikTokWall
+version: 1.0.4
+main: dev.lucas.tiktokwall.TikTokWallPlugin
+api-version: '26.2'
+author: lucas
+description: Render TikTok Live avatars as Minecraft block pixel art.
+commands:
+  tiktokwall:
+    description: Manage the TikTok avatar wall.
+    usage: /tiktokwall <setup|setpos|clear|test|size|info|facing|dithering|ditheringstrength|animation|animationspeed>
+    permission: tiktokwall.admin
+permissions:
+  tiktokwall.admin:
+    description: Allows managing TikTokWall.
+    default: op
